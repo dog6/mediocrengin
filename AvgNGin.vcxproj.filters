@@ -13,6 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{c2ab1b52-3b85-4e55-9c4c-b100d61b5d84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{09085de7-e880-499f-8134-82b6dab93732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{d450747d-51f9-4ccb-8b2c-7f715ec5d2c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{03f0a4c0-aadc-4f49-82be-2a32f9d0a261}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Assets">
+      <UniqueIdentifier>{45481fa1-60b0-4586-9d6b-67368384b1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Assets">
+      <UniqueIdentifier>{917400e8-55f2-4560-b9fe-bc599ad6a264}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -21,19 +39,22 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ObjFileParser.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="FileReader.cpp">
+      <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="FileReader.cpp">
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFileParser.cpp">
+      <Filter>Source Files\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,29 +62,41 @@
     <ClInclude Include="Game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjFileParser.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileReader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.hpp">
+    <ClInclude Include="Vertex.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FileReader.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFileParser.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TexCoord.hpp">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

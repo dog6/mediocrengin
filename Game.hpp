@@ -1,7 +1,6 @@
 #pragma once
 
-#ifndef GAME_HPP
-#define GAME_HPP
+#define STB_IMAGE_IMPLEMENTATION
 
 #include<glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -26,21 +25,26 @@
 #include "Renderer.hpp"
 #include "Transform.hpp"
 #include "GameObject.hpp"
+#include "Debug.hpp"
 
 #define FRAG_SHADER_PATH = G:/Projects/NG/AvgNGin/res/shaders/fragShaders/
 #define VERT_SHADER_PATH = G:/Projects/NG/AvgNGin/res/shaders/vertShaders/
 
+
+
 namespace ng {
-	class Game {
-		std::string windowTitle;
-		glm::uvec2 windowSize;
-	public:
-		Game();
-		~Game();
-		void Load();    // Called before game starts
-		void Start();    // Called when game first starts
-		void Run();    // Called after Start(), GameLoop
-		void Exit();    // Called when game is closed
-	};
-}
-#endif
+namespace Core {
+
+		class Game {
+			std::string windowTitle;
+			glm::uvec2 windowSize;
+		public:
+			Game();
+			~Game();
+			void Load();    // Called before game starts
+			void Start();    // Called when game first starts
+			void Run();    // Called after Start(), GameLoop
+			void Exit();    // Called when game is closed
+		};
+
+}}

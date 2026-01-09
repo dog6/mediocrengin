@@ -6,6 +6,9 @@
 
 #include "FileReader.hpp"
 
+using namespace ng::Core;
+using namespace ng::Assets;
+
 namespace ng {
     namespace Graphics {
 
@@ -14,10 +17,10 @@ namespace ng {
             unsigned int ID;
 
             static std::string ReadShaderFile(const char* shader_filePath) {
-                
+
                 std::ifstream file = FileReader::ReadFile(shader_filePath);
                 if (!file.is_open()) {
-                    printf("Failed to load shader %s", shader_filePath);
+                    Debug::Log(LogLevel::ERROR, "Failed to load shader %s", shader_filePath);
                     return "";
                 }
 
@@ -32,9 +35,9 @@ namespace ng {
             }
 
             static Shader* LoadShader(const char* vertex_shader_filePath, const char* frag_shader_filePath) {
-                
-                printf("Loading shaders:\n\t- Vertex: %s\n\t- Fragment: %s\n", vertex_shader_filePath, frag_shader_filePath);
-                
+
+                Debug::Log(LogLevel::DEBUG, "Loading shaders:\n\t- Vertex: %s\n\t- Fragment: %s\n", vertex_shader_filePath, frag_shader_filePath);
+
                 // Read vertex shader
                 std::string vertShader = ReadShaderFile(vertex_shader_filePath);
                 std::string fragShader = ReadShaderFile(frag_shader_filePath);
@@ -57,7 +60,7 @@ namespace ng {
                 glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
                 if (!success) {
                     glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-                    printf("ERROR: Vertex shader compilation failed\n%s\n", infoLog);
+                    Debug::Log(LogLevel::ERROR, "ERROR: Vertex shader compilation failed\n%s\n", infoLog);
                 }
 
                 // Compile fragment shader
@@ -69,7 +72,7 @@ namespace ng {
                 glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
                 if (!success) {
                     glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-                    printf("ERROR: Fragment shader compilation failed\n%s\n", infoLog);
+                    Debug::Log(LogLevel::ERROR, "ERROR: Fragment shader compilation failed\n%s", infoLog);
                 }
 
                 // Link program
@@ -82,13 +85,13 @@ namespace ng {
                 glGetProgramiv(ID, GL_LINK_STATUS, &success);
                 if (!success) {
                     glGetProgramInfoLog(ID, 512, NULL, infoLog);
-                    printf("ERROR: Shader program linking failed\n%s\n", infoLog);
+                    Debug::Log(LogLevel::ERROR, "ERROR: Shader program linking failed\n%s\n", infoLog);
                 }
 
                 glDeleteShader(vertex);
                 glDeleteShader(fragment);
 
-                printf("Shader created successfully! ID: %d\n", ID);
+                Debug::Log(LogLevel::DEBUG,"Shader created successfully! ID: %d\n", ID);
             }
 
             void Use() {
@@ -107,8 +110,11 @@ namespace ng {
                 glUniform3f(glGetUniformLocation(ID, name), vec.x, vec.y, vec.z);
             }
 
+            void SetInt(const char* name, int v) {
+                glUniform1i(glGetUniformLocation(ID, name), v);
+            }
 
         };
 
-    }
-}
+
+}}

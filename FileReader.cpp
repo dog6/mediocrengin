@@ -1,5 +1,8 @@
 #include "FileReader.hpp"
 
+using namespace ng::Assets;
+using namespace ng::Core;
+
 // Helper methods
 std::vector<std::string> FileReader::split(std::string_view str, char delim)
 {
@@ -24,7 +27,7 @@ int FileReader::safe_stoi(const std::string& s)
         return std::stoi(s);
     }
     catch (const std::exception&) {
-        printf("stoi failed on token: '%s'\n", s.c_str());
+        Debug::Log(LogLevel::ERROR, "safe_stoi failed on token: '%s'\n", s.c_str());
         return 0;
     }
 }
@@ -51,7 +54,7 @@ std::vector<int> FileReader::split_ints(const std::string& s, const std::string&
 std::ifstream FileReader::ReadFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if (!file.is_open()) {
-        printf("Failed to open file %s\n", filePath.c_str());
+        Debug::Log(LogLevel::ERROR, "Failed to open file %s\n", filePath.c_str());
     }
     return file;
 }

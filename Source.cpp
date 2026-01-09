@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-using namespace ng;
+using namespace ng::Core;
 
 int main(void)
 {

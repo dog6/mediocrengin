@@ -7,16 +7,20 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include "Debug.hpp"
 
-class FileReader {
+namespace ng {
+namespace Assets {
 
-public:
-	static std::vector<std::string> split(std::string_view str, char delim);
-	static int safe_stoi(const std::string& s);
-	static std::vector<int> split_ints(const std::string& s, const std::string& delimiter);
-	static std::ifstream ReadFile(const std::string& filePath);
-};
+		class FileReader {
 
+		public:
+			static std::vector<std::string> split(std::string_view str, char delim);
+			static int safe_stoi(const std::string& s);
+			static std::vector<int> split_ints(const std::string& s, const std::string& delimiter);
+			static std::ifstream ReadFile(const std::string& filePath);
+		};
 
+}}
 
 #endif

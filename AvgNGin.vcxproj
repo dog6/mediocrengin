@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="glad.c" />
@@ -144,14 +145,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Debug.hpp" />
     <ClInclude Include="FileReader.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameObject.hpp" />
+    <ClInclude Include="Material.hpp" />
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="ObjFileParser.hpp" />
     <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="Shader.hpp" />
+    <ClInclude Include="TexCoord.hpp" />
     <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="Vertex.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
