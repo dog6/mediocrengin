@@ -3,7 +3,7 @@ print("Scene exists: ", scene ~= nil)
 print("Scene Type: ", type(scene))
 
 local go = scene:CreateGameObject("Cube")
-local meshRenderer = go:AddComponent("MeshRenderer")
+go:AddComponent("MeshRenderer")
 
 local renderer = go:GetComponent("MeshRenderer")
 
