@@ -3,17 +3,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <AVGNG/Component.hpp>
 
-namespace ng {
-	namespace Core {
+namespace ng::Core {
 
 
-	struct Transform {
+	class Transform : public Component {
 
 		glm::vec3 position{ 0.0f };
 		glm::vec3 rotation{ 0.0f }; // in radians (pitch, yaw, roll)
 		glm::vec3 scale{ 1.0f };
 
+	public:
 		glm::mat4 GetModelMatrix() const
 		{
 
@@ -28,7 +29,11 @@ namespace ng {
 			return model;
 
 		}
+		
+		void SetPosition(glm::vec3 pos);
+		void SetRotation(glm::vec3 rot);
+		void SetScale(glm::vec3 scale);
 
 	};
 
-}}
+}

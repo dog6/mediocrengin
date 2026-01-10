@@ -1,16 +1,12 @@
 #pragma once
 
-
-#ifndef FILE_READER_HPP
-#define FILE_READER_HPP
-
 #include <vector>
 #include <string>
 #include <fstream>
-#include "Debug.hpp"
 
-namespace ng {
-namespace Assets {
+#include <AVGNG/Debug.hpp>
+
+namespace ng::Assets {
 
 		class FileReader {
 
@@ -21,6 +17,5 @@ namespace Assets {
 			static std::ifstream ReadFile(const std::string& filePath);
 		};
 
-}}
+}
 
-#endif

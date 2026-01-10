@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include <AVGNG/Game.hpp>
 
 using namespace ng::Core;
 

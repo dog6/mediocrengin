@@ -1,14 +1,9 @@
 #pragma once
 
-#ifndef RENDERER_HPP
-#define RENDERER_HPP
-
 #include <vector>
-#include "Mesh.hpp"
+#include <AVGNG/Mesh.hpp>
 
-namespace ng {
-namespace Graphics {
-
+namespace ng::Graphics {
 
 	// Renders Mesh objects to a GLFW instance
 	class Renderer {
@@ -17,8 +12,4 @@ namespace Graphics {
 	};
 
 
-
-
-}}
-
-#endif
+}

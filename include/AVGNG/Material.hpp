@@ -3,8 +3,7 @@
 #include <string>
 #include <glm/vec3.hpp>
 
-namespace ng {
-    namespace Graphics {
+namespace ng::Graphics {
 
         struct Material
         {
@@ -17,5 +16,4 @@ namespace ng {
             unsigned int diffuseTexID = 0; // OpenGL texture handle
         };
     
-    }
 }

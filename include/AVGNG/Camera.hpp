@@ -2,8 +2,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace ng {
-    namespace Graphics {
+namespace ng::Graphics {
 
         class Camera {
             public:
@@ -26,5 +25,4 @@ namespace ng {
                 }
         };
 
-    }
 }

@@ -5,16 +5,13 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <cstdio>
 #include <cstdarg>
+#include <fstream>
 
-using namespace std;
+namespace ng::Core {
 
-namespace ng {
-namespace Core {
-
-	static enum LogLevel {
+	enum LogLevel {
 		LOG,
 		DEBUG,
 		WARN,
@@ -24,7 +21,7 @@ namespace Core {
 
 	class Debug {
 
-		static ofstream s_file;
+		static std::ofstream s_file;
 
 		static void WriteConsole(LogLevel level, const char* msg, va_list args);
 		static void WriteFile(LogLevel level, const char* msg, va_list args);
@@ -32,11 +29,11 @@ namespace Core {
 		static bool OpenLogFile(const char* logFilePath);
 
 	public:
-		static void Init(const string& filePath);     // opens log file
+		static void Init(const std::string& filePath);     // opens log file
 		static void Shutdown();                       // closed log file
 		static void Log(LogLevel level, const char* msg, ...);
 
 	};
 
 
-}}
+}
