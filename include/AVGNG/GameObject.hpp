@@ -1,7 +1,7 @@
 #pragma once
 
+#include <AVGNG/MeshRenderer.hpp>
 #include <AVGNG/Transform.hpp>
-#include <AVGNG/Mesh.hpp>
 #include <AVGNG/Component.hpp>
 #include <iostream>
 
@@ -27,7 +27,8 @@ namespace ng::Core {
 
         GameObject(const GameObject&) = delete;
         GameObject& operator=(const GameObject&) = delete;
-
+        Component* AddComponentByName(const std::string& type);
+        Component* GetComponentByName(const std::string& type);
 
         template<typename T, typename... Args> T*
             AddComponent(Args&&... args) {

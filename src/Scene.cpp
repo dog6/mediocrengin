@@ -1,8 +1,12 @@
-#include "Scene.hpp"
+#include <AVGNG/Scene.hpp>
+
+#include <AVGNG/Time.hpp>
 
 using namespace ng::Graphics;
 
 namespace ng::Core {
+
+	float deltaTime;
 
 	Scene::Scene(Camera* _mainCamera, const char* _sceneName)
 	{
@@ -69,13 +73,19 @@ namespace ng::Core {
 	void Scene::Update() {
 		if (!isActive) return;
 
+		deltaTime = Time::DeltaTime();
+
 		// Update all game objects
 		for (auto* obj : gameObjectsInScene) {
 			if (obj->isActive) {
 				// Call Update on components if you have that system
-				//obj->Update()
+				obj->Update(deltaTime);
 			}
 		}
+
+		// Update Lua VM
+		ng::Scripting::LuaManager::Update(deltaTime);
+
 	}
 
 	void Scene::Render() {

@@ -7,6 +7,8 @@
 #include <AVGNG/Component.hpp>
 #include <AVGNG/MeshRenderer.hpp>
 
+#include <AVGNG/LuaManager.hpp>
+
 namespace ng::Core {
 
 	class Scene {

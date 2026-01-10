@@ -14,11 +14,16 @@
 #include <AVGNG/Material.hpp>
 #include <AVGNG/FileReader.hpp>
 
+#include <AVGNG/ShaderLoader.hpp>
+#include <AVGNG/GameObject.hpp>
+
+
 namespace ng::Assets {
 
         class ObjFileParser {
         public:
-            static ng::Graphics::Mesh* LoadObjFromFile(const std::string& objFilePath);
+            static ng::Core::GameObject* LoadObjAsGameObject(const char* name, const char* objFilePath, ng::Graphics::Shader* shader);
+            static ng::Graphics::Mesh* LoadObjFromFileAsMesh(const std::string& objFilePath);
             static std::unordered_map<std::string, ng::Graphics::Material> LoadMaterialFromFile(const std::string& mtlPath);
         };
 

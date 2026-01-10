@@ -63,56 +63,6 @@ static void InitializeGameWindow(int window_width, int window_height, const char
 
 }
 
-static Shader* LoadDefaultShader() {
-    std::string fragShaderFolder = "res/shaders/fragShaders/";
-    std::string vertShaderFolder = "res/shaders/vertexShaders/";
-
-    std::string vertShaderPath = vertShaderFolder + "defaultShader.vert";
-    std::string fragShaderPath = fragShaderFolder + "defaultShader.frag";
-
-    Debug::Log(DEBUG, "Loading default vertex shader: %s", vertShaderPath.c_str());
-    Debug::Log(DEBUG, "Loading default fragment shader: %s\n", fragShaderPath.c_str());
-
-    shader = ng::Graphics::Shader::LoadShader(vertShaderPath.c_str(), fragShaderPath.c_str());
-    
-    if (shader != nullptr) {
-        Debug::Log(LOG, "Successfully loaded shader ID: %d", shader->ID);
-        return shader;
-    }
-    return nullptr;
-}
-
-static Core::GameObject* LoadObjAsGameObject(const char* name, const char* objFilePath, Shader* shader) {
-
-    if (!std::filesystem::exists(objFilePath)) {
-        Debug::Log(ERROR, "Failed to load .obj with path '%s'.", objFilePath);
-    }
-
-    GameObject* result = new GameObject(name);
-
-    result->AddComponent<ng::Graphics::MeshRenderer>();
-    result->AddComponent<ng::Core::Transform>();
-
-    MeshRenderer* resultMeshRenderer = result->GetComponent<ng::Graphics::MeshRenderer>();
-
-    ObjFileParser parser = ObjFileParser();
-    resultMeshRenderer->mesh = parser.LoadObjFromFile(objFilePath);
-    
-    if (shader != nullptr) {
-        resultMeshRenderer->shader = shader;
-    }
-    else if (Shader* defaultShader = LoadDefaultShader()) {
-        resultMeshRenderer->shader = defaultShader;
-
-        if (defaultShader == nullptr) {
-            Debug::Log(LogLevel::ERROR, "Failed to load shader while loading .obj as gameObject.\n.OBJ path: '%s'.", objFilePath);
-        }
-    }
-
-    return result;
-
-}
-
     // Constructor
     Game::Game() {
         this->windowTitle = "AvgNGin | v0.0.0";
@@ -126,23 +76,33 @@ static Core::GameObject* LoadObjAsGameObject(const char* name, const char* objFi
     // Destructor
     Game::~Game() {}
 
+    // Before Load
+    void Core::Game::Init()
+    {
+        Debug::Log(LogLevel::LOG, "Loading game..");
+        InitializeGameWindow(this->windowSize.x, this->windowSize.y, this->windowTitle);
+        
+        Time::Init();
+
+        ng::Scripting::LuaManager::Init(activeScene);
+
+    }
+
     // Game Methods
     void Game::Load()
     {
-
-        Debug::Log(LogLevel::LOG, "Loading game..");
-        InitializeGameWindow(this->windowSize.x, this->windowSize.y, this->windowTitle);
-
-        Time::Init();
+        // Load lua scene script
+         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/dev.lua");
 
         // Load default shader
-        Shader* defaultShader = LoadDefaultShader();
-
+        Shader* defaultShader = ShaderLoader::LoadDefaultShader();
 
         // Load active scene
         if (activeScene != nullptr) {
             activeScene->Load();
         }
+
+        activeScene->Load();
 
         // Load Cube Mesh
         //cubeObj = LoadObjAsGameObject("Cube", "./res/models/mdl_grass_cube.obj", defaultShader);
@@ -158,25 +118,13 @@ static Core::GameObject* LoadObjAsGameObject(const char* name, const char* objFi
     void Game::Start() {
 
         Debug::Log(LogLevel::LOG, "Game started.");
-
+        activeScene->Start();
 
     }
 
     void Game::Run()
     {
         Debug::Log(LogLevel::LOG, "Starting game loop.");
-
-
-        //// Setup cube components
-        //Transform* cubeTF = cubeObj->GetComponent<Transform>();
-        //MeshRenderer* cubeMR = cubeObj->GetComponent<MeshRenderer>();
-        //cubeTF->SetPosition(glm::vec3(0,0,-10));
-
-        //// Setup terrain components
-        //Transform* terrainTF = terrainObj->GetComponent<Transform>();
-        //MeshRenderer* terrainMR = terrainObj->GetComponent<MeshRenderer>();
-        //terrainTF->SetPosition(glm::vec3(0, -3, -10));
-
 
         float cubeRotation = 0.0f;
         int frameCount = 0;  // Add counter
@@ -188,6 +136,7 @@ static Core::GameObject* LoadObjAsGameObject(const char* name, const char* objFi
             // Update
             //cubeRotation -= 2.0f * Time::DeltaTime(); // 2 rads/second
             //cubeTF->SetRotation(glm::vec3(cubeRotation, 0, cubeRotation));
+            activeScene->Update();
 
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -196,7 +145,7 @@ static Core::GameObject* LoadObjAsGameObject(const char* name, const char* objFi
             // Draw    
             /*cubeMR->Draw(*camera, *cubeTF);
             terrainMR->Draw(*camera, *terrainTF);*/
-
+            activeScene->Render();
 
             // Check for GL errors 
             if (frameCount++ == 60) {

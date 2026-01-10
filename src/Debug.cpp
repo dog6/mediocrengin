@@ -29,17 +29,13 @@ namespace ng::Core {
 
 	void Debug::Init(const std::string& filePath)
 	{
-		bool fileOpened = OpenLogFile(filePath.c_str());
-
-		if (!fileOpened) {
-			printf("%s", GetLogLevelAsString(ERROR));
-			printf("Failed to open log file '%s'.\n ONLY logs to console will work.\n", filePath.c_str());
+		if (!OpenLogFile(filePath.c_str())) {
+			Debug::Log(WARN, "%sFailed to open log file '%s'. ONLY logs to console will work.", filePath.c_str());
+			return;
 		}
 		else {
-			printf("%s", GetLogLevelAsString(LOG));
-			printf("Opened log file '%s'.\n", filePath.c_str());
+			Debug::Log(LOG, "Opened log file '%s'.", filePath.c_str());
 		}
-
 	}
 
 	void Debug::Shutdown()

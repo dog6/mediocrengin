@@ -11,6 +11,7 @@ using namespace ng::Graphics;
 
 namespace ng::Assets {
 
+    // Helper Methods
     glm::vec3 ProcessVertexPositions(const string& line) {
         stringstream ss(line);
         char v;
@@ -121,7 +122,6 @@ namespace ng::Assets {
         }
     }
 
-
     unsigned int LoadTextureFromFile(const string& path)
     {
         unsigned int textureID;
@@ -150,7 +150,9 @@ namespace ng::Assets {
         return textureID;
     }
 
-    Mesh* ObjFileParser::LoadObjFromFile(const string& objFilePath)
+
+    // Public Methods
+    Mesh* ObjFileParser::LoadObjFromFileAsMesh(const string& objFilePath)
     {
         std::filesystem::path objDir;
         objDir = std::filesystem::path(objFilePath).parent_path();
@@ -333,6 +335,37 @@ namespace ng::Assets {
 
         Debug::Log(LogLevel::DEBUG, "Loaded %zu materials from %s", materials.size(), mtlPath.c_str());
         return materials;
+    }
+
+    GameObject* ObjFileParser::LoadObjAsGameObject(const char* name, const char* objFilePath, Shader* shader) {
+
+        if (!filesystem::exists(objFilePath)) {
+            Debug::Log(ERROR, "Failed to load .obj with path '%s'.", objFilePath);
+        }
+
+        GameObject* result = new GameObject(name);
+
+        result->AddComponent<MeshRenderer>();
+        result->AddComponent<Transform>();
+
+        MeshRenderer* resultMeshRenderer = result->GetComponent<MeshRenderer>();
+
+        ObjFileParser parser = ObjFileParser();
+        resultMeshRenderer->SetMesh(parser.LoadObjFromFileAsMesh(objFilePath));
+
+        if (shader != nullptr) {
+            resultMeshRenderer->shader = shader;
+        }
+        else if (Shader* defaultShader = ShaderLoader::LoadDefaultShader()) {
+            resultMeshRenderer->shader = defaultShader;
+
+            if (defaultShader == nullptr) {
+                Debug::Log(LogLevel::ERROR, "Failed to load shader while loading .obj as gameObject.\n.OBJ path: '%s'.", objFilePath);
+            }
+        }
+
+        return result;
+
     }
 
 }

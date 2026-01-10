@@ -12,7 +12,7 @@ namespace ng::Graphics {
             return;
         }
 
-        if (this->mesh == nullptr) {
+        if (this->GetMesh() == nullptr) {
             Debug::Log(LogLevel::ERROR, "Mesh is null in MeshRenderer::Draw");
             return;
         }
@@ -59,6 +59,35 @@ namespace ng::Graphics {
         glBindVertexArray(0);
     }
 
+    void MeshRenderer::SetMesh(Mesh* mesh)
+    {
+        this->mesh = mesh;
+    }
 
+    Mesh* MeshRenderer::GetMesh() { return this->mesh; }
+
+    void MeshRenderer::LoadMeshWithOBJPath(const char* objPath)
+    {
+        Mesh* loadedMesh = ng::Assets::ObjFileParser::LoadObjFromFileAsMesh(objPath);
+    
+        if (loadedMesh == nullptr) {
+            Debug::Log(ERROR, "Failed to load mesh from MeshRenderer with path '%s'.", objPath);
+            return;
+        }
+
+        // loadedMesh != nullptr
+        Debug::Log(LOG, "Loaded Mesh '%s' for MeshRenderer attached to GameObject: '%s'", objPath, owner->name.c_str());
+        this->SetMesh(loadedMesh);
+
+    }
+
+    void MeshRenderer::LoadMeshShader(const char* vertShaderPath, const char* fragShaderPath) {
+        this->shader = ng::Assets::ShaderLoader::LoadShader(vertShaderPath, fragShaderPath);
+
+        if (this->shader == nullptr) {
+            Debug::Log(ERROR, "Failed to load mesh shader.\n    Vertex Shader: '%s'\n    Fragment Shader: '%s'", vertShaderPath, fragShaderPath);
+        }
+
+    }
 
 }

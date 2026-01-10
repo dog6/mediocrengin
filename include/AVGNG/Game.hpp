@@ -18,21 +18,19 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include <AVGNG/Shader.hpp>
-#include <AVGNG/Camera.hpp>
-#include <AVGNG/Mesh.hpp>
-#include <AVGNG/MeshRenderer.hpp>
+
+// Graphics
+#include <AVGNG/Graphics.hpp>
+
+// Core
+#include <AVGNG/Core.hpp>
+
+// Scripting
+#include <AVGNG/LuaManager.hpp>
+
+// Assets
 #include <AVGNG/ObjFileParser.hpp>
-#include <AVGNG/Renderer.hpp>
-#include <AVGNG/Transform.hpp>
-#include <AVGNG/GameObject.hpp>
-#include <AVGNG/Debug.hpp>
-#include <AVGNG/Time.hpp>
-#include <AVGNG/Scene.hpp>
-
-#define FRAG_SHADER_PATH = G:/Projects/NG/AvgNGin/res/shaders/fragShaders/
-#define VERT_SHADER_PATH = G:/Projects/NG/AvgNGin/res/shaders/vertShaders/
-
+#include <AVGNG/ShaderLoader.hpp>
 
 
 namespace ng::Core {
@@ -45,7 +43,8 @@ namespace ng::Core {
 			Game();
 			Game(const char* title, glm::uvec2 size);
 			~Game();
-			void Load();    // Called before game starts
+			void Init();    // Called when game first starts up
+			void Load();    // Called before game loop starts
 			void Start();    // Called when game first starts
 			void Run();    // Called after Start(), GameLoop
 			void Exit();    // Called when game is closed
