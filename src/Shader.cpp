@@ -37,6 +37,7 @@ namespace ng::Graphics {
 
     }
 
+
     Shader::Shader(const char* vertexCode, const char* fragmentCode)
     {
         {
@@ -86,6 +87,11 @@ namespace ng::Graphics {
             Debug::Log(LogLevel::DEBUG, "Shader created successfully! ID: %d\n", ID);
         }
     }
+
+    Shader::~Shader()
+    {
+    }
+
 
     void Shader::Use()
     {

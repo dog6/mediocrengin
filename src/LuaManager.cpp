@@ -64,8 +64,8 @@ namespace ng::Scripting {
 	void RegisterMeshRenderer(sol::state& lua) {
 		lua.new_usertype<ng::Graphics::MeshRenderer>("MeshRenderer",
 			sol::base_classes, sol::bases<ng::Core::Component>(),
-			"LoadMesh", &ng::Graphics::MeshRenderer::LoadMeshWithOBJPath,
-			"LoadShader", &ng::Graphics::MeshRenderer::LoadMeshShader
+			"LoadMesh", &ng::Graphics::MeshRenderer::LoadMesh,
+			"LoadShader", &ng::Graphics::MeshRenderer::LoadShader
 		);
 	}
 

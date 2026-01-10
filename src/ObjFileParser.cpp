@@ -54,7 +54,9 @@ namespace ng::Assets {
             faceGroups.push_back(token);
         }
 
+#ifndef NG_QUIET_PARSING
         Debug::Log(DEBUG, "Face has %d vertex groups", faceGroups.size());
+#endif
 
         if (faceGroups.empty()) {
             Debug::Log(ERROR, "No vertex groups found in face: '%s'", line.c_str());
@@ -72,7 +74,9 @@ namespace ng::Assets {
 
             vector<int> idx = FileReader::split_ints(groupStr, "/");
 
+#ifndef NG_QUIET_PARSING
             Debug::Log(DEBUG, "Parsing '%s' -> %d indices", groupStr.c_str(), idx.size());
+#endif
 
             if (idx.empty() || idx[0] <= 0 || idx[0] > (int)positions.size()) {
                 Debug::Log(WARN, "Invalid position index in '%s'", groupStr.c_str());
@@ -91,7 +95,10 @@ namespace ng::Assets {
             vertexCache[groupStr] = newIndex;
             faceIndices.push_back(newIndex);
 
+#ifndef NG_QUIET_PARSING
             Debug::Log(DEBUG, "Created vertex %d", newIndex);
+#endif
+
         }
 
         // Triangulate
@@ -131,7 +138,7 @@ namespace ng::Assets {
         unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
         if (!data)
         {
-            Debug::Log(LogLevel::ERROR, "Failed to load texture: %s\n", path.c_str());
+            Debug::Log(ERROR, "Failed to load texture: %s\n", path.c_str());
             return 0;
         }
 
@@ -179,7 +186,9 @@ namespace ng::Assets {
         int vertexCount = 0;
         int faceCount = 0;
 
+#ifndef NG_QUIET_PARSING
         Debug::Log(LogLevel::DEBUG, "Loading OBJ file: %s\n", objFilePath.c_str());
+#endif
 
         while (getline(file, line))
         {
@@ -192,7 +201,9 @@ namespace ng::Assets {
                 glm::vec3 v = ProcessVertexPositions(line);
                 positions.emplace_back(v.x, v.y, v.z);
                 vertexCount++;
+#ifndef NG_QUIET_PARSING
                 Debug::Log(LogLevel::DEBUG, "Loaded vertex %d: (%f, %f, %f)\n", vertexCount, v.x, v.y, v.z);
+#endif
             }
             // Vertex normals
             else if (line.rfind("vn ", 0) == 0)
@@ -211,7 +222,9 @@ namespace ng::Assets {
             {
                 faceCount++;
 
+#ifndef NG_QUIET_PARSING
                 Debug::Log(LogLevel::DEBUG, "Processing face %d: %s", faceCount, line.c_str());
+#endif
 
                 // Remove the leading "f "
                 line = line.substr(2);
@@ -223,7 +236,10 @@ namespace ng::Assets {
             if (line.rfind("usemtl ", 0) == 0)
             {
                 currentMaterial = line.substr(7);
+#ifndef NG_QUIET_PARSING
                 Debug::Log(LogLevel::DEBUG, "Switching to material: %s", currentMaterial.c_str());
+#endif
+
             }
 
             if (line.rfind("mtllib ", 0) == 0) {
@@ -237,13 +253,19 @@ namespace ng::Assets {
 
                 materials = LoadMaterialFromFile(mtlPath);
 
+#ifndef NG_QUIET_PARSING
                 Debug::Log(LogLevel::DEBUG, "Found %zu materials\n    .obj file '%s'\n    .mtl file '%s'",
                     materials.size(), objFilePath.c_str(), mtlPath.c_str());
+#endif
+
             }
+
         }
 
+#ifndef NG_QUIET_PARSING
         Debug::Log(LogLevel::DEBUG, "Total: %d positions, %d faces, %d final vertices\n",
             vertexCount, faceCount, (int)vertices.size());
+#endif
 
         file.close();
 
@@ -260,27 +282,36 @@ namespace ng::Assets {
         }
 
         if (mesh == nullptr) {
+#ifndef NG_QUIET_PARSING
             Debug::Log(LogLevel::DEBUG, "Failed to create mesh from file %s", objFilePath.c_str());
+#endif
             return nullptr;
         }
-        Debug::Log(LogLevel::DEBUG, "Successfully loaded .obj file as mesh %s", objFilePath.c_str());
-        Debug::Log(LogLevel::DEBUG, "VAO: %d, VBO: %d, EBO: %d", mesh->VAO, mesh->VBO, mesh->EBO);
+        Debug::Log(LOG, "Successfully loaded .obj file as mesh %s", objFilePath.c_str());
+
+#ifndef NG_QUIET_PARSING
+        Debug::Log(DEBUG, "VAO: %d, VBO: %d, EBO: %d", mesh->VAO, mesh->VBO, mesh->EBO);
+#endif
+
         return mesh;
     }
 
     unordered_map<string, Material> ng::Assets::ObjFileParser::LoadMaterialFromFile(const string& mtlPath)
     {
+
+#ifndef NG_QUIET_PARSING
         Debug::Log(LogLevel::DEBUG, "Loading MTL file: '%s'", mtlPath.c_str());
+#endif
 
         if (!std::filesystem::exists(mtlPath)) {
-            Debug::Log(LogLevel::WARN, "MTL file does not exist: '%s'", mtlPath.c_str());
+            Debug::Log(WARN, "MTL file does not exist: '%s'", mtlPath.c_str());
         }
 
         unordered_map<string, Material> materials;
 
         ifstream file(mtlPath);
         if (!file.is_open()) {
-            Debug::Log(LogLevel::WARN, "Failed to open MTL file: %s", mtlPath.c_str());
+            Debug::Log(WARN, "Failed to open MTL file: %s", mtlPath.c_str());
             return materials;
         }
 
@@ -333,7 +364,7 @@ namespace ng::Assets {
             }
         }
 
-        Debug::Log(LogLevel::DEBUG, "Loaded %zu materials from %s", materials.size(), mtlPath.c_str());
+        Debug::Log(LOG, "Loaded %zu materials from %s", materials.size(), mtlPath.c_str());
         return materials;
     }
 
@@ -360,7 +391,7 @@ namespace ng::Assets {
             resultMeshRenderer->shader = defaultShader;
 
             if (defaultShader == nullptr) {
-                Debug::Log(LogLevel::ERROR, "Failed to load shader while loading .obj as gameObject.\n.OBJ path: '%s'.", objFilePath);
+                Debug::Log(ERROR, "Failed to load shader while loading .obj as gameObject.\n.OBJ path: '%s'.", objFilePath);
             }
         }
 

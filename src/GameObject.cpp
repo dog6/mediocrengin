@@ -24,8 +24,16 @@ namespace ng::Core {
 
     Component* GameObject::GetComponentByName(const std::string& type)
     {
-        if (type == "Transform") return GetComponent<Transform>();
-        if (type == "MeshRenderer") return GetComponent <MeshRenderer>();
+        if (type == "Transform") {
+            auto* comp = GetComponent<Transform>();
+            Debug::Log(LOG, "GetComponent Transform for '%s': %p", name.c_str(), comp);
+            return comp;
+        }
+        if (type == "MeshRenderer") {
+            auto* comp = GetComponent<MeshRenderer>();
+            Debug::Log(LOG, "GetComponent MeshRenderer for '%s': %p", name.c_str(), comp);
+            return comp;
+        }
         return nullptr;
     }
 

@@ -1,6 +1,8 @@
 // objFileParser.hpp
 #pragma once
 
+#define NG_QUIET_PARSING
+
 #include <string>
 #include <vector>
 #include <string_view>
@@ -16,7 +18,6 @@
 
 #include <AVGNG/ShaderLoader.hpp>
 #include <AVGNG/GameObject.hpp>
-
 
 namespace ng::Assets {
 

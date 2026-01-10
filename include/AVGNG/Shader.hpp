@@ -10,13 +10,14 @@ namespace ng::Graphics {
 
         class Shader {
         public:
+            Shader(const char* vertexCode, const char* fragmentCode);
+            ~Shader();
             unsigned int ID;
 
             static std::string ReadShaderFile(const char* shader_filePath);
 
             static Shader* LoadShader(const char* vertex_shader_filePath, const char* frag_shader_filePath);
 
-            Shader(const char* vertexCode, const char* fragmentCode);
 
             void Use();
 

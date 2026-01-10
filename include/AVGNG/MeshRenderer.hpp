@@ -17,8 +17,8 @@ namespace ng::Graphics {
 		void SetMesh(ng::Graphics::Mesh* mesh);
 		Mesh* GetMesh();
 
-		void LoadMeshWithOBJPath(const char* objPath);
-		void LoadMeshShader(const char* vertShaderPath, const char* fragShaderPath);
+		void LoadMesh(const char* objPath);
+		void LoadShader(const char* vertShaderPath, const char* fragShaderPath);
 	};
 
 }

@@ -6,18 +6,19 @@ namespace ng::Graphics {
 
     void MeshRenderer::Draw(Camera& camera, Transform& transform)
     {
+
         // Early validation checks
         if (this->shader == nullptr) {
             Debug::Log(LogLevel::ERROR, "Shader is null in MeshRenderer::Draw");
             return;
         }
 
-        if (this->GetMesh() == nullptr) {
+        if (this->mesh == nullptr) {
             Debug::Log(LogLevel::ERROR, "Mesh is null in MeshRenderer::Draw");
             return;
         }
 
-        if (mesh->indices.size() == 0) {
+        if (this->mesh->indices.size() == 0) {
             Debug::Log(LogLevel::WARN, "Mesh has no indices");
             return;
         }
@@ -59,15 +60,24 @@ namespace ng::Graphics {
         glBindVertexArray(0);
     }
 
+    
+    // Getters & Setters
     void MeshRenderer::SetMesh(Mesh* mesh)
     {
         this->mesh = mesh;
     }
-
     Mesh* MeshRenderer::GetMesh() { return this->mesh; }
 
-    void MeshRenderer::LoadMeshWithOBJPath(const char* objPath)
+    /// <summary>
+    /// Loads a mesh for this->mesh using a given .obj file path
+    /// </summary>
+    /// <param name="objPath">.obj file path</param>
+    void MeshRenderer::LoadMesh(const char* objPath)
     {
+        Debug::Log(DEBUG, "LoadMesh called on MeshRenderer %p", (void*)this);
+        Debug::Log(DEBUG, "    .OBJ Path: '%s'", objPath);
+
+
         Mesh* loadedMesh = ng::Assets::ObjFileParser::LoadObjFromFileAsMesh(objPath);
     
         if (loadedMesh == nullptr) {
@@ -81,13 +91,42 @@ namespace ng::Graphics {
 
     }
 
-    void MeshRenderer::LoadMeshShader(const char* vertShaderPath, const char* fragShaderPath) {
-        this->shader = ng::Assets::ShaderLoader::LoadShader(vertShaderPath, fragShaderPath);
+    /// <summary>
+    /// Loads a shader for this->mesh using given vertex and fragment shader path.
+    /// </summary>
+    /// <param name="vertShaderPath">path to shader.vert file</param>
+    /// <param name="fragShaderPath">path to shader.frag file</param>
+    void MeshRenderer::LoadShader(const char* vertShaderPath, const char* fragShaderPath) {
 
-        if (this->shader == nullptr) {
-            Debug::Log(ERROR, "Failed to load mesh shader.\n    Vertex Shader: '%s'\n    Fragment Shader: '%s'", vertShaderPath, fragShaderPath);
+        Debug::Log(DEBUG, "LoadShader called on MeshRenderer %p", (void*)this);
+        Debug::Log(DEBUG, "    Vertex: '%s'", vertShaderPath);
+        Debug::Log(DEBUG, "    Fragment: '%s'", fragShaderPath);
+
+        if (!std::filesystem::exists(vertShaderPath)) {
+            Debug::Log(ERROR, "Failed to load vertex shader for MeshRenderer %p", (void*)this);
+            Debug::Log(ERROR, "    Path: '%s'", vertShaderPath);
+            return;
         }
 
+        if (!std::filesystem::exists(fragShaderPath)) {
+            Debug::Log(ERROR, "Failed to load fragment shader for MeshRenderer %p", (void*)this);
+            Debug::Log(ERROR, "    Path: '%s'", fragShaderPath);
+            return;
+        }
+
+        Shader* loadedShader = ng::Assets::ShaderLoader::LoadShader(vertShaderPath, fragShaderPath);
+
+        if (loadedShader == nullptr) {
+            Debug::Log(ERROR, "Failed to load mesh shader.\n    Vertex Shader: '%s'\n    Fragment Shader: '%s'", vertShaderPath, fragShaderPath);
+            return;
+        }
+
+        Debug::Log(LOG, "Sucessfully loaded shader for MeshRenderer %p", (void*)this);
+        Debug::Log(LOG, "    Vertex: '%s'", vertShaderPath);
+        Debug::Log(LOG, "    Fragment: '%s'", fragShaderPath);
+        
+        this->shader = loadedShader;
+    
     }
 
 }
