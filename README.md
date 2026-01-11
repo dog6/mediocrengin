@@ -1,12 +1,19 @@
-### .OBJ File Parsing
+<details>
+  <summary>.OBJ File Parsing</summary>
 <img width="997" height="582" alt="image" src="https://github.com/user-attachments/assets/f92908fd-9ea8-4247-8a62-08fcbb94681f" />
+</details>
 
-### .MTL Parsing and texture rendering
-<img width="997" height="619" alt="image" src="https://github.com/user-attachments/assets/6248012b-08e1-4aa4-b0cc-d896fd895824" />
+<details>
+  <summary>.MTL Parsing & texture rendering</summary>
+  <img width="997" height="619" alt="image" src="https://github.com/user-attachments/assets/6248012b-08e1-4aa4-b0cc-d896fd895824" />
+</details>
 
-### Basic lighting from the sun, using cached shaders and materials
-<img width="1276" height="711" alt="image" src="https://github.com/user-attachments/assets/ac49bba3-15aa-453a-97eb-7a016d491649" />
+<details>
+  <summary>Basic lighting from sun, using cached shaders & materials</summary>
+  <img width="1276" height="711" alt="image" src="https://github.com/user-attachments/assets/ac49bba3-15aa-453a-97eb-7a016d491649" />
+</details>
 
-### GIF to demonstrate basic phong lighting using a static sun.
-<img width="997" alt="spinning_cube" src="https://github.com/user-attachments/assets/26c5bade-b016-452f-ae66-d0aa9ed9dd24" />
-
+<details>
+  <summary>GIF to demonstrate basic phong lighting using a single source (the sun)</summary>
+  <img width="997" alt="spinning_cube" src="https://github.com/user-attachments/assets/26c5bade-b016-452f-ae66-d0aa9ed9dd24" />
+</details>
