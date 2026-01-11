@@ -85,7 +85,13 @@ namespace ng::Scripting {
 
 	void LuaManager::Init(ng::Core::Scene* scene)
 	{
-		m_lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math);
+		m_lua.open_libraries(
+			sol::lib::base,
+			sol::lib::package,
+			sol::lib::math,
+			sol::lib::table,
+			sol::lib::io
+		);
 
 		if (m_lua["print"].valid()) {
 			Debug::Log(LOG, "C++ Verify: 'print' is valid in Lua state.");
