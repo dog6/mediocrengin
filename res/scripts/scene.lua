@@ -1,4 +1,4 @@
-print("=== example.lua started ===")
+print("--- Example Scene Lua Script Loaded ---")
 print("Scene exists: ", scene ~= nil)
 print("Scene Type: ", type(scene))
 

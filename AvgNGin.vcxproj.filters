@@ -90,6 +90,9 @@
     <ClCompile Include="src\ShaderLoader.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="src\KeyboardInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AVGNG\Camera.hpp">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="include\AVGNG\Core.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\KeyboardInput.hpp">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

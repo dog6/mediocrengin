@@ -5,6 +5,7 @@
 namespace ng::Graphics {
 
         class Camera {
+
             public:
                 glm::vec3 position;
                 glm::vec3 target;
@@ -23,6 +24,7 @@ namespace ng::Graphics {
                 glm::mat4 GetProjectionMatrix(float width, float height) {
                     return glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
                 }
+
         };
 
 }

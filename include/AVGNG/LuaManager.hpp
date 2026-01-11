@@ -10,16 +10,21 @@ namespace ng::Scripting {
 
 	class LuaManager {
 
-	private:
-		static void BindToLua(sol::state& lua);
-		static sol::state m_lua;
-
 	public:
-		static void Init(ng::Core::Scene* scene);
-		static sol::state& GetState();
+		struct LuaScript {
+			sol::state lua;
+			std::string filepath;
+		};
 
-		static void Update(float deltaTime);
 		static void Load(ng::Core::Scene* scene, const char* scriptPath);
+		static void Update(float deltaTime);
+		static void BindToLua(sol::state& lua);
+		static void Cleanup();
+
+	private:
+
+		static std::vector<LuaScript> s_scripts;
+
 
 	};
 

@@ -1,4 +1,3 @@
-// objFileParser.hpp
 #pragma once
 
 #define NG_QUIET_PARSING

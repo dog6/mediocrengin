@@ -34,6 +34,11 @@ namespace ng::Core {
 		void SetRotation(glm::vec3 rot);
 		void SetScale(glm::vec3 scale);
 
+		glm::vec3 GetPosition() const { return position; }
+		glm::vec3 GetRotation() const { return rotation; }
+		glm::vec3 GetScale() const { return scale; }
+	
+	
 	};
 
 }

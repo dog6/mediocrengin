@@ -142,6 +142,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\KeyboardInput.cpp" />
     <ClCompile Include="src\LuaManager.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshRenderer.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="include\AVGNG\Game.hpp" />
     <ClInclude Include="include\AVGNG\GameObject.hpp" />
     <ClInclude Include="include\AVGNG\Graphics.hpp" />
+    <ClInclude Include="include\AVGNG\KeyboardInput.hpp" />
     <ClInclude Include="include\AVGNG\LuaManager.hpp" />
     <ClInclude Include="include\AVGNG\Material.hpp" />
     <ClInclude Include="include\AVGNG\Mesh.hpp" />

@@ -18,6 +18,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include <AVGNG/KeyboardInput.hpp>
 
 // Graphics
 #include <AVGNG/Graphics.hpp>

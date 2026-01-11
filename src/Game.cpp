@@ -6,57 +6,57 @@ using namespace ng::Assets;
 
 namespace ng {
 
-GLFWwindow* gameWindow;
+    GLFWwindow* gameWindow;
 
 
-Camera* camera = new ng::Graphics::Camera();
-Scene* activeScene = new Scene(camera, "Development Scene");
+    Camera* camera = new ng::Graphics::Camera();
+    Scene* activeScene = new Scene(camera, "Development Scene");
 
-// Helper Methods
-static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
+    // Helper Methods
+    static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
 
-    // Setup Debug Logging
-    Debug::Init("game.log");
+        // Setup Debug Logging
+        Debug::Init("game.log");
 
-    Debug::Log(LOG, "Initializing game window..");
+        Debug::Log(LOG, "Initializing game window..");
 
-    if (!glfwInit()) {
-        Debug::Log(FATAL, "Failed to initialize GLFW instance");
-        return;
+        if (!glfwInit()) {
+            Debug::Log(FATAL, "Failed to initialize GLFW instance");
+            return;
+        }
+
+        // Set OpenGL version
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        /* Create a windowed mode window and its OpenGL context */
+        gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
+
+        if (!gameWindow) {
+            Debug::Log(FATAL, "Failed to create GLFW window");
+            glfwTerminate();
+            return;
+        }
+
+        glfwMakeContextCurrent(gameWindow);
+
+
+        // Initialize GLAD
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+            Debug::Log(FATAL, "Failed to initialize GLAD");
+            return;
+        }
+
+        glEnable(GL_DEPTH_TEST);
+        glViewport(0, 0, window_width, window_height);
+        //glEnable(GL_CULL_FACE);
+        //glCullFace(GL_BACK);
+
+        Debug::Log(LOG, "Successfully created game window.");
+
+
     }
-
-    // Set OpenGL version
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    /* Create a windowed mode window and its OpenGL context */
-    gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
-
-    if (!gameWindow) {
-        Debug::Log(FATAL, "Failed to create GLFW window");
-        glfwTerminate();
-        return;
-    }
-
-    glfwMakeContextCurrent(gameWindow);
-
-
-    // Initialize GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        Debug::Log(FATAL, "Failed to initialize GLAD");
-        return;
-    }
-
-    glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, window_width, window_height);
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
-
-    Debug::Log(LOG, "Successfully created game window.");
-
-
-}
 
     // Constructor
     Game::Game() {
@@ -79,15 +79,19 @@ static void InitializeGameWindow(int window_width, int window_height, const char
         
         Time::Init();
 
-        ng::Scripting::LuaManager::Init(activeScene);
-
     }
 
     // Game Methods
     void Game::Load()
     {
+
+        // Load input handler
+        ng::Core::KeyboardInput::Init(gameWindow);
+
         // Load lua scene script
-         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/dev.lua");
+         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
+		 ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/noclip.lua");
+
 
         // Load active scene
         if (activeScene != nullptr) {
@@ -95,13 +99,6 @@ static void InitializeGameWindow(int window_width, int window_height, const char
         }
 
         activeScene->Load();
-
-        // Load Cube Mesh
-        //cubeObj = LoadObjAsGameObject("Cube", "./res/models/mdl_grass_cube.obj", defaultShader);
-        //cubeObj = LoadObjAsGameObject("Cube", "./res/models/textured_cube.obj", defaultShader);
-        // Load Terrain Mesh
-        //terrainObj = LoadObjAsGameObject("Terrain", "res/models/mdl_terrain.obj", defaultShader);
-
 
         Debug::Log(LogLevel::LOG, "Loading completed.");
 
