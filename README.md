@@ -11,9 +11,5 @@
 <details>
   <summary>Basic lighting from sun, using cached shaders & materials</summary>
   <img width="1276" height="711" alt="image" src="https://github.com/user-attachments/assets/ac49bba3-15aa-453a-97eb-7a016d491649" />
-</details>
-
-<details>
-  <summary>GIF to demonstrate basic phong lighting using a single source (the sun)</summary>
-  <img width="997" alt="spinning_cube" src="https://github.com/user-attachments/assets/26c5bade-b016-452f-ae66-d0aa9ed9dd24" />
+    <img width="997" alt="spinning_cube" src="https://github.com/user-attachments/assets/26c5bade-b016-452f-ae66-d0aa9ed9dd24" />
 </details>
