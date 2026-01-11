@@ -9,15 +9,14 @@
 namespace ng::Graphics {
 
         class Shader {
+
         public:
-            Shader(const char* vertexCode, const char* fragmentCode);
+            Shader();
             ~Shader();
-            unsigned int ID;
+            unsigned int ID = 0; // default ID to 0
 
-            static std::string ReadShaderFile(const char* shader_filePath);
-
-            static Shader* LoadShader(const char* vertex_shader_filePath, const char* frag_shader_filePath);
-
+   
+            void Build(const char* vertexCode, const char* fragmentCode);
 
             void Use();
 

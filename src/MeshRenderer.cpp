@@ -8,12 +8,12 @@ namespace ng::Graphics {
     {
 
         // Early validation checks
-        if (this->shader == nullptr) {
+        if (!this->shader) {
             Debug::Log(LogLevel::ERROR, "Shader is null in MeshRenderer::Draw");
             return;
         }
 
-        if (this->mesh == nullptr) {
+        if (!this->mesh) {
             Debug::Log(LogLevel::ERROR, "Mesh is null in MeshRenderer::Draw");
             return;
         }
@@ -22,17 +22,19 @@ namespace ng::Graphics {
             Debug::Log(LogLevel::WARN, "Mesh has no indices");
             return;
         }
+        
+        // Use shader
+        this->shader->Use();
 
         // Get matrices
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = camera.GetProjectionMatrix(1280, 720);
         glm::mat4 model = transform.GetModelMatrix();
 
-        // Use shader and set uniforms
-        shader->Use();
-        shader->SetMat4("view", view);
-        shader->SetMat4("projection", projection);
-        shader->SetMat4("model", model);
+        // Set matrices
+        this->shader->SetMat4("view", view);
+        this->shader->SetMat4("projection", projection);
+        this->shader->SetMat4("model", model);
 
         // Set material properties
         if (mesh->material) {
@@ -44,22 +46,24 @@ namespace ng::Graphics {
         }
 
         // Bind and draw
-        glBindVertexArray(mesh->VAO);
+        glBindVertexArray(this->mesh->VAO);
 
         // Bind texture if available
-        if (mesh->material && mesh->material->diffuseTexID > 0) {
+        if (this->mesh->material && this->mesh->material->diffuseTexID > 0) {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, mesh->material->diffuseTexID);
-            shader->SetInt("diffuseMap", 0);
+            glBindTexture(GL_TEXTURE_2D, this->mesh->material->diffuseTexID);
+            this->shader->SetInt("diffuseMap", 0);
+        }
+        else {
+			Debug::Log(WARN, "Failed to bind texture to MeshRenderer %p", (void*)this);
         }
 
         // Draw the mesh
-        glDrawElements(GL_TRIANGLES, (GLsizei)mesh->indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, (GLsizei)this->mesh->indices.size(), GL_UNSIGNED_INT, 0);
 
         // Cleanup
         glBindVertexArray(0);
     }
-
     
     // Getters & Setters
     void MeshRenderer::SetMesh(Mesh* mesh)
@@ -67,6 +71,7 @@ namespace ng::Graphics {
         this->mesh = mesh;
     }
     Mesh* MeshRenderer::GetMesh() { return this->mesh; }
+
 
     /// <summary>
     /// Loads a mesh for this->mesh using a given .obj file path
@@ -91,12 +96,13 @@ namespace ng::Graphics {
 
     }
 
+
     /// <summary>
     /// Loads a shader for this->mesh using given vertex and fragment shader path.
     /// </summary>
     /// <param name="vertShaderPath">path to shader.vert file</param>
     /// <param name="fragShaderPath">path to shader.frag file</param>
-    void MeshRenderer::LoadShader(const char* vertShaderPath, const char* fragShaderPath) {
+    void MeshRenderer::LoadShader(const char* shaderName, const char* vertShaderPath, const char* fragShaderPath) {
 
         Debug::Log(DEBUG, "LoadShader called on MeshRenderer %p", (void*)this);
         Debug::Log(DEBUG, "    Vertex: '%s'", vertShaderPath);
@@ -114,18 +120,20 @@ namespace ng::Graphics {
             return;
         }
 
-        Shader* loadedShader = ng::Assets::ShaderLoader::LoadShader(vertShaderPath, fragShaderPath);
+        Shader* loadedShader = ng::Assets::ShaderLoader::LoadShader(shaderName, vertShaderPath, fragShaderPath);
 
-        if (loadedShader == nullptr) {
+
+        if (!loadedShader) {
             Debug::Log(ERROR, "Failed to load mesh shader.\n    Vertex Shader: '%s'\n    Fragment Shader: '%s'", vertShaderPath, fragShaderPath);
+            this->shader = nullptr;
             return;
         }
 
+        this->shader = loadedShader;
         Debug::Log(LOG, "Sucessfully loaded shader for MeshRenderer %p", (void*)this);
         Debug::Log(LOG, "    Vertex: '%s'", vertShaderPath);
         Debug::Log(LOG, "    Fragment: '%s'", fragShaderPath);
         
-        this->shader = loadedShader;
     
     }
 

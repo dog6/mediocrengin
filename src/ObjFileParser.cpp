@@ -201,6 +201,7 @@ namespace ng::Assets {
                 glm::vec3 v = ProcessVertexPositions(line);
                 positions.emplace_back(v.x, v.y, v.z);
                 vertexCount++;
+
 #ifndef NG_QUIET_PARSING
                 Debug::Log(LogLevel::DEBUG, "Loaded vertex %d: (%f, %f, %f)\n", vertexCount, v.x, v.y, v.z);
 #endif
@@ -251,7 +252,11 @@ namespace ng::Assets {
                 std::filesystem::path mtlFullPath = objDir / mtlFile;
                 std::string mtlPath = mtlFullPath.string();
 
-                materials = LoadMaterialFromFile(mtlPath);
+                if (materials.empty()) {
+                    materials = LoadMaterialFromFile(mtlPath);
+                }
+                
+                // Otherwise material already loaded from previous call
 
 #ifndef NG_QUIET_PARSING
                 Debug::Log(LogLevel::DEBUG, "Found %zu materials\n    .obj file '%s'\n    .mtl file '%s'",

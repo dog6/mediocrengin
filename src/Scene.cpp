@@ -98,10 +98,15 @@ namespace ng::Core {
 			auto* meshRenderer = obj->GetComponent<MeshRenderer>();
 			auto* transform = obj->GetComponent<Transform>();
 
+			//Debug::Log(DEBUG, "Drawing MeshRenderer %p with shader %p ID: %d",
+				//meshRenderer, meshRenderer->shader,
+				//meshRenderer->shader ? meshRenderer->shader->ID : 0);
+
 			if (meshRenderer != nullptr && transform != nullptr) {
 				meshRenderer->Draw(*mainCamera, *transform);
 			}
 		}
+
 	}
 
 	void Scene::Unload() {

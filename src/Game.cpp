@@ -12,11 +12,6 @@ GLFWwindow* gameWindow;
 Camera* camera = new ng::Graphics::Camera();
 Scene* activeScene = new Scene(camera, "Development Scene");
 
-Shader* shader = nullptr;
-
-//GameObject* cubeObj = new GameObject("Cube");
-//GameObject* terrainObj = new GameObject("Terrain");
-
 // Helper Methods
 static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
 
@@ -94,9 +89,6 @@ static void InitializeGameWindow(int window_width, int window_height, const char
         // Load lua scene script
          ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/dev.lua");
 
-        // Load default shader
-        Shader* defaultShader = ShaderLoader::LoadDefaultShader();
-
         // Load active scene
         if (activeScene != nullptr) {
             activeScene->Load();
@@ -133,18 +125,12 @@ static void InitializeGameWindow(int window_width, int window_height, const char
         {
             Time::Update();
 
-            // Update
-            //cubeRotation -= 2.0f * Time::DeltaTime(); // 2 rads/second
-            //cubeTF->SetRotation(glm::vec3(cubeRotation, 0, cubeRotation));
             activeScene->Update();
 
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glDisable(GL_CULL_FACE);  // Before drawing
 
-            // Draw    
-            /*cubeMR->Draw(*camera, *cubeTF);
-            terrainMR->Draw(*camera, *terrainTF);*/
             activeScene->Render();
 
             // Check for GL errors 

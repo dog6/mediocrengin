@@ -2,44 +2,35 @@ print("--- Lua Example Start ---")
 print("Scene exists: ", scene ~= nil)
 print("Scene Type: ", type(scene))
 
--- TODO second cube missing shader for some reason
+-- ---- Cube 1 ----
+local cube1 = scene:CreateGameObject("Cube1")
+local mr1 = cube1:AddComponent("MeshRenderer")
+local renderer1 = cube1:GetComponent("MeshRenderer")
 
-local cubeObj = scene:CreateGameObject("Cube")
-local cubeTwoObj = scene:CreateGameObject("Second cube")
+renderer1:LoadMesh("res/models/mdl_grass_cube.obj")
+renderer1:LoadShader("Default", "res/shaders/vertexShaders/defaultShader.vert",
+                     "res/shaders/fragShaders/defaultShader.frag")
 
-print("Cube 1 created:", cubeObj ~= nil)
-print("Cube 2 created:", cubeTwoObj ~= nil)
+local tf1 = cube1:GetComponent("Transform")
+tf1:SetPosition(-3, 0, -10)
 
-cubeObj:AddComponent("MeshRenderer")
-cubeTwoObj:AddComponent("MeshRenderer")
+-- ---- Cube 2 ----
+local cube2 = scene:CreateGameObject("Cube2")
+local mr2 = cube2:AddComponent("MeshRenderer")
+local renderer2 = cube2:GetComponent("MeshRenderer")
 
-local cubeMR = cubeObj:GetComponent("MeshRenderer")
-local cubeTwoMR = cubeTwoObj:GetComponent("MeshRenderer")
+renderer2:LoadMesh("res/models/mdl_grass_cube.obj")
+renderer2:LoadShader("Default2", "res/shaders/vertexShaders/defaultShader.vert",
+                     "res/shaders/fragShaders/defaultShader.frag")
 
-print("Cube 1 MeshRenderer:", cubeMR ~= nil)
-print("Cube 2 MeshRenderer:", cubeTwoMR ~= nil)
-print("Are they the same object?:", cubeMR == cubeTwoMR)
+local tf2 = cube2:GetComponent("Transform")
+tf2:SetPosition(3, 0, -10)
 
-cubeMR:LoadMesh("res/models/mdl_grass_cube.obj")
-print("Cube 1 mesh loaded")
-cubeMR:LoadShader("res/shaders/vertexShaders/defaultShader.vert", "res/shaders/fragShaders/defaultShader.frag")
-print("Cube 1 shader loaded")
-
-cubeTwoMR:LoadMesh("res/models/mdl_grass_cube.obj")
-print("Cube 2 mesh loaded")
-cubeTwoMR:LoadShader("res/shaders/vertexShaders/defaultShader.vert", "res/shaders/fragShaders/defaultShader.frag")
-print("Cube 2 shader loaded")
-
-local cubeTF = cubeObj:GetComponent("Transform")
-cubeTF:SetPosition(-3, 0, -10)
-
-local cubeTwoTF = cubeTwoObj:GetComponent("Transform")
-cubeTwoTF:SetPosition(3, 0, -10)
-
+-- ---- Rotation ----
 local rotation = 0
 
 function OnUpdate(deltaTime)
     rotation = rotation + (2 * deltaTime)
-    cubeTF:SetRotation(rotation, 0, rotation)
-    -- cubeTwoTF:SetRotation(rotation, 0, rotation)
+    tf1:SetRotation(rotation, 0, rotation)
+    tf2:SetRotation(rotation, 0, rotation)
 end

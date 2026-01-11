@@ -4,103 +4,128 @@ using namespace ng::Core;
 using namespace ng::Assets;
 
 namespace ng::Graphics {
-    std::string Shader::ReadShaderFile(const char* shader_filePath)
-    {
 
-        std::ifstream file = FileReader::ReadFile(shader_filePath);
-        if (!file.is_open()) {
-            Debug::Log(LogLevel::ERROR, "Failed to load shader %s", shader_filePath);
-            return "";
+
+	// Constrctor & Destructor
+    Shader::Shader() {}
+    Shader::~Shader() {  }
+
+    // Shader Methods
+    void Shader::Build(const char* vertexCode, const char* fragmentCode)
+    {
+        int success;
+        char infoLog[512];
+        
+        Debug::Log(DEBUG, "Building shader program...");
+
+        //
+        // VERTEX SHADER
+        //
+        // Compile vertex shader
+        unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex, 1, &vertexCode, NULL);
+        glCompileShader(vertex);
+
+        // Check vertex shader
+        glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(vertex, 512, NULL, infoLog);
+            Debug::Log(LogLevel::ERROR, "ERROR: Vertex shader compilation failed\n%s\n", infoLog);
+        }
+        
+        //
+        // FRAGMENT SHADER
+        //
+        // Compile fragment shader
+        unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment, 1, &fragmentCode, NULL);
+        glCompileShader(fragment);
+
+        // Check fragment shader
+        glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(fragment, 512, NULL, infoLog);
+            Debug::Log(LogLevel::ERROR, "ERROR: Fragment shader compilation failed\n%s", infoLog);
         }
 
-        std::string vertShaderProgram;
+        // Link program
+        ID = glCreateProgram();
+        Debug::Log(DEBUG, "Created shader program with ID: %d", ID);
 
-        std::string line;
-        while (std::getline(file, line)) {
-            vertShaderProgram += line + "\n";
+        glAttachShader(ID, vertex);
+        glAttachShader(ID, fragment);
+        glLinkProgram(ID);
+
+        // Check linking
+        glGetProgramiv(ID, GL_LINK_STATUS, &success);
+        if (!success) {
+            glGetProgramInfoLog(ID, 512, NULL, infoLog);
+            Debug::Log(LogLevel::ERROR, "ERROR: Shader program linking failed\n%s\n", infoLog);
         }
 
-        return vertShaderProgram;
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+
+        Debug::Log(LogLevel::DEBUG, "Shader created successfully! ID: %d\n", ID);
     }
-
-    Shader* Shader::LoadShader(const char* vertex_shader_filePath, const char* frag_shader_filePath)
-    {
-
-        Debug::Log(LogLevel::DEBUG, "Loading shaders:\n\t- Vertex: %s\n\t- Fragment: %s\n", vertex_shader_filePath, frag_shader_filePath);
-
-        // Read vertex shader
-        std::string vertShader = ReadShaderFile(vertex_shader_filePath);
-        std::string fragShader = ReadShaderFile(frag_shader_filePath);
-
-        Shader* result = new Shader(vertShader.c_str(), fragShader.c_str());
-        return result;
-
-    }
-
-
-    Shader::Shader(const char* vertexCode, const char* fragmentCode)
-    {
-        {
-            int success;
-            char infoLog[512];
-
-            // Compile vertex shader
-            unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
-            glShaderSource(vertex, 1, &vertexCode, NULL);
-            glCompileShader(vertex);
-
-            // Check vertex shader
-            glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
-            if (!success) {
-                glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-                Debug::Log(LogLevel::ERROR, "ERROR: Vertex shader compilation failed\n%s\n", infoLog);
-            }
-
-            // Compile fragment shader
-            unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
-            glShaderSource(fragment, 1, &fragmentCode, NULL);
-            glCompileShader(fragment);
-
-            // Check fragment shader
-            glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
-            if (!success) {
-                glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-                Debug::Log(LogLevel::ERROR, "ERROR: Fragment shader compilation failed\n%s", infoLog);
-            }
-
-            // Link program
-            ID = glCreateProgram();
-            glAttachShader(ID, vertex);
-            glAttachShader(ID, fragment);
-            glLinkProgram(ID);
-
-            // Check linking
-            glGetProgramiv(ID, GL_LINK_STATUS, &success);
-            if (!success) {
-                glGetProgramInfoLog(ID, 512, NULL, infoLog);
-                Debug::Log(LogLevel::ERROR, "ERROR: Shader program linking failed\n%s\n", infoLog);
-            }
-
-            glDeleteShader(vertex);
-            glDeleteShader(fragment);
-
-            Debug::Log(LogLevel::DEBUG, "Shader created successfully! ID: %d\n", ID);
-        }
-    }
-
-    Shader::~Shader()
-    {
-    }
-
 
     void Shader::Use()
     {
+        // HUGE PERFORMANCE LOSS!!
+        // Currently calling every frame, even if this shader is already bound
+        
+        // Flush all existing errors first so we don't catch old bugs
+        while (glGetError() != GL_NO_ERROR);
+
+        // Check if shader ID is valid
+        if (this->ID == 0) {
+            Debug::Log(ERROR, "Trying to use shader with ID 0!");
+            return;
+        }
+
+        // Check lua script validity
+        if (!glIsProgram(ID)) {
+            Debug::Log(ERROR, "Shader ID %d is not a valid shader program!", ID);
+            return;
+        }
+
+        glValidateProgram(ID);
+        GLint status;
+        glGetProgramiv(ID, GL_VALIDATE_STATUS, &status);
+        if (status == GL_FALSE) {
+            char infoLog[512];
+            glGetProgramInfoLog(ID, 512, NULL, infoLog);
+            Debug::Log(ERROR, "Shader Validation Failed: %s", infoLog);
+        }
+
+        // Debug::Log(DEBUG, "! ---- Using shader program ID: %d", ID);
         glUseProgram(ID);
+
+        GLenum err = glGetError();
+        if (err != GL_NO_ERROR) {
+            Debug::Log(ERROR, "Error using shader %d: %d", ID, err);
+        }
+	
     }
 
     void Shader::SetMat4(const char* name, glm::mat4 matrix)
     {
-        glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, glm::value_ptr(matrix));
+        GLint location = glGetUniformLocation(ID, name);
+        if (location == -1) {
+            Debug::Log(WARN, "Uniform '%s' not found in shader %d", name, ID);
+            return;
+        }
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
+    void Shader::SetVec3(const char* name, glm::vec3 vec)
+    {
+        GLint location = glGetUniformLocation(ID, name);
+        if (location == -1) {
+            Debug::Log(WARN, "Uniform '%s' not found in shader %d", name, ID);
+            return;
+        }
+        glUniform3f(location, vec.x, vec.y, vec.z);
     }
 
     void Shader::SetVec4(const char* name, glm::vec4 vec)
@@ -108,14 +133,15 @@ namespace ng::Graphics {
         glUniform4f(glGetUniformLocation(ID, name), vec.x, vec.y, vec.z, vec.w);
     }
 
-    void Shader::SetVec3(const char* name, glm::vec3 vec)
-    {
-        glUniform3f(glGetUniformLocation(ID, name), vec.x, vec.y, vec.z);
-    }
-
     void Shader::SetInt(const char* name, int v)
     {
-        glUniform1i(glGetUniformLocation(ID, name), v);
+        GLint location = glGetUniformLocation(ID, name);
+        if (location == -1) {
+            Debug::Log(WARN, "Uniform '%s' not found in shader %d", name, ID);
+            return;
+        }
+        glUniform1i(location, v);
     }
+   
 
 }
