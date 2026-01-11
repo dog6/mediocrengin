@@ -107,13 +107,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glfw3_mt.lib;glfw3dll.lib;opengl32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glfw3_mt.lib;glfw3dll.lib;opengl32.lib;gdi32.lib;shell32.lib;lua54.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -125,6 +126,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,24 +137,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FileReader.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="ObjFileParser.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="src\Debug.cpp" />
+    <ClCompile Include="src\FileReader.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\LuaManager.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\MeshRenderer.cpp" />
+    <ClCompile Include="src\ObjFileParser.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShaderLoader.cpp" />
+    <ClCompile Include="src\Source.cpp" />
+    <ClCompile Include="src\Time.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.hpp" />
-    <ClInclude Include="FileReader.hpp" />
-    <ClInclude Include="Game.hpp" />
-    <ClInclude Include="GameObject.hpp" />
-    <ClInclude Include="Mesh.hpp" />
-    <ClInclude Include="ObjFileParser.hpp" />
-    <ClInclude Include="Renderer.hpp" />
-    <ClInclude Include="Shader.hpp" />
-    <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="include\AVGNG\Camera.hpp" />
+    <ClInclude Include="include\AVGNG\Component.hpp" />
+    <ClInclude Include="include\AVGNG\Core.hpp" />
+    <ClInclude Include="include\AVGNG\Debug.hpp" />
+    <ClInclude Include="include\AVGNG\FileReader.hpp" />
+    <ClInclude Include="include\AVGNG\Game.hpp" />
+    <ClInclude Include="include\AVGNG\GameObject.hpp" />
+    <ClInclude Include="include\AVGNG\Graphics.hpp" />
+    <ClInclude Include="include\AVGNG\LuaManager.hpp" />
+    <ClInclude Include="include\AVGNG\Material.hpp" />
+    <ClInclude Include="include\AVGNG\Mesh.hpp" />
+    <ClInclude Include="include\AVGNG\MeshRenderer.hpp" />
+    <ClInclude Include="include\AVGNG\ObjFileParser.hpp" />
+    <ClInclude Include="include\AVGNG\Renderer.hpp" />
+    <ClInclude Include="include\AVGNG\Scene.hpp" />
+    <ClInclude Include="include\AVGNG\Shader.hpp" />
+    <ClInclude Include="include\AVGNG\ShaderLoader.hpp" />
+    <ClInclude Include="include\AVGNG\TexCoord.hpp" />
+    <ClInclude Include="include\AVGNG\Time.hpp" />
+    <ClInclude Include="include\AVGNG\Transform.hpp" />
+    <ClInclude Include="include\AVGNG\Vertex.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
