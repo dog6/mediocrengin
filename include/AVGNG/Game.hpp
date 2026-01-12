@@ -2,9 +2,9 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
+// Dependents
 #include<glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <cstdio>
 #include <string>
 #include <string_view>
@@ -14,17 +14,19 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+// Inputs
 #include <AVGNG/KeyboardInput.hpp>
+#include <AVGNG/MouseInput.hpp>
 
 // Graphics
 #include <AVGNG/Graphics.hpp>
 
 // Core
 #include <AVGNG/Core.hpp>
+#include <AVGNG/Cursor.hpp>
 
 // Scripting
 #include <AVGNG/LuaManager.hpp>

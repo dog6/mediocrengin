@@ -41,7 +41,7 @@ namespace ng::Graphics {
             shader->SetVec3("baseColor", mesh->material->Kd);
             shader->SetVec3("sunDirection", glm::normalize(glm::vec3(-0.3f, -1.0f, -0.5f)));
             shader->SetVec3("sunColor", glm::vec3(1.0f, 0.95f, 0.8f));
-            shader->SetVec3("viewPos", camera.position);
+            shader->SetVec3("viewPos", camera.GetPosition());
         }
         else {
             Debug::Log(LogLevel::WARN, "No material assigned, using magenta");

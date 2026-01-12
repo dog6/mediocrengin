@@ -1,11 +1,17 @@
 
+#include <AVGNG/LuaManager.hpp>
+
+
 #include <AVGNG/Scene.hpp>
 #include <AVGNG/GameObject.hpp>
 #include <AVGNG/Transform.hpp>
 #include <AVGNG/MeshRenderer.hpp>
-#include <AVGNG/LuaManager.hpp>
 #include <AVGNG/ObjFileParser.hpp>
+
 #include <AVGNG/KeyboardInput.hpp>
+#include <AVGNG/MouseInput.hpp>
+
+#include <AVGNG/Cursor.hpp>
 
 using namespace ng::Core;
 using namespace ng::Graphics;
@@ -69,16 +75,25 @@ namespace ng::Scripting {
 
 			lua.new_usertype<ng::Graphics::Camera>("Camera",
 				"SetPosition", [](ng::Graphics::Camera& cam, float x, float y, float z) {
-					cam.position = glm::vec3(x, y, z);
+					cam.SetPosition(glm::vec3(x, y, z));
 				},
 				"GetPosition", [](ng::Graphics::Camera& cam) {
-					return std::make_tuple(cam.position.x, cam.position.y, cam.position.z);
+					glm::vec3 camPos = cam.GetPosition();
+					return std::make_tuple(camPos.x, camPos.y, camPos.z);
 				},
 				"SetTarget", [](ng::Graphics::Camera& cam, float x, float y, float z) {
-					cam.target = glm::vec3(x, y, z);
+					cam.SetTarget(glm::vec3(x, y, z));
 				},
 				"GetTarget", [](ng::Graphics::Camera& cam) {
-					return std::make_tuple(cam.target.x, cam.target.y, cam.target.z);
+					glm::vec3 camTarget = cam.GetTarget();
+					return std::make_tuple(camTarget.x, camTarget.y, camTarget.z);
+				}, 
+				"SetUpwardDirection", [](ng::Graphics::Camera& cam, float x, float y, float z) {
+					cam.SetUp(glm::vec3(x, y, z));
+				},
+				"GetUpwardDirection", [](ng::Graphics::Camera& cam) {
+					glm::vec3 camUp = cam.GetUp();
+					return std::make_tuple(camUp.x, camUp.y, camUp.z);
 				}
 			);
 		  
@@ -130,12 +145,13 @@ namespace ng::Scripting {
 			}
 			catch (const sol::error& e) {
 				Debug::Log(ERROR, "Exception loading Lua script '%s': %s", filepath, e.what());
+				return;
 			}
 			
 
 			s_scripts.push_back(std::move(script));
 
-			Debug::Log(LOG, "Loaded Lua script: '%s'", filepath);
+			Debug::Log(LOG, " -> Loaded Lua script: '%s'\n\n", filepath);
 
 		}
 
@@ -177,7 +193,9 @@ namespace ng::Scripting {
 			RegisterCamera(lua);
 			
 			KeyboardInput::RegisterKeyboardWithLua(lua);
-			KeyboardInput::RegisterKeysWithLua(lua);
+			MouseInput::RegisterMouseWithLua(lua);
+
+			Cursor::RegisterCursorWithLua(lua);
 
 		}
 

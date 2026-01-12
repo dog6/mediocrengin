@@ -1,10 +1,10 @@
 print("=== voxel_wg.lua started ===")
 
 -- World settings
-local WORLD_SIZE = 12        -- 12x12 grid (144 columns)
+local WORLD_SIZE = 16        -- 12x12 grid (144 columns)
 local MAX_HEIGHT = 6         -- Maximum terrain height
 local BLOCK_SIZE = 2         -- Space between blocks
-local WORLD_Z = -30          -- Push back so we can see it all
+local WORLD_Z = 30          -- Push back so we can see it all
 
 -- Seed for world generation
 local WORLD_SEED = 123456789

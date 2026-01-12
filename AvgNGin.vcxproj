@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\AVGNG\Cursor.cpp" />
     <ClCompile Include="src\Debug.cpp" />
     <ClCompile Include="src\FileReader.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="src\LuaManager.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshRenderer.cpp" />
+    <ClCompile Include="src\MouseInput.cpp" />
     <ClCompile Include="src\ObjFileParser.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Scene.cpp" />
@@ -159,6 +161,7 @@
     <ClInclude Include="include\AVGNG\Camera.hpp" />
     <ClInclude Include="include\AVGNG\Component.hpp" />
     <ClInclude Include="include\AVGNG\Core.hpp" />
+    <ClInclude Include="include\AVGNG\Cursor.hpp" />
     <ClInclude Include="include\AVGNG\Debug.hpp" />
     <ClInclude Include="include\AVGNG\FileReader.hpp" />
     <ClInclude Include="include\AVGNG\Game.hpp" />
@@ -169,6 +172,7 @@
     <ClInclude Include="include\AVGNG\Material.hpp" />
     <ClInclude Include="include\AVGNG\Mesh.hpp" />
     <ClInclude Include="include\AVGNG\MeshRenderer.hpp" />
+    <ClInclude Include="include\AVGNG\MouseInput.hpp" />
     <ClInclude Include="include\AVGNG\ObjFileParser.hpp" />
     <ClInclude Include="include\AVGNG\Renderer.hpp" />
     <ClInclude Include="include\AVGNG\Scene.hpp" />

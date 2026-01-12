@@ -91,6 +91,12 @@
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
     <ClCompile Include="src\KeyboardInput.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MouseInput.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AVGNG\Cursor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,6 +165,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\AVGNG\KeyboardInput.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\MouseInput.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\Cursor.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

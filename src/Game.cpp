@@ -79,19 +79,20 @@ namespace ng {
         
         Time::Init();
 
+        // Initialize input handlers
+        MouseInput::Init(*gameWindow);
+        KeyboardInput::Init(gameWindow);
+        Cursor::Init(gameWindow);
+
     }
 
     // Game Methods
     void Game::Load()
     {
 
-        // Load input handler
-        ng::Core::KeyboardInput::Init(gameWindow);
-
         // Load lua scene script
-         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
+         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/scene.lua");
 		 ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/noclip.lua");
-
 
         // Load active scene
         if (activeScene != nullptr) {
@@ -126,7 +127,8 @@ namespace ng {
 
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //glDisable(GL_CULL_FACE);  // Before drawing
+
+
 
             activeScene->Render();
 

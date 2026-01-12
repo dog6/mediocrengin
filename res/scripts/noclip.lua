@@ -1,7 +1,8 @@
--- Handles no-clip camera movement only
+-- Handles no-clip camera movement and mouse look
 
 local speed = 10.0
 local fastMultiplier = 3.0
+local mouseSensitivity = 0.1
 
 function OnUpdate(dt)
     local moveSpeed = speed * dt
@@ -15,18 +16,15 @@ function OnUpdate(dt)
     local px, py, pz = camera:GetPosition()
     local tx, ty, tz = camera:GetTarget()
 
-    -- Calculate forward vector (normalized)
+    -- IMPORTANT: Must call GetMousePosition first to update internal state
+    local mdx, mdy = MouseInput.GetMouseDelta()
+    
+    -- Calculate current forward vector
     local fx = tx - px
     local fy = ty - py
     local fz = tz - pz
     local flen = math.sqrt(fx*fx + fy*fy + fz*fz)
     fx, fy, fz = fx/flen, fy/flen, fz/flen
-
-    -- Calculate HORIZONTAL forward vector (flatten Y for WASD movement)
-    local hfx = fx
-    local hfz = fz
-    local hflen = math.sqrt(hfx*hfx + hfz*hfz)
-    hfx, hfz = hfx/hflen, hfz/hflen
 
     -- Calculate right vector (cross product of forward and world up)
     local upx, upy, upz = 0, 1, 0
@@ -34,6 +32,47 @@ function OnUpdate(dt)
     local ry = fz*upx - fx*upz
     local rz = fx*upy - fy*upx
     local rlen = math.sqrt(rx*rx + ry*ry + rz*rz)
+    rx, ry, rz = rx/rlen, ry/rlen, rz/rlen
+
+    -- Apply mouse rotation
+    -- Horizontal rotation (yaw) around world up axis - FIXED: removed negative sign
+    local yawAngle = mdx * mouseSensitivity * dt
+    local cosYaw = math.cos(yawAngle)
+    local sinYaw = math.sin(yawAngle)
+    local nfx = fx * cosYaw - fz * sinYaw
+    local nfz = fx * sinYaw + fz * cosYaw
+    fx, fz = nfx, nfz
+
+    -- Vertical rotation (pitch) around right axis
+    -- Using the actual right vector for proper pitch rotation
+    local pitchAngle = mdy * mouseSensitivity * dt
+    
+    -- Rotate forward vector around the right vector
+    local dot = fx*rx + fy*ry + fz*rz
+    local cosPitch = math.cos(pitchAngle)
+    local sinPitch = math.sin(pitchAngle)
+    
+    fx = fx * cosPitch + (rx * dot * (1 - cosPitch) - (ry*fz - rz*fy) * sinPitch)
+    fy = fy * cosPitch + (ry * dot * (1 - cosPitch) - (rz*fx - rx*fz) * sinPitch)
+    fz = fz * cosPitch + (rz * dot * (1 - cosPitch) - (rx*fy - ry*fx) * sinPitch)
+
+    -- Re-normalize forward vector
+    flen = math.sqrt(fx*fx + fy*fy + fz*fz)
+    fx, fy, fz = fx/flen, fy/flen, fz/flen
+
+    -- Calculate HORIZONTAL forward vector (flatten Y for WASD movement)
+    local hfx = fx
+    local hfz = fz
+    local hflen = math.sqrt(hfx*hfx + hfz*hfz)
+    if hflen > 0.0001 then
+        hfx, hfz = hfx/hflen, hfz/hflen
+    end
+
+    -- Recalculate right vector for movement
+    rx = fy*upz - fz*upy
+    ry = fz*upx - fx*upz
+    rz = fx*upy - fy*upx
+    rlen = math.sqrt(rx*rx + ry*ry + rz*rz)
     rx, ry, rz = rx/rlen, ry/rlen, rz/rlen
 
     -- Apply movement
@@ -69,7 +108,9 @@ function OnUpdate(dt)
         dy = dy - moveSpeed
     end
 
-    -- Update camera position and target
+    -- Update camera position
     camera:SetPosition(px + dx, py + dy, pz + dz)
-    camera:SetTarget(tx + dx, ty + dy, tz + dz)
+    
+    -- Update camera target based on rotated forward vector
+    camera:SetTarget(px + dx + fx, py + dy + fy, pz + dz + fz)
 end

@@ -136,10 +136,11 @@ namespace ng::Core {
         static std::unordered_map<int, bool> s_KeyPressed;
         static std::unordered_map<int, bool> s_KeyReleased;
         static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void RegisterKeysWithLua(sol::state& lua);
+
     public:
 
         static void Init(GLFWwindow* gameWindow);
-        static void RegisterKeysWithLua(sol::state& lua);
         static void RegisterKeyboardWithLua(sol::state& lua);
 
         static bool IsKeyDown(Key key);        // Checks if key is currently held down
