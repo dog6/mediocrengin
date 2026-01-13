@@ -4,7 +4,25 @@ local speed = 10.0
 local fastMultiplier = 3.0
 local mouseSensitivity = 0.1
 
-function OnUpdate(dt)
+local cursorLocked = true
+
+-- Lock cursor to screen
+Cursor.SetCursorLockMode(CursorLockMode.LOCKED)
+
+function ListenForCursorLockToggle()
+ if (KeyboardInput.IsKeyPressed(Key.KEY_ESCAPE)) then
+        cursorLocked = not cursorLocked
+
+        if (cursorLocked) then
+            Cursor.SetCursorLockMode(CursorLockMode.LOCKED)
+        else
+            Cursor.SetCursorLockMode(CursorLockMode.NONE)
+        end
+
+    end
+end
+
+function HandleNoclip(dt)
     local moveSpeed = speed * dt
 
     -- Hold shift to move faster
@@ -108,9 +126,16 @@ function OnUpdate(dt)
         dy = dy - moveSpeed
     end
 
+
     -- Update camera position
     camera:SetPosition(px + dx, py + dy, pz + dz)
     
     -- Update camera target based on rotated forward vector
     camera:SetTarget(px + dx + fx, py + dy + fy, pz + dz + fz)
+
+end
+
+function OnUpdate(dt)
+    ListenForCursorLockToggle()
+    HandleNoclip(dt)
 end

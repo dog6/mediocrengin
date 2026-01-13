@@ -1,5 +1,4 @@
-#include "Cursor.hpp"
-
+#include <AVGNG/Cursor.hpp>
 
 namespace ng::Core {
 

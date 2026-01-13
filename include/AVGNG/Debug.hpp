@@ -1,8 +1,7 @@
 #pragma once
 
 // DEFINE NG_DEBUG_MODE in preprocessor to enable debug logging
-#define NG_DEBUG_MODE
-
+//#define NG_DEBUG_MODE
 #include <string>
 #include <iostream>
 #include <cstdio>

@@ -109,7 +109,6 @@ namespace ng::Scripting {
 		
 		std::vector<LuaManager::LuaScript> LuaManager::s_scripts;
 
-
 		/// <summary>
 		/// Loads a script file and binds it to the active scene.
 		/// </summary>

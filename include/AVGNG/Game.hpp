@@ -22,10 +22,18 @@
 #include <AVGNG/MouseInput.hpp>
 
 // Graphics
-#include <AVGNG/Graphics.hpp>
+#include <AVGNG/Camera.hpp>
+#include <AVGNG/Shader.hpp>
+#include <AVGNG/Mesh.hpp>
+#include <AVGNG/MeshRenderer.hpp>
+#include <AVGNG/Renderer.hpp>
 
 // Core
-#include <AVGNG/Core.hpp>
+#include <AVGNG/Time.hpp>
+#include <AVGNG/Transform.hpp>
+#include <AVGNG/GameObject.hpp>
+#include <AVGNG/Debug.hpp>
+#include <AVGNG/Scene.hpp>
 #include <AVGNG/Cursor.hpp>
 
 // Scripting
@@ -35,6 +43,15 @@
 #include <AVGNG/ObjFileParser.hpp>
 #include <AVGNG/ShaderLoader.hpp>
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
+#define NG_DEVELOPER_MODE
+
+#ifdef NG_DEVELOPER_MODE
+	#include <AVGNG/InspectorView.hpp>	
+#endif
 
 namespace ng::Core {
 
@@ -43,6 +60,8 @@ namespace ng::Core {
 			glm::uvec2 windowSize;
 
 		public:
+			static ng::Core::Scene* activeScene;
+			static ng::Graphics::Camera* camera;
 			Game();
 			Game(const char* title, glm::uvec2 size);
 			~Game();

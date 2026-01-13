@@ -100,9 +100,6 @@ print("Terrain generation complete!")
 print("Total blocks: " .. blockCount)
 print("World center: (0, 0, " .. WORLD_Z .. ")")
 
-function OnUpdate(deltaTime)
-end
-
 print("=== World Ready! ===")
 print("Seed: " .. WORLD_SEED .. " - Change WORLD_SEED for different terrain!")
 print("Tip: Position camera at (0, 10, 0) looking forward to see terrain")

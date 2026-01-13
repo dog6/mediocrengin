@@ -1,5 +1,4 @@
 #include <AVGNG/ShaderLoader.hpp>
-#include <AVGNG/Graphics.hpp>
 #include <AVGNG/Debug.hpp>
 
 using namespace ng::Core;

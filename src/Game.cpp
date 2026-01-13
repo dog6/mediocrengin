@@ -4,13 +4,15 @@ using namespace ng::Core;
 using namespace ng::Graphics;
 using namespace ng::Assets;
 
+#ifdef NG_DEVELOPER_MODE
+using namespace ng::Editor;
+#endif
 namespace ng {
 
     GLFWwindow* gameWindow;
 
-
-    Camera* camera = new ng::Graphics::Camera();
-    Scene* activeScene = new Scene(camera, "Development Scene");
+    Camera* Game::camera = new ng::Graphics::Camera();
+    Scene* Game::activeScene = new Scene(camera, "Development Scene");
 
     // Helper Methods
     static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
@@ -50,11 +52,8 @@ namespace ng {
 
         glEnable(GL_DEPTH_TEST);
         glViewport(0, 0, window_width, window_height);
-        //glEnable(GL_CULL_FACE);
-        //glCullFace(GL_BACK);
 
         Debug::Log(LOG, "Successfully created game window.");
-
 
     }
 
@@ -72,18 +71,40 @@ namespace ng {
     Game::~Game() {}
 
     // Before Load
-    void Core::Game::Init()
+    void Game::Init()
     {
         Debug::Log(LogLevel::LOG, "Loading game..");
         InitializeGameWindow(this->windowSize.x, this->windowSize.y, this->windowTitle);
         
         Time::Init();
 
+        // Setup IMGUI
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+        ImGui::StyleColorsDark(); // theme
+
+        float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
+        style.FontScaleDpi = main_scale;
+
+
+
         // Initialize input handlers
         MouseInput::Init(*gameWindow);
         KeyboardInput::Init(gameWindow);
         Cursor::Init(gameWindow);
 
+        // GL ES 3.0 + GLSL 300 es (WebGL 2.0)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+        ImGui_ImplOpenGL3_Init("#version 330");
+        ImGui_ImplGlfw_InitForOpenGL(gameWindow, true);
     }
 
     // Game Methods
@@ -91,7 +112,7 @@ namespace ng {
     {
 
         // Load lua scene script
-         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/scene.lua");
+         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
 		 ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/noclip.lua");
 
         // Load active scene
@@ -110,8 +131,12 @@ namespace ng {
         Debug::Log(LogLevel::LOG, "Game started.");
         activeScene->Start();
 
-    }
+#ifdef NG_DEVELOPER_MODE
+        InspectorView::Show();
+#endif
 
+    }
+	ImVec4 clearcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     void Game::Run()
     {
         Debug::Log(LogLevel::LOG, "Starting game loop.");
@@ -122,28 +147,40 @@ namespace ng {
         while (!glfwWindowShouldClose(gameWindow))
         {
             Time::Update();
+            glfwPollEvents();
 
-            activeScene->Update();
+            int display_w, display_h;
+            glfwGetFramebufferSize(gameWindow, &display_w, &display_h);
+            glViewport(0, 0, display_w, display_h);
 
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
+            activeScene->Update();
             activeScene->Render();
 
-            // Check for GL errors 
-            if (frameCount++ == 60) {
+            // Start ImGui frame
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
-                // Check for openGL errors
+#ifdef NG_DEVELOPER_MODE            
+            ng::Editor::InspectorView::Update();
+#endif
+
+            // End ImGui frame and render
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            if (frameCount++ == 60) {
                 GLenum err = glGetError();
                 if (err != GL_NO_ERROR) {
                     Debug::Log(LogLevel::ERROR, "OpenGL Error: %d", err);
                 }
+                frameCount = 0;
             }
 
             glfwSwapBuffers(gameWindow);
-            glfwPollEvents();
         }
 
         this->Exit();

@@ -27,12 +27,6 @@ function CreateMeshObject(name, modelPath)
     return go
 end
 
-local cursorLocked = true
-
--- Lock cursor to screen
-Cursor.SetCursorLockMode(CursorLockMode.LOCKED)
-
-
 local terrainGO = CreateMeshObject("Terrain", "./res/models/mdl_world.obj")
 local terrainTF = terrainGO:GetComponent("Transform")
 
@@ -56,16 +50,5 @@ function OnUpdate(deltaTime)
 
     ballTF:SetRotation(0, rot, 0)
     isoTF:SetRotation(0, rot, 0)
-
-    if (KeyboardInput.IsKeyPressed(Key.KEY_ESCAPE)) then
-        cursorLocked = not cursorLocked
-
-        if (cursorLocked) then
-            Cursor.SetCursorLockMode(CursorLockMode.LOCKED)
-        else
-            Cursor.SetCursorLockMode(CursorLockMode.NONE)
-        end
-
-    end
-
+   
 end
