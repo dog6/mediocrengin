@@ -132,11 +132,13 @@ namespace ng {
         activeScene->Start();
 
 #ifdef NG_DEVELOPER_MODE
-        InspectorView::Show();
+        EditorUI::ShowInspector();
+        EditorUI::ShowHierarchy();
 #endif
 
     }
-	ImVec4 clearcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+   
+    ImVec4 clearcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     void Game::Run()
     {
         Debug::Log(LogLevel::LOG, "Starting game loop.");
@@ -165,7 +167,7 @@ namespace ng {
             ImGui::NewFrame();
 
 #ifdef NG_DEVELOPER_MODE            
-            ng::Editor::InspectorView::Update();
+            ng::Editor::EditorUI::Update();
 #endif
 
             // End ImGui frame and render

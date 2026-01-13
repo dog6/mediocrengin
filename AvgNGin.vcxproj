@@ -144,13 +144,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\AVGNG\Cursor.cpp" />
     <ClCompile Include="include\AVGNG\InspectorView.cpp" />
+    <ClCompile Include="src\Cursor.cpp" />
     <ClCompile Include="src\Debug.cpp" />
+    <ClCompile Include="src\EditorUI.cpp" />
     <ClCompile Include="src\FileReader.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\HierarchyView.cpp" />
     <ClCompile Include="src\imgui.cpp" />
     <ClCompile Include="src\imgui_draw.cpp" />
     <ClCompile Include="src\imgui_impl_glfw.cpp" />
@@ -178,9 +180,12 @@
     <ClInclude Include="include\AVGNG\Component.hpp" />
     <ClInclude Include="include\AVGNG\Cursor.hpp" />
     <ClInclude Include="include\AVGNG\Debug.hpp" />
+    <ClInclude Include="include\AVGNG\EditorUI.hpp" />
+    <ClInclude Include="include\AVGNG\EditorUIElement.hpp" />
     <ClInclude Include="include\AVGNG\FileReader.hpp" />
     <ClInclude Include="include\AVGNG\Game.hpp" />
     <ClInclude Include="include\AVGNG\GameObject.hpp" />
+    <ClInclude Include="include\AVGNG\HierarchyView.hpp" />
     <ClInclude Include="include\AVGNG\InspectorView.hpp" />
     <ClInclude Include="include\AVGNG\KeyboardInput.hpp" />
     <ClInclude Include="include\AVGNG\LuaManager.hpp" />

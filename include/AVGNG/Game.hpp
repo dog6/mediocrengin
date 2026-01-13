@@ -43,6 +43,9 @@
 #include <AVGNG/ObjFileParser.hpp>
 #include <AVGNG/ShaderLoader.hpp>
 
+// Editor UI
+#include <AVGNG/EditorUI.hpp>
+
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
