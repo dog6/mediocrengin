@@ -167,4 +167,13 @@ LOCKED   - Cursor is locked to the window center
 CONFINED - Cursor is confined to the window bounds
 ```
 
+### Generic Methods
+
+#### Methods
+
+| Method | Description |
+|--------|-------------|
+| `print("")` | Overridden lua print() method to support engine logging |
+| `clear()` | Clears in-engine developer console
+
 ---
