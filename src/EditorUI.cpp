@@ -4,6 +4,8 @@
 #include <AVGNG/HierarchyView.hpp>
 #include <AVGNG/ConsoleView.hpp>
 
+#include <AVGNG/KeyboardInput.hpp>
+
 #include <AVGNG/Debug.hpp>
 
 using namespace ng::Core;
@@ -13,7 +15,7 @@ namespace ng::Editor {
 	bool EditorUI::s_isInspectorVisible;
 	bool EditorUI::s_isConsoleVisible;
 	bool EditorUI::s_isHierarchyVisible;
-
+	bool EditorUI::s_allVisible;
 	// Inspector View
 	void EditorUI::ShowInspector()
 	{
@@ -76,9 +78,52 @@ namespace ng::Editor {
 	// Handler Methods
 	void EditorUI::Update()
 	{
-		InspectorView::Update();
 		HierarchyView::Update();
+		InspectorView::Update();
 		ConsoleView::Update();
+
+		// ~ to toggle all UI elements
+		if (KeyboardInput::IsKeyPressed(Key::KEY_GRAVE_ACCENT)) {
+
+			s_allVisible = !s_allVisible;
+			
+			if (s_allVisible) {
+				ShowAllElements();
+			}
+			else {
+				HideAllElements();
+			}
+
+		}
+
+		if (KeyboardInput::IsKeyPressed(Key::KEY_F1)) {
+			if (HierarchyView::IsVisible()) {
+				HideHierarchy();
+			}
+			else {
+				ShowHierarchy();
+			}
+		}
+
+		if (KeyboardInput::IsKeyPressed(Key::KEY_F2)) {
+			if (InspectorView::IsVisible()) {
+				HideInspector();
+			}
+			else {
+				ShowInspector();
+			}
+		}
+
+		if (KeyboardInput::IsKeyPressed(Key::KEY_F3)) {
+			if (ConsoleView::IsVisible()) {
+				HideConsole();
+			}
+			else {
+				ShowConsole();
+			}
+		}
+
+
 	}
 
 }

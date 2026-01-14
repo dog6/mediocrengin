@@ -21,6 +21,11 @@ namespace ng::Core {
 		FATAL
 	};
 
+	struct LogMessage {
+		LogLevel level;
+		std::string message;
+	};
+
 	class Debug {
 
 		static std::ofstream s_file;
@@ -35,6 +40,7 @@ namespace ng::Core {
 		static void Shutdown();                       // closed log file
 		static void Log(LogLevel level, const char* msg, ...);
 		static void Log(LogLevel level, const char* asciiColorCode, const char* msg, ...);
+		static void Log(LogMessage logMessage);
 
 	};
 

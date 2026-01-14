@@ -1,8 +1,8 @@
 #pragma once
 
 #include <AVGNG/Mesh.hpp>
-#include <AVGNG/Component.hpp>
 #include <AVGNG/ObjFileParser.hpp>
+#include <AVGNG/Component.hpp>
 
 namespace ng::Graphics {
 
@@ -19,6 +19,10 @@ namespace ng::Graphics {
 
 		void LoadMesh(const char* objPath);
 		void LoadShader(const char* shaderName, const char* vertShaderPath, const char* fragShaderPath);
+
+		void OnInspectorGUI() override;
+
+
 	};
 
 }

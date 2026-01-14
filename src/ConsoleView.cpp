@@ -10,9 +10,21 @@ namespace ng::Editor {
 	bool ConsoleView::s_isVisible = false;
 	std::vector<std::string> ConsoleView::s_logs;
 
+	char cmdBuff[256] = "";
 
-	void ConsoleView::DeveloperCommandSent(const char* msg) {
-		Debug::Log(LOG, msg);
+	int ConsoleView::DeveloperCommandSent(ImGuiInputTextCallbackData* data) {
+
+		const char* cmd = data->Buf;
+
+		Debug::Log(DEV, "> %s", cmd);
+
+		// TODO:
+		ng::Scripting::LuaManager::Execute(cmd);
+
+
+
+		return 0;
+
 	}
 
 	void ConsoleView::CreateUI()
@@ -21,6 +33,7 @@ namespace ng::Editor {
 		if (!s_isVisible) return;
 
 		ImGui::Begin("Developer Console", &s_isVisible, ImGuiWindowFlags_MenuBar);
+		ImGui::SetWindowPos(ImVec2(0, 100), ImGuiCond_Appearing);
 
 		ImGui::TextColored(ImColor(0, 157, 255), "Output:");
 
@@ -32,6 +45,7 @@ namespace ng::Editor {
 
 		ImGui::EndChild();
 
+		ImGui::InputText("Command Input", cmdBuff, sizeof(cmdBuff), ImGuiInputTextFlags_CallbackCompletion, DeveloperCommandSent);
 
 		ImGui::End();
 

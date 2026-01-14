@@ -13,6 +13,7 @@ void ng::Editor::HierarchyView::CreateUI()
 
 
 	ImGui::Begin("Scene Hierarchy", &s_isVisible, ImGuiWindowFlags_MenuBar);
+	ImGui::SetWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
 
 	ImGui::TextColored(ImColor(0, 157, 255), "GameObjects");
 	ImGui::BeginChild("Scrolling");

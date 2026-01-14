@@ -1,5 +1,7 @@
 #include <AVGNG/MeshRenderer.hpp>
 
+#include <imgui.h>
+
 using namespace ng::Core;
 
 namespace ng::Graphics {
@@ -140,4 +142,26 @@ namespace ng::Graphics {
     
     }
 
+
+    void MeshRenderer::OnInspectorGUI() {
+        // Render imgui elements for MeshRenderer Component
+        ng::Graphics::MeshRenderer* mr = static_cast<ng::Graphics::MeshRenderer*>(this);
+        ng::Graphics::Mesh* mesh = mr->GetMesh();
+        ImGui::Text("MeshRenderer Component [%p]", mr);
+        if (mesh) {
+            ImGui::Text("Vertices: %d", (int)mesh->vertices.size());
+            ImGui::Text("Indices: %d", (int)mesh->indices.size());
+        }
+        else {
+            ImGui::TextColored(ImColor(255, 0, 0), "No mesh assigned.");
+        }
+       /* if (mr->shader) {
+            ImGui::Text("Shader assigned: %s", mr->shader->ID);
+        }
+        else {
+            ImGui::TextColored(ImColor(255, 0, 0), "No shader assigned.");
+        }*/
+    }
+
 }
+

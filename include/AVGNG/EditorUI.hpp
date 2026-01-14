@@ -7,6 +7,7 @@ namespace ng::Editor {
 		static bool s_isInspectorVisible;
 		static bool s_isConsoleVisible;
 		static bool s_isHierarchyVisible;
+		static bool s_allVisible;
 
 	public:
 		static void ShowInspector();

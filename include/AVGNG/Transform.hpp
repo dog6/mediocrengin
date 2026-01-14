@@ -37,7 +37,9 @@ namespace ng::Core {
 		glm::vec3 GetPosition() const { return position; }
 		glm::vec3 GetRotation() const { return rotation; }
 		glm::vec3 GetScale() const { return scale; }
-	
+
+		void OnInspectorGUI() override;
+
 	
 	};
 

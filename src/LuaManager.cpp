@@ -13,6 +13,10 @@
 
 #include <AVGNG/Cursor.hpp>
 
+#ifdef NG_DEVELOPER_MODE
+#include <AVGNG/ConsoleView.hpp>
+#endif
+
 using namespace ng::Core;
 using namespace ng::Graphics;
 
@@ -107,7 +111,38 @@ namespace ng::Scripting {
 			);
 		}
 		
-		std::vector<LuaManager::LuaScript> LuaManager::s_scripts;
+		void RegisterDeveloperConsole(sol::state& lua) {
+			// override lua print function
+			lua["print"] = [](sol::variadic_args args) {
+				bool first = true;
+				for (auto arg : args) {
+					if (!first) std::cout << "\t"; // separate with tab like Lua
+					first = false;
+
+					// Convert argument to string based on type
+					if (arg.is<std::string>()) {
+						std::cout << arg.as<std::string>();
+					}
+					else if (arg.is<bool>()) {
+						std::cout << (arg.as<bool>() ? "true" : "false");
+					}
+					else if (arg.is<double>()) {
+						std::cout << arg.as<double>();
+					}
+					else if (arg.is<int>()) {
+						std::cout << arg.as<int>();
+					}
+					else {
+						std::cout << "userdata"; // fallback for other types
+					}
+				}
+				std::cout << std::endl;
+				};
+			lua.set_function("clear", &ng::Editor::ConsoleView::Clear);
+		}
+
+
+		std::vector<LuaScript> LuaManager::s_scripts;
 
 		/// <summary>
 		/// Loads a script file and binds it to the active scene.
@@ -190,7 +225,8 @@ namespace ng::Scripting {
 			RegisterTransform(lua);
 			RegisterMeshRenderer(lua);
 			RegisterCamera(lua);
-			
+			RegisterDeveloperConsole(lua);
+
 			KeyboardInput::RegisterKeyboardWithLua(lua);
 			MouseInput::RegisterMouseWithLua(lua);
 
@@ -198,12 +234,64 @@ namespace ng::Scripting {
 
 		}
 
+
 		/// <summary>
 		/// Unloads all loaded lua scripts.
 		/// </summary>
 		void LuaManager::Cleanup()
 		{
 			s_scripts.clear();
+		}
+
+		void LuaManager::Execute(const char* luaCode)
+		{
+			LuaScript cmdScript = LuaScript();
+			sol::state& lua = cmdScript.lua;
+
+			lua.open_libraries(
+				sol::lib::base,
+				sol::lib::package,
+				sol::lib::math,
+				sol::lib::table,
+				sol::lib::string
+			);
+
+			BindToLua(lua);
+
+			LogMessage log;
+
+			try {
+				// Run lua code
+				sol::load_result script = lua.load(luaCode);
+
+				if (!script.valid()) {
+					sol::error err = script;
+					log.level = ERROR;
+					log.message = std::string("Compile Error: ") + err.what();
+				}
+				else {
+					sol::protected_function func = script;
+					sol::protected_function_result result = func();
+
+					if (!result.valid()) {
+						sol::error err = result;
+						log.level = WARN;
+						log.message = std::string("Runtime Error: ") + err.what();
+					}
+					else {
+						log.level = LOG;
+						log.message = std::string("Successfully executed lua command");
+					}
+
+				}
+			}
+			catch (const std::exception& e) {
+				log.level = ERROR;
+				log.message = std::string("Exception: ") + e.what();
+			}
+
+			Debug::Log(log);
+
 		}
 
 }

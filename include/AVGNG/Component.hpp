@@ -14,7 +14,7 @@ namespace ng::Core {
 
 			virtual void Start() {}
 			virtual void Update(float detltaTime) {}
-
+			virtual void OnInspectorGUI() = 0;
 		};
 
 }

@@ -79,20 +79,29 @@
 namespace ng::Core {
 
 		class Game {
+
+		private:
 			const char* windowTitle;
-			glm::uvec2 windowSize;
+			glm::uvec2 defaultWindowSize;
+			glm::vec<2, int> currentWindowSize;
 
 		public:
+
+			static GLFWwindow* gameWindow;
 			static ng::Core::Scene* activeScene;
 			static ng::Graphics::Camera* camera;
+
 			Game();
 			Game(const char* title, glm::uvec2 size);
 			~Game();
+
 			void Init();    // Called when game first starts up
 			void Load();    // Called before game loop starts
 			void Start();    // Called when game first starts
 			void Run();    // Called after Start(), GameLoop
 			void Exit();    // Called when game is closed
+
+			static glm::uvec2 GetWindowSize();
 
 		};
 

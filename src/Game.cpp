@@ -9,8 +9,8 @@ using namespace ng::Editor;
 #endif
 namespace ng {
 
-    GLFWwindow* gameWindow;
 
+    GLFWwindow* Game::gameWindow = nullptr;
     Camera* Game::camera = new ng::Graphics::Camera();
     Scene* Game::activeScene = new Scene(camera, "Development Scene");
 
@@ -33,15 +33,15 @@ namespace ng {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         /* Create a windowed mode window and its OpenGL context */
-        gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
+        Game::gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
 
-        if (!gameWindow) {
+        if (!Game::gameWindow) {
             Debug::Log(FATAL, "Failed to create GLFW window");
             glfwTerminate();
             return;
         }
 
-        glfwMakeContextCurrent(gameWindow);
+        glfwMakeContextCurrent(Game::gameWindow);
 
 
         // Initialize GLAD
@@ -60,21 +60,23 @@ namespace ng {
     // Constructor
     Game::Game() {
         this->windowTitle = "AvgNGin | v0.0.0";
-        this->windowSize = glm::uvec2(1280, 720);
+        this->defaultWindowSize = glm::uvec2(1280, 720);
     }
     Game::Game(const char* title, glm::uvec2 size) {
         this->windowTitle = title;
-        this->windowSize = size;
+        this->defaultWindowSize = size;
     }
     
     // Destructor
-    Game::~Game() {}
+    Game::~Game() {
+        this->activeScene->Unload();
+    }
 
     // Before Load
     void Game::Init()
     {
         Debug::Log(LogLevel::LOG, "Loading game..");
-        InitializeGameWindow(this->windowSize.x, this->windowSize.y, this->windowTitle);
+        InitializeGameWindow(this->defaultWindowSize.x, this->defaultWindowSize.y, this->windowTitle);
         
         Time::Init();
 
@@ -113,7 +115,7 @@ namespace ng {
 
         // Load lua scene script
          //ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
-        ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/scene.lua");
+         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/scene.lua");
 		 ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/noclip.lua");
 
         // Load active scene
@@ -151,14 +153,16 @@ namespace ng {
             Time::Update();
             glfwPollEvents();
 
-            int display_w, display_h;
-            glfwGetFramebufferSize(gameWindow, &display_w, &display_h);
-            glViewport(0, 0, display_w, display_h);
+            // Update everything in scene
+            activeScene->Update();
+            
+            glfwGetFramebufferSize(gameWindow, &currentWindowSize.x, &currentWindowSize.y);
+            glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
 
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            activeScene->Update();
+            
+            // Render to game window
             activeScene->Render();
 
             // Start ImGui frame
@@ -195,6 +199,11 @@ namespace ng {
 
         glfwTerminate();
 
+    }
+
+    glm::uvec2 Core::Game::GetWindowSize()
+    {
+        return glm::uvec2();
     }
 
 }

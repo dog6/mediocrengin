@@ -3,6 +3,7 @@
 #include <AVGNG/ConsoleView.hpp>
 #include <vector>
 #include <string>
+#include <imgui.h>
 
 namespace ng::Editor 
 {
@@ -13,7 +14,7 @@ namespace ng::Editor
 			static std::vector<std::string> s_logs;
 			static bool s_isVisible;
 			static void CreateUI(); // updates UI elements
-			static void DeveloperCommandSent(const char* msg);
+			static int DeveloperCommandSent(ImGuiInputTextCallbackData* data);
 
 		public:
 

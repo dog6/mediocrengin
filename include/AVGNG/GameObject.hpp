@@ -30,6 +30,10 @@ namespace ng::Core {
         Component* AddComponentByName(const std::string& type);
         Component* GetComponentByName(const std::string& type);
 
+        std::vector<std::unique_ptr<Component>> GetAttachedComponents() {
+            return std::move(components);
+        }
+
         template<typename T, typename... Args> T*
             AddComponent(Args&&... args) {
             static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");

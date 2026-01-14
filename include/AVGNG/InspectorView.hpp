@@ -9,6 +9,7 @@ namespace ng::Editor {
 
 	private:
 		static ng::Core::GameObject* s_inspectedObject;
+		static std::vector<std::unique_ptr<ng::Core::Component>> s_inspectedComponents;
 		static bool s_isVisible;
 		static void CreateUI(); // updates UI elements
 

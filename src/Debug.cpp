@@ -109,6 +109,11 @@ namespace ng::Core {
 
 	}
 
+	void Debug::Log(LogMessage logMessage)
+	{
+		Log(logMessage.level, "%s", logMessage.message.c_str());
+	}
+
 
 	void Debug::WriteConsole(LogLevel level, const char* msg, va_list args, const char* asciiColorCode)
 	{
