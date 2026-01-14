@@ -21,7 +21,11 @@ This engine uses the sol2 library as a bridge between the engine and Lua.
 
 ---
 
-### GameObject
+<details>
+  <summary>ng::Core</summary>
+<br/>
+<details>
+  <summary>GameObject</summary>
 
 #### Properties
 
@@ -37,8 +41,10 @@ This engine uses the sol2 library as a bridge between the engine and Lua.
 | `GameObject:GetComponent(string componentName)` | Retrieves a component from the game object |
 
 ---
+</details>
 
-### Transform
+<details>
+  <summary>Transform</summary>
 
 #### Methods
 
@@ -52,8 +58,10 @@ This engine uses the sol2 library as a bridge between the engine and Lua.
 | `Transform:GetScale()` | `(float x, float y, float z)` | Gets the current scale |
 
 ---
+</details>
 
-### Camera
+<details>
+  <summary>Camera</summary>  
 
 #### Methods
 
@@ -67,19 +75,10 @@ This engine uses the sol2 library as a bridge between the engine and Lua.
 | `camera:GetUpwardDirection()` | `(float x, float y, float z)` | Gets the current upward direction |
 
 ---
+</details>
 
-### MeshRenderer
-
-#### Methods
-
-| Method | Description |
-|--------|-------------|
-| `MeshRenderer:LoadMesh(string mesh_filepath)` | Loads a mesh from the specified file path |
-| `MeshRenderer:LoadShader(string shaderName, string vertex_filepath, string fragment_filepath)` | Loads a shader with the given name and file paths |
-
----
-
-### KeyboardInput
+<details>
+  <summary>Keyboard Input</summary>
 
 #### Methods
 
@@ -133,7 +132,10 @@ KEY_KP_DECIMAL, KEY_KP_DIVIDE, KEY_KP_MULTIPLY, KEY_KP_SUBTRACT, KEY_KP_ADD, KEY
 ```
 
 ---
+</details>
 
+<details>
+  <summary>MouseInput</summary>
 ### MouseInput
 
 #### Methods
@@ -151,7 +153,10 @@ BUTTON_4, BUTTON_5, BUTTON_6, BUTTON_7, BUTTON_8
 ```
 
 ---
+</details>
 
+<details>
+  <summary>Cursor</summary>
 ### Cursor
 
 #### Methods
@@ -166,6 +171,31 @@ NONE     - Cursor is free to move
 LOCKED   - Cursor is locked to the window center
 CONFINED - Cursor is confined to the window bounds
 ```
+</details>
+
+</details>
+
+<details>
+  <summary>ng::Graphics</summary>
+<br/>
+<details>
+<summary>MeshRenderer</summary>
+
+#### Methods
+
+| Method | Description |
+|--------|-------------|
+| `MeshRenderer:LoadMesh(string mesh_filepath)` | Loads a mesh from the specified file path |
+| `MeshRenderer:LoadShader(string shaderName, string vertex_filepath, string fragment_filepath)` | Loads a shader with the given name and file paths |
+
+---
+</details>
+</details>
+
+
+
+<details>
+  <summary>Generic Lua Engine Bindings</summary>
 
 ### Generic Methods
 
@@ -177,3 +207,4 @@ CONFINED - Cursor is confined to the window bounds
 | `clear()` | Clears in-engine developer console
 
 ---
+</details>
