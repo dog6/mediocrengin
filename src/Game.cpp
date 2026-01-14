@@ -112,7 +112,8 @@ namespace ng {
     {
 
         // Load lua scene script
-         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
+         //ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
+        ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/scene.lua");
 		 ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/noclip.lua");
 
         // Load active scene
@@ -132,8 +133,7 @@ namespace ng {
         activeScene->Start();
 
 #ifdef NG_DEVELOPER_MODE
-        EditorUI::ShowInspector();
-        EditorUI::ShowHierarchy();
+        EditorUI::ShowAllElements();
 #endif
 
     }

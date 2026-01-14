@@ -1,9 +1,9 @@
 #pragma once
-
 #include <AVGNG/EditorUIElement.hpp>
 
+
 namespace ng::Editor {
-	class HierarchyView : EditorUIElement {
+	class HierarchyView : public EditorUIElement {
 
 	private:
 		static bool s_isVisible;
@@ -11,7 +11,7 @@ namespace ng::Editor {
 
 	public:
 
-		static void EditorUIElement::Show() { s_isVisible = true; }
+		static void EditorUIElement::Show()  { s_isVisible = true; }
 		static void EditorUIElement::Hide() { s_isVisible = false; }
 		static bool EditorUIElement::IsVisible() { return s_isVisible; }
 

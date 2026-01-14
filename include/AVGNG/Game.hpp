@@ -1,25 +1,46 @@
 #pragma once
 
+
+// =====================================================================================================
+// AVGNG Engine
+// ----------------------------------
+// 
+// Developer mode can be enabled by adding NG_DEVELOPER_MODE to your preprocessor definitions.
+// Simply defining it here won't work as other files may have already been compiled.
+// 
+// Debug mode can be enabled by adding NG_DEBUG_MODE to your preprocessor definitions.
+// 
+// In VSStudio, right-click project -> properties -> C/C++ -> Preprocessor -> Preprocessor Definitions
+// and add them there.
+// =====================================================================================================
+
 #define STB_IMAGE_IMPLEMENTATION
 
-// Dependents
-#include<glad/glad.h>
-#include <GLFW/glfw3.h>
+// std includes
 #include <cstdio>
 #include <string>
 #include <string_view>
 #include <vector>
 #include <fstream>
 #include <sstream>
+
+
+// external libs
+#include<glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 // Inputs
 #include <AVGNG/KeyboardInput.hpp>
 #include <AVGNG/MouseInput.hpp>
+#include <AVGNG/Cursor.hpp>
 
 // Graphics
 #include <AVGNG/Camera.hpp>
@@ -32,9 +53,8 @@
 #include <AVGNG/Time.hpp>
 #include <AVGNG/Transform.hpp>
 #include <AVGNG/GameObject.hpp>
-#include <AVGNG/Debug.hpp>
 #include <AVGNG/Scene.hpp>
-#include <AVGNG/Cursor.hpp>
+#include <AVGNG/Debug.hpp>
 
 // Scripting
 #include <AVGNG/LuaManager.hpp>
@@ -43,18 +63,18 @@
 #include <AVGNG/ObjFileParser.hpp>
 #include <AVGNG/ShaderLoader.hpp>
 
-// Editor UI
-#include <AVGNG/EditorUI.hpp>
-
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-
-#define NG_DEVELOPER_MODE
 
 #ifdef NG_DEVELOPER_MODE
-	#include <AVGNG/InspectorView.hpp>	
+	// Editor UI
+	#include <AVGNG/EditorUIElement.hpp>
+	#include <AVGNG/EditorUI.hpp>
+
+	// Editor UI Views
+	#include <AVGNG/InspectorView.hpp>
+	#include <AVGNG/HierarchyView.hpp>
+	#include <AVGNG/ConsoleView.hpp>
 #endif
+
 
 namespace ng::Core {
 

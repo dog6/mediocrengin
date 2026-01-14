@@ -1,8 +1,5 @@
 #include <AVGNG/InspectorView.hpp>
-
 #include <AVGNG/Game.hpp>
-#include <vector>
-#include <imgui.h>
 
 
 using namespace ng::Core;
@@ -29,12 +26,15 @@ namespace ng::Editor {
 
 	}
 
-	void InspectorView::Inspect(Core::GameObject* object)
+	void InspectorView::Inspect(int objIndex, Core::GameObject* object)
 	{
 		s_inspectedObject = object;
 
-		if (s_inspectedObject == nullptr) {
-			Debug::Log(DEBUG, "Inspector now looking at %s", object->name.c_str());
+		if (s_inspectedObject != nullptr) {
+			Debug::Log(DEBUG, "Inspector now looking at %s (%d)", object->name.c_str(), objIndex);
+		}
+		else {
+			Debug::Log(DEBUG, "Inspector no longer inspecting any object.");
 		}
 	}
 

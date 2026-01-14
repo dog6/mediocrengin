@@ -105,7 +105,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NG_DEVELOPER_MODE;NG_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -144,7 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\AVGNG\InspectorView.cpp" />
+    <ClCompile Include="src\ConsoleView.cpp" />
     <ClCompile Include="src\Cursor.cpp" />
     <ClCompile Include="src\Debug.cpp" />
     <ClCompile Include="src\EditorUI.cpp" />
@@ -161,6 +161,7 @@
     <ClCompile Include="src\imgui_stdlib.cpp" />
     <ClCompile Include="src\imgui_tables.cpp" />
     <ClCompile Include="src\imgui_widgets.cpp" />
+    <ClCompile Include="src\InspectorView.cpp" />
     <ClCompile Include="src\KeyboardInput.cpp" />
     <ClCompile Include="src\LuaManager.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
@@ -178,6 +179,8 @@
   <ItemGroup>
     <ClInclude Include="include\AVGNG\Camera.hpp" />
     <ClInclude Include="include\AVGNG\Component.hpp" />
+    <ClInclude Include="include\AVGNG\ConsoleColors.hpp" />
+    <ClInclude Include="include\AVGNG\ConsoleView.hpp" />
     <ClInclude Include="include\AVGNG\Cursor.hpp" />
     <ClInclude Include="include\AVGNG\Debug.hpp" />
     <ClInclude Include="include\AVGNG\EditorUI.hpp" />

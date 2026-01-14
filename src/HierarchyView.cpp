@@ -1,5 +1,4 @@
 #include <AVGNG/HierarchyView.hpp>
-
 #include <AVGNG/Game.hpp>
 
 using namespace ng::Core;
@@ -11,6 +10,8 @@ void ng::Editor::HierarchyView::CreateUI()
 
 	if (!s_isVisible) return;
 
+
+
 	ImGui::Begin("Scene Hierarchy", &s_isVisible, ImGuiWindowFlags_MenuBar);
 
 	ImGui::TextColored(ImColor(0, 157, 255), "GameObjects");
@@ -18,12 +19,22 @@ void ng::Editor::HierarchyView::CreateUI()
 
 	std::vector<GameObject*> gameObjects = Game::activeScene->GetGameObjects();
 
+	std::string currGoLabel = std::string();
+	GameObject* currGO;
+
 	for (int n = 0; n < gameObjects.size(); n++) {
 		
-		if (ImGui::Button(("OBJ #" + std::to_string(n) + ": " + gameObjects[n]->name).c_str(), ImVec2(240, 20))) {
-		
+		currGO = gameObjects[n]; // get GO name
+		currGoLabel.assign("OBJ " + std::to_string(n) + ": " + currGO->name);
+
+		if (ImGui::Button(currGoLabel.c_str(), ImVec2(280, 20))) {
+			
 			// pass selected object to inspector
-			InspectorView::Inspect(gameObjects[n]);
+			InspectorView::Inspect(n, gameObjects[n]);
+
+#ifdef NG_DEVELOPER_MODE
+			Debug::Log(DEV, "Selected gameObject %s for inspection.", CONSOLE_YELLOW, currGoLabel);
+#endif
 
 		}
 	}

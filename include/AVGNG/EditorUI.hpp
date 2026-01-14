@@ -11,14 +11,14 @@ namespace ng::Editor {
 	public:
 		static void ShowInspector();
 		static void ShowHierarchy();
-		//void ShowConsole();
+		static void ShowConsole();
 
 		static void HideInspector();
 		static void HideHierarchy();
-		//void HideConsole();
+		static void HideConsole();
 
-		//void ShowAllElements();
-		//void HideAllElements();
+		static void ShowAllElements();
+		static void HideAllElements();
 
 		static void Update();
 

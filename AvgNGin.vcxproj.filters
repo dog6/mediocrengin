@@ -55,6 +55,12 @@
     <Filter Include="Header Files\Editor\Views">
       <UniqueIdentifier>{fce081f7-39d7-4b1d-801f-d905a7ad70ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Debug">
+      <UniqueIdentifier>{fe25d8ca-fbe9-4d78-9651-2579d1c9e49b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Debug">
+      <UniqueIdentifier>{bcedd6dc-bb5e-4aa7-9d78-879fd9e35760}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -71,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="src\Renderer.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Debug.cpp">
-      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Transform.cpp">
       <Filter>Source Files\Core</Filter>
@@ -135,17 +138,23 @@
     <ClCompile Include="src\imgui_widgets.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="include\AVGNG\InspectorView.cpp">
-      <Filter>Source Files\Editor\Views</Filter>
-    </ClCompile>
     <ClCompile Include="src\EditorUI.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\HierarchyView.cpp">
       <Filter>Source Files\Editor\Views</Filter>
     </ClCompile>
+    <ClCompile Include="src\Debug.cpp">
+      <Filter>Source Files\Core\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="src\Cursor.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InspectorView.cpp">
+      <Filter>Source Files\Editor\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConsoleView.cpp">
+      <Filter>Source Files\Editor\Views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,9 +177,6 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\AVGNG\Component.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AVGNG\Debug.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="include\AVGNG\GameObject.hpp">
@@ -226,6 +232,15 @@
     </ClInclude>
     <ClInclude Include="include\AVGNG\HierarchyView.hpp">
       <Filter>Header Files\Editor\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\ConsoleView.hpp">
+      <Filter>Header Files\Editor\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\Debug.hpp">
+      <Filter>Header Files\Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\ConsoleColors.hpp">
+      <Filter>Header Files\Core\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

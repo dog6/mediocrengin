@@ -1,10 +1,11 @@
 #pragma once
+
 #include <AVGNG/EditorUIElement.hpp>
 #include <AVGNG/GameObject.hpp>
 
 namespace ng::Editor {
 
-	class InspectorView : EditorUIElement {
+	class InspectorView : public EditorUIElement {
 
 	private:
 		static ng::Core::GameObject* s_inspectedObject;
@@ -17,7 +18,7 @@ namespace ng::Editor {
 		static void EditorUIElement::Hide() { s_isVisible = false; } // hides UI
 		static bool EditorUIElement::IsVisible() { return s_isVisible; }
 		
-		static void Inspect(ng::Core::GameObject* object); // sets object to be inspected
+		static void Inspect(int objIndex, ng::Core::GameObject* object); // sets object to be inspected
 
 		static void Update() { CreateUI(); }
 
