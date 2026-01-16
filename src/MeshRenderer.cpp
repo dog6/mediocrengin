@@ -1,5 +1,8 @@
 #include <AVGNG/MeshRenderer.hpp>
-
+#include <AVGNG/AssimpObjLoader.hpp>
+#include <AVGNG/Shader.hpp>
+#include <AVGNG/ShaderLoader.hpp>
+#include <AVGNG/GameObject.hpp>
 #include <imgui.h>
 
 using namespace ng::Core;
@@ -8,12 +11,7 @@ namespace ng::Graphics {
 
     void MeshRenderer::Draw(Camera& camera, Transform& transform)
     {
-
         // Early validation checks
-        if (!this->shader) {
-            Debug::Log(LogLevel::ERROR, "Shader is null in MeshRenderer::Draw");
-            return;
-        }
 
         if (!this->mesh) {
             Debug::Log(LogLevel::ERROR, "Mesh is null in MeshRenderer::Draw");
@@ -24,52 +22,22 @@ namespace ng::Graphics {
             Debug::Log(LogLevel::WARN, "Mesh has no indices");
             return;
         }
-        
+
+        if (!this->mesh->material) {
+            Debug::Log(LogLevel::WARN, "Mesh has no material assigned");
+            return;
+        }
+
+        this->mesh->UseShader(camera, transform);
+
         // Use shader
-        this->shader->Use();
-
-        // Get matrices
-        glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 projection = camera.GetProjectionMatrix(1280, 720);
-        glm::mat4 model = transform.GetModelMatrix();
-
-        // Set matrices
-        this->shader->SetMat4("view", view);
-        this->shader->SetMat4("projection", projection);
-        this->shader->SetMat4("model", model);
-
-        // Set material properties
-        if (mesh->material) {
-            shader->SetVec3("baseColor", mesh->material->Kd);
-            shader->SetVec3("sunDirection", glm::normalize(glm::vec3(-0.3f, -1.0f, -0.5f)));
-            shader->SetVec3("sunColor", glm::vec3(1.0f, 0.95f, 0.8f));
-            shader->SetVec3("viewPos", camera.GetPosition());
-        }
-        else {
-            Debug::Log(LogLevel::WARN, "No material assigned, using magenta");
-            shader->SetVec3("baseColor", glm::vec3(1.0f, 0.0f, 1.0f));
-        }
-
-        // Bind and draw
-        glBindVertexArray(this->mesh->VAO);
-
-        // Bind texture if available
-        if (this->mesh->material && this->mesh->material->diffuseTexID > 0) {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, this->mesh->material->diffuseTexID);
-            this->shader->SetInt("diffuseMap", 0);
-        }
-        else {
-			Debug::Log(WARN, "Failed to bind texture to MeshRenderer %p", (void*)this);
-        }
-
-        // Draw the mesh
-        glDrawElements(GL_TRIANGLES, (GLsizei)this->mesh->indices.size(), GL_UNSIGNED_INT, 0);
-
-        // Cleanup
+        // 
+        // Bind, Draw, Cleanup
+        glBindVertexArray(mesh->VAO);
+        glDrawElements(GL_TRIANGLES, (GLsizei)mesh->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
-    
+
     // Getters & Setters
     void MeshRenderer::SetMesh(Mesh* mesh)
     {
@@ -87,22 +55,26 @@ namespace ng::Graphics {
         Debug::Log(DEBUG, "LoadMesh called on MeshRenderer %p", (void*)this);
         Debug::Log(DEBUG, "    .OBJ Path: '%s'", objPath);
 
-
-        Mesh* loadedMesh = ng::Assets::ObjFileParser::LoadObjFromFileAsMesh(objPath);
+        // Load mesh using AssimpObjLoader
+		Mesh* loadedMesh = ng::Assets::AssimpObjLoader::LoadObjAsMesh(objPath);
     
         if (loadedMesh == nullptr) {
             Debug::Log(ERROR, "Failed to load mesh from MeshRenderer with path '%s'.", objPath);
             return;
         }
 
-        // loadedMesh != nullptr
+        if (!loadedMesh->material) {
+            Debug::Log(DEBUG, "Mesh had no material, creating default Material");
+            loadedMesh->material = new ng::Graphics::Material();
+            // Shader should  be set automatically by material to ShaderLoader::s_defaultShader
+        }
+
         Debug::Log(LOG, "Loaded Mesh '%s' for MeshRenderer attached to GameObject: '%s'", objPath, owner->name.c_str());
         this->SetMesh(loadedMesh);
 
     }
 
-
-    /// <summary>
+   /* /// <summary>
     /// Loads a shader for this->mesh using given vertex and fragment shader path.
     /// </summary>
     /// <param name="vertShaderPath">path to shader.vert file</param>
@@ -140,28 +112,58 @@ namespace ng::Graphics {
         Debug::Log(LOG, "    Fragment: '%s'", fragShaderPath);
         
     
-    }
+    }*/
 
 
     void MeshRenderer::OnInspectorGUI() {
+
         // Render imgui elements for MeshRenderer Component
         ng::Graphics::MeshRenderer* mr = static_cast<ng::Graphics::MeshRenderer*>(this);
         ng::Graphics::Mesh* mesh = mr->GetMesh();
         ImGui::Text("MeshRenderer Component [%p]", mr);
-        if (mesh) {
-            ImGui::Text("Vertices: %d", (int)mesh->vertices.size());
-            ImGui::Text("Indices: %d", (int)mesh->indices.size());
-        }
-        else {
+
+        if (mesh == nullptr) {
             ImGui::TextColored(ImColor(255, 0, 0), "No mesh assigned.");
+            return;
         }
-       /* if (mr->shader) {
-            ImGui::Text("Shader assigned: %s", mr->shader->ID);
+
+        ImGui::Text("Vertices: %d", (int)mesh->vertices.size());
+        ImGui::Text("Indices: %d", (int)mesh->indices.size());
+
+        MaterialData* matData = mesh->material->GetMaterialData();
+
+		Texture* diffTex = matData->FindTexture(TEXTURE_TYPE_DIFFUSE);
+		Texture* specTex = matData->FindTexture(TEXTURE_TYPE_SPECULAR);
+		Texture* normTex = matData->FindTexture(TEXTURE_TYPE_NORMAL);
+		Texture* emissiveTex = matData->FindTexture(TEXTURE_TYPE_EMISSIVE);
+		Texture* alphaTex = matData->FindTexture(TEXTURE_TYPE_ALPHA);
+
+        if (matData != nullptr) {
+
+            if (ImGui::CollapsingHeader("Material Properties", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick)) {
+                if (diffTex) ImGui::Text("Diffuse Map: %d", diffTex->id);
+                if (specTex) ImGui::Text("Specular Map: %d", specTex->id);
+                if (emissiveTex) ImGui::Text("Emissive Map: %d", emissiveTex->id);
+                if (normTex) ImGui::Text("Normal Map: %d", normTex->id);
+                if (alphaTex) ImGui::Text("Alpha Map: %d", alphaTex->id);
+
+				ImGui::ColorPicker3("Albedo Color", (float*)&matData->Albedo, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorPicker3("Diffuse Color", (float*)&matData->Diffuse, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorPicker3("Specular Color", (float*)&matData->Specular, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorPicker3("Emissive Color", (float*)&matData->Emissive, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorPicker3("Ambient Color", (float*)&matData->Ambient, ImGuiColorEditFlags_NoAlpha);
+                ImGui::SliderFloat("Index of Refraction", &matData->IOR, 1.0f, 3.0f);
+                ImGui::SliderFloat("Shininess", &matData->Shininess, 0.0f, 2000.0f);
+            }
+
         }
         else {
-            ImGui::TextColored(ImColor(255, 0, 0), "No shader assigned.");
-        }*/
+            Debug::Log(WARN, "Inspected GameObject '%s': Mesh is missing material data", owner->name.c_str());
+        }
+
+       
     }
+
 
 }
 

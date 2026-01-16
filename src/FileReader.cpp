@@ -52,12 +52,16 @@ namespace ng::Assets {
         return tokens;
     }
 
-    std::ifstream FileReader::ReadFile(const std::string& filePath) {
+    std::string FileReader::ReadFile(const std::string& filePath) {
         std::ifstream file(filePath);
         if (!file.is_open()) {
-            Debug::Log(LogLevel::ERROR, "Failed to open file %s\n", filePath.c_str());
+            Debug::Log(LogLevel::ERROR, "Failed to open file: %s", filePath.c_str());
+            return "";
         }
-        return file;
+
+        std::string content((std::istreambuf_iterator<char>(file)),
+            std::istreambuf_iterator<char>());
+        return content;
     }
 
 }

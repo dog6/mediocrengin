@@ -1,9 +1,13 @@
 // objFileParser.cpp
 #include <AVGNG/ObjFileParser.hpp>
-#define STB_IMAGE_IMPLEMENTATION
-#include <AVGNG/stb_image.h>
+
+#ifndef STB_IMAGE_IMPLEMENTATION
+    #include <AVGNG/stb_image.h>
+#endif
 
 #include <AVGNG/TexCoord.hpp>
+#include <AVGNG/Utility.hpp>
+
 
 using namespace std;
 using namespace ng::Core;
@@ -11,7 +15,16 @@ using namespace ng::Graphics;
 
 namespace ng::Assets {
 
-    // Helper Methods
+
+    // Helper Method
+    
+    std::string GetFullPathOfTexture(const std::string& textureFile, std::stringstream& ss) {
+        std::string textureFilename;
+        ss >> textureFilename;
+        ng::Assets::Utility::GetFullPathFromFilename(textureFile, textureFilename);
+        return textureFilename;
+    }
+
     glm::vec3 ProcessVertexPositions(const string& line) {
         stringstream ss(line);
         char v;
@@ -37,33 +50,27 @@ namespace ng::Assets {
     }
 
     void ProcessFace(
-        const string& line,
-        const vector<glm::vec3>& positions,
-        const vector<glm::vec2>& texCoords,
-        const vector<glm::vec3>& normals,
-        vector<Vertex>& vertices,
-        vector<unsigned int>& indices,
-        unordered_map<string, unsigned int>& vertexCache
+        const std::string& line,
+        const std::vector<glm::vec3>& positions,
+        const std::vector<glm::vec2>& texCoords,
+        const std::vector<glm::vec3>& normals,
+        std::vector<Vertex>& vertices,
+        std::vector<unsigned int>& indices,
+        std::unordered_map<std::string, unsigned int>& vertexCache
     ) {
-        // Use stringstream - more reliable than custom split
-        stringstream ss(line);
-        vector<string> faceGroups;
-        string token;
+        std::stringstream ss(line);
+        std::vector<std::string> faceGroups;
+        std::string token;
 
-        while (ss >> token) {
+        while (ss >> token)
             faceGroups.push_back(token);
-        }
-
-#ifndef NG_QUIET_PARSING
-        Debug::Log(DEBUG, "Face has %d vertex groups", faceGroups.size());
-#endif
 
         if (faceGroups.empty()) {
             Debug::Log(ERROR, "No vertex groups found in face: '%s'", line.c_str());
             return;
         }
 
-        vector<unsigned int> faceIndices;
+        std::vector<unsigned int> faceIndices;
 
         for (auto& groupStr : faceGroups) {
             // Check cache
@@ -72,33 +79,58 @@ namespace ng::Assets {
                 continue;
             }
 
-            vector<int> idx = FileReader::split_ints(groupStr, "/");
+            // Split vertex/uv/normal indices
+            std::vector<int> idx = FileReader::split_ints(groupStr, "/");
+            Vertex v;
 
-#ifndef NG_QUIET_PARSING
-            Debug::Log(DEBUG, "Parsing '%s' -> %d indices", groupStr.c_str(), idx.size());
-#endif
-
+            // Position
             if (idx.empty() || idx[0] <= 0 || idx[0] > (int)positions.size()) {
                 Debug::Log(WARN, "Invalid position index in '%s'", groupStr.c_str());
                 continue;
             }
-
-            Vertex v;
             v.position = positions[idx[0] - 1];
-            v.texCoord = (idx.size() > 1 && idx[1] > 0 && idx[1] <= (int)texCoords.size())
-                ? texCoords[idx[1] - 1] : glm::vec2(0.0f);
-            v.normal = (idx.size() > 2 && idx[2] > 0 && idx[2] <= (int)normals.size())
-                ? normals[idx[2] - 1] : glm::vec3(0.0f, 0.0f, 1.0f);
+
+            // TexCoord
+            if (idx.size() > 1 && idx[1] > 0 && idx[1] <= (int)texCoords.size())
+                v.texCoord = texCoords[idx[1] - 1];
+            else
+                v.texCoord = glm::vec2(0.0f, 0.0f);
+
+            // Normal
+            if (idx.size() > 2 && idx[2] > 0 && idx[2] <= (int)normals.size()) {
+                v.normal = normals[idx[2] - 1];
+            }
+            else {
+                // Will compute face normal later if missing
+                v.normal = glm::vec3(0.0f);
+            }
 
             vertices.push_back(v);
             unsigned int newIndex = (unsigned int)vertices.size() - 1;
             vertexCache[groupStr] = newIndex;
             faceIndices.push_back(newIndex);
+        }
 
-#ifndef NG_QUIET_PARSING
-            Debug::Log(DEBUG, "Created vertex %d", newIndex);
-#endif
+        // If normals were missing, compute per-face normal
+        bool missingNormals = false;
+        for (auto idx : faceIndices)
+            if (vertices[idx].normal == glm::vec3(0.0f))
+                missingNormals = true;
 
+        if (missingNormals && faceIndices.size() >= 3) {
+            glm::vec3 a = vertices[faceIndices[0]].position;
+            glm::vec3 b = vertices[faceIndices[1]].position;
+            glm::vec3 c = vertices[faceIndices[2]].position;
+            glm::vec3 faceNormal = glm::normalize(glm::cross(b - a, c - a));
+            for (auto idx : faceIndices)
+                vertices[idx].normal = faceNormal;
+        }
+
+        // Triangulate if face has more than 3 vertices (fan)
+        for (size_t i = 1; i + 1 < faceIndices.size(); ++i) {
+            indices.push_back(faceIndices[0]);
+            indices.push_back(faceIndices[i]);
+            indices.push_back(faceIndices[i + 1]);
         }
 
         // Triangulate
@@ -127,8 +159,11 @@ namespace ng::Assets {
         else {
             Debug::Log(WARN, "Face has less than 3 vertices (%d)", faceIndices.size());
         }
+
     }
 
+
+    // Load texture from file and return OpenGL texture ID
     unsigned int LoadTextureFromFile(const string& path)
     {
         unsigned int textureID;
@@ -154,41 +189,17 @@ namespace ng::Assets {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
+        Debug::Log(LOG, "Loaded texture ID '%d' from file '%s'", textureID, path.c_str());
         return textureID;
     }
 
 
-    // Public Methods
-    Mesh* ObjFileParser::LoadObjFromFileAsMesh(const string& objFilePath)
-    {
-        std::filesystem::path objDir;
-        objDir = std::filesystem::path(objFilePath).parent_path();
-
-        ifstream file = FileReader::ReadFile(objFilePath);
-        if (!file.is_open()) {
-            return nullptr;
-        }
-        string line;
-
-        vector<Vertex> vertices;
-        vector<glm::vec3> positions;
-        vector<glm::vec3> normals;
-        vector<glm::vec2> texCoords;
-        vector<unsigned int> indices;
-
-        string currentMaterial;
-
-        // Make materials static so they persist after function returns
-        static unordered_map<string, unordered_map<string, Material>> allMaterials;
-        unordered_map<string, Material>& materials = allMaterials[objFilePath];
-        unordered_map<string, unsigned int> vertexCache;
-
-        int vertexCount = 0;
-        int faceCount = 0;
-
-#ifndef NG_QUIET_PARSING
-        Debug::Log(LogLevel::DEBUG, "Loading OBJ file: %s\n", objFilePath.c_str());
-#endif
+    void ParseOBJFile(ifstream& file, string& line,
+        vector<glm::vec3>& positions, vector<glm::vec3>& normals,
+        vector<glm::vec2>& texCoords, vector<Vertex>& vertices,
+        vector<unsigned int>& indices, unordered_map<string, unsigned int>& vertexCache,
+        int& vertexCount, int& faceCount) {
+        Debug::Log(DEBUG, "Parsing OBJ file..");
 
         while (getline(file, line))
         {
@@ -229,150 +240,165 @@ namespace ng::Assets {
 
                 // Remove the leading "f "
                 line = line.substr(2);
-
                 ProcessFace(line, positions, texCoords, normals, vertices, indices, vertexCache);
-            }
-
-            // Parse MTL
-            if (line.rfind("usemtl ", 0) == 0)
-            {
-                currentMaterial = line.substr(7);
-#ifndef NG_QUIET_PARSING
-                Debug::Log(LogLevel::DEBUG, "Switching to material: %s", currentMaterial.c_str());
-#endif
 
             }
+        }
+    }
+
+    void ParseMTLFile(std::unordered_map<std::string, MaterialData>& materials, std::ifstream& file, std::string& line, const std::string& mtlPath)
+    {
+		Debug::Log(DEBUG, "Parsing MTL file: '%s'..", mtlPath.c_str());
+        MaterialData* current = nullptr;
+
+        while (std::getline(file, line)) {
+            if (line.empty() || line[0] == '#') continue;
+            std::stringstream ss(line);
+            std::string keyword;
+            ss >> keyword;
+
+            if (keyword == "newmtl") {
+                std::string name;
+                ss >> name;
+                materials[name] = MaterialData();
+                materials[name].name = name;
+                current = &materials[name];
+                Debug::Log(DEBUG, "Found new material: %s", name.c_str());
+            }
+            else if (!current) continue;
+
+            else if (keyword == "Ka") ss >> current->Ambient.r >> current->Ambient.g >> current->Ambient.b;
+            else if (keyword == "Kd") ss >> current->Diffuse.r >> current->Diffuse.g >> current->Diffuse.b;
+            else if (keyword == "Ks") ss >> current->Specular.r >> current->Specular.g >> current->Specular.b;
+            else if (keyword == "Ke") ss >> current->Emissive.r >> current->Emissive.g >> current->Emissive.b;
+            else if (keyword == "Ni") ss >> current->IOR;
+            else if (keyword == "Ns") ss >> current->Shininess;
+
+            else if (keyword == "map_Kd") {
+                std::string texPath = GetFullPathOfTexture(mtlPath, ss);
+                current->diffuseTexID = LoadTextureFromFile(texPath);
+                Debug::Log(DEBUG, "!! Loaded diffuse texture for material '%s' from '%s'", current->name.c_str(), texPath.c_str());
+            }
+            else if (keyword == "map_Ks") {
+                std::string texPath = GetFullPathOfTexture(mtlPath, ss);
+                current->specularTexID = LoadTextureFromFile(texPath);
+                Debug::Log(DEBUG, "!! Loaded specular texture for material '%s' from '%s'", current->name.c_str(), texPath.c_str());
+
+            }
+            else if (keyword == "map_Ke") {
+                std::string texPath = GetFullPathOfTexture(mtlPath, ss);
+                current->emissiveTexID = LoadTextureFromFile(texPath);
+                Debug::Log(DEBUG, "!! Loaded emissive texture for material '%s' from '%s'", current->name.c_str(), texPath.c_str());
+
+            }
+            else if (keyword == "map_d") {
+                std::string texPath = GetFullPathOfTexture(mtlPath, ss);
+                current->alphaTexID = LoadTextureFromFile(texPath);
+                Debug::Log(DEBUG, "!! Loaded displacement texture for material '%s' from '%s'", current->name.c_str(), texPath.c_str());
+            }
+            else if (keyword == "map_Bump" || keyword == "bump") {
+                std::string texPath = GetFullPathOfTexture(mtlPath, ss);
+                current->normalTexID = LoadTextureFromFile(texPath);
+                Debug::Log(DEBUG, "!! Loaded normal texture for material '%s' from '%s'", current->name.c_str(), texPath.c_str());
+            }
+        }
+    }
+
+    // Public Methods
+    Mesh* ObjFileParser::LoadObjFromFileAsMesh(const std::string& objFilePath) {
+        
+        std::ifstream file(objFilePath);
+        if (!file.is_open()) {
+            Debug::Log(ERROR, "Failed to open OBJ file: %s", objFilePath.c_str());
+            return nullptr;
+        }
+
+        std::filesystem::path objDir = std::filesystem::path(objFilePath).parent_path();
+        std::vector<Vertex> vertices;
+        std::vector<glm::vec3> positions;
+        std::vector<glm::vec3> normals;
+        std::vector<glm::vec2> texCoords;
+        std::vector<unsigned int> indices;
+        std::unordered_map<std::string, unsigned int> vertexCache;
+
+        std::unordered_map<std::string, MaterialData> materials;
+        std::string currentMaterial;
+
+        std::string line;
+        int vertexCount = 0;
+        int faceCount = 0;
+
+        while (std::getline(file, line)) {
+            if (line.empty() || line[0] == '#') continue;
 
             if (line.rfind("mtllib ", 0) == 0) {
                 std::string mtlFile = line.substr(7);
-
-                // Trim trailing whitespace
                 mtlFile.erase(mtlFile.find_last_not_of(" \r\n\t") + 1);
-
-                std::filesystem::path mtlFullPath = objDir / mtlFile;
-                std::string mtlPath = mtlFullPath.string();
-
-                if (materials.empty()) {
-                    materials = LoadMaterialFromFile(mtlPath);
-                }
-                
-                // Otherwise material already loaded from previous call
-
-#ifndef NG_QUIET_PARSING
-                Debug::Log(LogLevel::DEBUG, "Found %zu materials\n    .obj file '%s'\n    .mtl file '%s'",
-                    materials.size(), objFilePath.c_str(), mtlPath.c_str());
-#endif
-
+                materials = LoadMaterialsFromFile((objDir / mtlFile).string());
             }
-
+            else if (line.rfind("usemtl ", 0) == 0) {
+                currentMaterial = line.substr(7);
+                currentMaterial.erase(currentMaterial.find_last_not_of(" \r\n\t") + 1);
+            }
+            else if (line.rfind("v ", 0) == 0) positions.push_back(ProcessVertexPositions(line)), vertexCount++;
+            else if (line.rfind("vn ", 0) == 0) normals.push_back(ProcessVertexNormals(line));
+            else if (line.rfind("vt ", 0) == 0) {
+                TexCoord tc = ProcessTexCoords(line);
+                texCoords.push_back(glm::vec2(tc.u, tc.v_coord));
+            }
+            else if (line.rfind("f ", 0) == 0) {
+                line = line.substr(2);
+                ProcessFace(line, positions, texCoords, normals, vertices, indices, vertexCache);
+            }
         }
-
-#ifndef NG_QUIET_PARSING
-        Debug::Log(LogLevel::DEBUG, "Total: %d positions, %d faces, %d final vertices\n",
-            vertexCount, faceCount, (int)vertices.size());
-#endif
-
         file.close();
 
         if (positions.empty()) {
-            Debug::Log(LogLevel::WARN, "WARNING: No vertices loaded from %s", objFilePath.c_str());
+            Debug::Log(WARN, "No vertices loaded from %s", objFilePath.c_str());
             return nullptr;
         }
 
-        // Create and return the mesh
         Mesh* mesh = new Mesh(vertices, indices);
+        mesh->filepath = objFilePath.c_str();
 
         if (!currentMaterial.empty() && materials.find(currentMaterial) != materials.end()) {
-            mesh->material = &materials[currentMaterial];
+            mesh->material->SetMaterialData(materials[currentMaterial]);
+            Debug::Log(LOG, "Applied material '%s' to mesh '%s'", materials[currentMaterial].name.c_str(), mesh->filepath);
         }
-
-        if (mesh == nullptr) {
-#ifndef NG_QUIET_PARSING
-            Debug::Log(LogLevel::DEBUG, "Failed to create mesh from file %s", objFilePath.c_str());
-#endif
-            return nullptr;
-        }
-        Debug::Log(LOG, "Successfully loaded .obj file as mesh %s", objFilePath.c_str());
-
-#ifndef NG_QUIET_PARSING
-        Debug::Log(DEBUG, "VAO: %d, VBO: %d, EBO: %d", mesh->VAO, mesh->VBO, mesh->EBO);
-#endif
 
         return mesh;
     }
 
-    unordered_map<string, Material> ng::Assets::ObjFileParser::LoadMaterialFromFile(const string& mtlPath)
-    {
-
-#ifndef NG_QUIET_PARSING
-        Debug::Log(LogLevel::DEBUG, "Loading MTL file: '%s'", mtlPath.c_str());
-#endif
+    // Load MTL file
+    std::unordered_map<std::string, MaterialData> ng::Assets::ObjFileParser::LoadMaterialsFromFile(const std::string& mtlPath) {
+        std::unordered_map<std::string, MaterialData> materials;
 
         if (!std::filesystem::exists(mtlPath)) {
             Debug::Log(WARN, "MTL file does not exist: '%s'", mtlPath.c_str());
+            return materials;
         }
 
-        unordered_map<string, Material> materials;
-
-        ifstream file(mtlPath);
+        std::ifstream file(mtlPath);
         if (!file.is_open()) {
             Debug::Log(WARN, "Failed to open MTL file: %s", mtlPath.c_str());
             return materials;
         }
 
-        Material* current = nullptr;
-        string line;
+        std::string line;
+		ParseMTLFile(materials, file, line, mtlPath); // populates materials map
 
-        while (getline(file, line))
-        {
-            if (line.empty() || line[0] == '#') continue;
+        file.close();
 
-            stringstream ss(line);
-            string keyword;
-            ss >> keyword;
-
-            if (keyword == "newmtl")
-            {
-                string name;
-                ss >> name;
-                materials[name] = Material();
-                materials[name].name = name;
-                current = &materials[name];
-            }
-            else if (!current)
-            {
-                continue;
-            }
-            else if (keyword == "Ka")
-            {
-                ss >> current->Ka.r >> current->Ka.g >> current->Ka.b;
-            }
-            else if (keyword == "Kd")
-            {
-                ss >> current->Kd.r >> current->Kd.g >> current->Kd.b;
-            }
-            else if (keyword == "Ks")
-            {
-                ss >> current->Ks.r >> current->Ks.g >> current->Ks.b;
-            }
-            else if (keyword == "Ns")
-            {
-                ss >> current->Ns;
-            }
-            else if (keyword == "map_Kd")
-            {
-                string texFile;
-                ss >> texFile;
-
-                std::filesystem::path texFullPath = std::filesystem::path(mtlPath).parent_path() / texFile;
-                current->diffuseTexID = LoadTextureFromFile(texFullPath.string());
-            }
+        if (materials.size() != 0) {
+            Debug::Log(LOG, "Loaded %zu materials from %s", materials.size(), mtlPath.c_str());
         }
-
-        Debug::Log(LOG, "Loaded %zu materials from %s", materials.size(), mtlPath.c_str());
+        else {
+            Debug::Log(WARN, "Failed to find materials from MTL file: '%s'", mtlPath.c_str());
+        }
         return materials;
     }
-
+    
+    // Load .obj as GameObject ( starts w/ Transform & MeshRenderer components attached )
     GameObject* ObjFileParser::LoadObjAsGameObject(const char* name, const char* objFilePath, Shader* shader) {
 
         if (!filesystem::exists(objFilePath)) {

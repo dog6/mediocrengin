@@ -14,18 +14,17 @@ function CreateMeshObject(name, modelPath)
     -- 3. Load the mesh
     renderer:LoadMesh(modelPath)
 
-    -- 4. Load the default shader
-    renderer:LoadShader(
-        "DefaultShader",
-        "res/shaders/vertexShaders/devShader.vert",
-        "res/shaders/fragShaders/devShader.frag"
-    )
+    -- local m = renderer:GetMesh()
+    -- local mat = m.material
 
-    -- Add Transform component
-    go:AddComponent("Transform")
+    -- local defaultShader = ShaderLoader:LoadDefaultShader()
 
+    -- mat:SetShader(defaultShader)
     return go
 end
+
+local towerGO = CreateMeshObject("Skyscraper", "./res/models/mdl_skyscraper.obj")
+local towerTF = towerGO:GetComponent("Transform")
 
 local terrainGO = CreateMeshObject("Terrain", "./res/models/mdl_world.obj")
 local terrainTF = terrainGO:GetComponent("Transform")
@@ -35,6 +34,9 @@ local ballTF = ballGO:GetComponent("Transform")
 
 local isoGO = CreateMeshObject("Ball", "./res/models/mdl_isosphere.obj")
 local isoTF = isoGO:GetComponent("Transform")
+
+towerTF:SetPosition(0,0,0)
+towerTF:SetScale(.1,.1,.1)
 
 terrainTF:SetPosition(0,-10,-10)
 

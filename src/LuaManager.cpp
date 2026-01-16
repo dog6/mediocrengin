@@ -103,14 +103,37 @@ namespace ng::Scripting {
 		  
 		}
 		
+		void RegisterMesh(sol::state& lua) {
+			lua.new_usertype<ng::Graphics::Mesh>("Mesh",
+				"filepath", &ng::Graphics::Mesh::filepath,
+				"material", &ng::Graphics::Mesh::GetMaterial
+			);
+		}
+
+		void RegisterMaterial(sol::state& lua) {
+			lua.new_usertype<ng::Graphics::Material>("Material",
+				"SetShader", &ng::Graphics::Material::SetShader,
+				"GetShader", &ng::Graphics::Material::GetShader,
+				"SetMaterialData", &ng::Graphics::Material::SetMaterialData,
+				"GetMaterialData", &ng::Graphics::Material::GetMaterialData
+			);
+		}
+
 		void RegisterMeshRenderer(sol::state& lua) {
 			lua.new_usertype<ng::Graphics::MeshRenderer>("MeshRenderer",
 		  		sol::base_classes, sol::bases<ng::Core::Component>(),
 		  		"LoadMesh", &ng::Graphics::MeshRenderer::LoadMesh,
-		  		"LoadShader", &ng::Graphics::MeshRenderer::LoadShader
+				"GetMesh", &ng::Graphics::MeshRenderer::GetMesh
 			);
 		}
 		
+		void RegisterShaderLoader(sol::state& lua) {
+			lua.new_usertype<ng::Assets::ShaderLoader>("ShaderLoader",
+				"LoadShaderFromFile", &ng::Assets::ShaderLoader::LoadShader,
+				"LoadDefaultShader", &ng::Assets::ShaderLoader::LoadDefaultShader
+			);
+		}
+
 		void RegisterDeveloperConsole(sol::state& lua) {
 			// override lua print function
 			lua["print"] = [](sol::variadic_args args) {
@@ -223,6 +246,7 @@ namespace ng::Scripting {
 			RegisterScene(lua);
 			RegisterGameObject(lua);
 			RegisterTransform(lua);
+			RegisterShaderLoader(lua);
 			RegisterMeshRenderer(lua);
 			RegisterCamera(lua);
 			RegisterDeveloperConsole(lua);

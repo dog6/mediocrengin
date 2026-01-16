@@ -9,16 +9,29 @@ using namespace ng::Editor;
 #endif
 namespace ng {
 
-
     GLFWwindow* Game::gameWindow = nullptr;
     Camera* Game::camera = new ng::Graphics::Camera();
     Scene* Game::activeScene = new Scene(camera, "Development Scene");
 
+    // Helper methods
+    void SetupImGUI(GLFWwindow* window) {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        ImGui::StyleColorsDark(); // theme
+
+        float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
+        style.FontScaleDpi = main_scale;
+    }
+
+
+
     // Helper Methods
     static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
-
-        // Setup Debug Logging
-        Debug::Init("game.log");
 
         Debug::Log(LOG, "Initializing game window..");
 
@@ -61,10 +74,12 @@ namespace ng {
     Game::Game() {
         this->windowTitle = "AvgNGin | v0.0.0";
         this->defaultWindowSize = glm::uvec2(1280, 720);
+		this->currentWindowSize = this->defaultWindowSize;
     }
     Game::Game(const char* title, glm::uvec2 size) {
         this->windowTitle = title;
         this->defaultWindowSize = size;
+        this->currentWindowSize = this->defaultWindowSize;
     }
     
     // Destructor
@@ -81,20 +96,7 @@ namespace ng {
         Time::Init();
 
         // Setup IMGUI
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-        ImGui::StyleColorsDark(); // theme
-
-        float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
-        ImGuiStyle& style = ImGui::GetStyle();
-        style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
-        style.FontScaleDpi = main_scale;
-
-
+        SetupImGUI(gameWindow);
 
         // Initialize input handlers
         MouseInput::Init(*gameWindow);
@@ -114,9 +116,11 @@ namespace ng {
     {
 
         // Load lua scene script
-         //ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
+        //ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
          ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/scene.lua");
 		 ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/noclip.lua");
+        
+
 
         // Load active scene
         if (activeScene != nullptr) {
@@ -196,7 +200,7 @@ namespace ng {
     {
 
         Debug::Log(LogLevel::LOG, "Exiting application.");
-
+        Debug::Shutdown();
         glfwTerminate();
 
     }

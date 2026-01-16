@@ -9,12 +9,15 @@ namespace ng::Editor {
 	bool InspectorView::s_isVisible = false;
 	GameObject* InspectorView::s_inspectedObject = nullptr;
 
-	std::vector<std::unique_ptr<ng::Core::Component>> InspectorView::s_inspectedComponents;
+	//std::vector<std::unique_ptr<ng::Core::Component>> InspectorView::s_inspectedComponents;
+
+	std::vector<Component*> InspectorView::s_inspectedComponents;
 
 	void InspectorView::CreateUI()
 	{
 		// TODO:
 		// Bug where s_inspectedObject disappears after being selected
+		// Looks like we're accidentally taking a ptr to an object somewhere
 
 		if (!s_isVisible) return;
 		ImGui::Begin("Inspector", &s_isVisible, ImGuiWindowFlags_MenuBar);
@@ -44,6 +47,7 @@ namespace ng::Editor {
 
 	void InspectorView::Inspect(int objIndex, Core::GameObject* object)
 	{
+
 		s_inspectedComponents.clear();
 		s_inspectedObject = object;
 

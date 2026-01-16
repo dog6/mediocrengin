@@ -30,8 +30,13 @@ namespace ng::Core {
         Component* AddComponentByName(const std::string& type);
         Component* GetComponentByName(const std::string& type);
 
-        std::vector<std::unique_ptr<Component>> GetAttachedComponents() {
-            return std::move(components);
+        std::vector<Component*> GetAttachedComponents() {
+            std::vector<Component*> result;
+            for (auto& comp : components)
+            {
+                result.push_back(comp.get());  // get raw pointer, no ownership transfer
+            }
+            return result;
         }
 
         template<typename T, typename... Args> T*

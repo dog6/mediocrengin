@@ -84,9 +84,6 @@
     <ClCompile Include="src\FileReader.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="src\ObjFileParser.cpp">
-      <Filter>Source Files\Assets</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameObject.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -156,6 +153,18 @@
     <ClCompile Include="src\ConsoleView.cpp">
       <Filter>Source Files\Editor\Views</Filter>
     </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AVGNG\AssimpObjLoader.cpp">
+      <Filter>Source Files\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AVGNG\MaterialData.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AVGNG\Texture.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AVGNG\Camera.hpp">
@@ -189,9 +198,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="include\AVGNG\FileReader.hpp">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AVGNG\ObjFileParser.hpp">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
     <ClInclude Include="include\AVGNG\Game.hpp">
@@ -241,6 +247,18 @@
     </ClInclude>
     <ClInclude Include="include\AVGNG\ConsoleColors.hpp">
       <Filter>Header Files\Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\Utility.hpp">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\MaterialData.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\Texture.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\AssimpObjLoader.hpp">
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

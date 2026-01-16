@@ -35,13 +35,14 @@ namespace ng::Editor {
 		ImGui::Begin("Developer Console", &s_isVisible, ImGuiWindowFlags_MenuBar);
 		ImGui::SetWindowPos(ImVec2(0, 100), ImGuiCond_Appearing);
 
-		ImGui::TextColored(ImColor(0, 157, 255), "Output:");
+		ImGui::BeginChild("Scrolling", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()), true);
 
-
-		ImGui::BeginChild("Scrolling", ImVec2(0,0), true);
-			for (const std::string& log : s_logs) {
+			for (const std::string& log : s_logs) 
 				ImGui::TextColored(ImColor(255, 255, 255), "> %s", log.c_str());
-			}
+
+			// If already at bottom, keep following new content
+			if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+				ImGui::SetScrollHereY(1.0f);
 
 		ImGui::EndChild();
 

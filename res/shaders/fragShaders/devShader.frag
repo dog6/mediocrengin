@@ -1,21 +1,23 @@
-#version 330 core
+#version 330
 
 in vec3 FragPos;
 in vec3 Normal;
-in vec2 TexCoord;
+in vec2 TexCoords;
 
 out vec4 FragColor;
 
-uniform vec3 baseColor;
-uniform sampler2D diffuseMap;
+uniform vec3 Albedo;
 
-// Sun/Directional Light (like Minecraft)
+uniform sampler2D diffuseMap;
+uniform bool hasDiffuseMap;
+
 uniform vec3 sunDirection;   // Direction the sun is shining
 uniform vec3 sunColor;       // Color of sunlight (usually warm white/yellow)
 uniform vec3 viewPos;        // Camera position for specular
 
 void main()
 {
+
     // Normalize the normal vector
     vec3 norm = normalize(Normal);
     
@@ -43,8 +45,15 @@ void main()
     vec3 lighting = ambient + diffuse + specular;
     
     // Apply to texture/color
-    vec4 texColor = texture(diffuseMap, TexCoord);
-    vec3 result = lighting * baseColor * texColor.rgb;
+
+    vec3 result;
+    if (hasDiffuseMap) {
+        vec4 texColor = texture(diffuseMap, TexCoords);
+        result = lighting * Albedo * texColor.rgb;
+    }else {
+        result = lighting * Albedo;
+    }
     
     FragColor = vec4(result, 1.0);
+    
 }

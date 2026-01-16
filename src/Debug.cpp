@@ -3,6 +3,7 @@
 #ifdef NG_DEVELOPER_MODE
 #include <AVGNG/ConsoleView.hpp>
 #endif
+#define NG_DEBUG_MODE
 
 namespace ng::Core {
 
@@ -54,8 +55,10 @@ namespace ng::Core {
 
 	void Debug::Init(const std::string& filePath)
 	{
-		if (!OpenLogFile(filePath.c_str())) {
-			Debug::Log(WARN, "%sFailed to open log file '%s'. ONLY logs to console will work.", filePath.c_str());
+		s_file.open(filePath, std::ios::out | std::ios::trunc);
+		bool result = s_file.is_open();
+		if (!result) {
+			Debug::Log(WARN, "Failed to open log file '%s'. ONLY logs to console will work.", filePath.c_str());
 			return;
 		}
 		else {
@@ -69,53 +72,50 @@ namespace ng::Core {
 			s_file.close();
 	}
 
-	bool Debug::OpenLogFile(const char* logFilePath)
-	{
-		s_file.open(logFilePath, std::ios::out | std::ios::trunc);
-		return s_file.is_open();
-	}
-
-
 	// Logs to both file & console
 	void Debug::Log(LogLevel level, const char* msg, ...)
 	{
 
+		// Format the message once
+		char buffer[1024];
 		va_list args;
 		va_start(args, msg);
-		WriteConsole(level, msg, args);
-		WriteFile(level, msg, args);
-
-#ifdef NG_DEVELOPER_MODE
-		ng::Editor::ConsoleView::Log(FormatString(msg, args).c_str());
-#endif
-
+		vsnprintf(buffer, sizeof(buffer), msg, args);
 		va_end(args);
 
-	}
-
-	void Debug::Log(LogLevel level, const char* asciiColorCode, const char* msg, ...) {
-
-
-		va_list args;
-		va_start(args, msg);
-		WriteConsole(level, msg, args, asciiColorCode);
-		WriteFile(level, msg, args);
-
 #ifdef NG_DEVELOPER_MODE
-		ng::Editor::ConsoleView::Log(FormatString(msg, args).c_str());
+		ng::Editor::ConsoleView::Log(msg);
 #endif
 
-		va_end(args);
-
+		WriteConsole(level, buffer);
+		WriteFile(level, buffer);
 	}
+
+	//void Debug::Log(LogLevel level, const char* asciiColorCode, const char* msg, ...) {
+
+
+	//	// Format the message once
+	//	char buffer[4096];
+	//	va_list args;
+	//	va_start(args, msg);
+	//	vsnprintf(buffer, sizeof(buffer), msg, args);
+	//	va_end(args);
+
+	//	WriteConsole(level, buffer, asciiColorCode);
+	//	WriteFile(level, buffer);
+	//	#ifdef NG_DEVELOPER_MODE
+	//			ng::Editor::ConsoleView::Log(buffer);
+	//	#endif
+
+	//}
 
 	void Debug::Log(LogMessage logMessage)
 	{
-		Log(logMessage.level, "%s", logMessage.message.c_str());
+		Log(logMessage.level, CONSOLE_WHITE, logMessage.message.c_str());
 	}
 
 
-	void Debug::WriteConsole(LogLevel level, const char* msg, va_list args, const char* asciiColorCode)
+	void Debug::WriteConsole(LogLevel level, const char* msg, const char* asciiColorCode)
 	{
 
 #ifndef NG_DEBUG_MODE
@@ -124,24 +124,14 @@ namespace ng::Core {
 #endif
 
 #ifndef NG_DEVELOPER_MODE
+		// skip dev-level logs if NG_DEVELOPER_MODE is not defined
 		if (level == DEV) return;
 #endif
-
 		// Print prefix
-		printf("%s", GetLogLevelAsString(level));
-
-		// Print the formatted message
-		vprintf(msg, args);
-		printf("%s", CONSOLE_WHITE);
-
-		// Newline at the end
-		printf("\n");
-
-	
-
+		printf("%s %s\n", GetLogLevelAsString(level), msg);
 	}
 
-	void Debug::WriteFile(LogLevel level, const char* msg, va_list args)
+	void Debug::WriteFile(LogLevel level, const char* msg)
 	{
 
 #ifndef NG_DEBUG_MODE
@@ -152,7 +142,6 @@ namespace ng::Core {
 #ifndef NG_DEVELOPER_MODE
 		if (level == DEV) return;
 #endif
-
 		if (!s_file.is_open()) {
 			printf("[ERROR] Failed to open log file\n");
 			return;
@@ -161,12 +150,8 @@ namespace ng::Core {
 		// Print prefix
 		s_file << GetLogLevelAsString(level);
 
-		// Format the variadic arguments
-		char buff[2048]; // max message size
-		vsnprintf(buff, sizeof(buff), msg, args);
-
 		// Write formatted message to the file
-		s_file << buff << std::endl;
+		s_file << msg << std::endl;
 
 	}
 

@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glfw3_mt.lib;glfw3dll.lib;opengl32.lib;gdi32.lib;shell32.lib;lua54.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glfw3_mt.lib;glfw3dll.lib;opengl32.lib;gdi32.lib;shell32.lib;lua54.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -144,6 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\AVGNG\AssimpObjLoader.cpp" />
+    <ClCompile Include="include\AVGNG\MaterialData.cpp" />
+    <ClCompile Include="include\AVGNG\Texture.cpp" />
     <ClCompile Include="src\ConsoleView.cpp" />
     <ClCompile Include="src\Cursor.cpp" />
     <ClCompile Include="src\Debug.cpp" />
@@ -164,10 +167,10 @@
     <ClCompile Include="src\InspectorView.cpp" />
     <ClCompile Include="src\KeyboardInput.cpp" />
     <ClCompile Include="src\LuaManager.cpp" />
+    <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshRenderer.cpp" />
     <ClCompile Include="src\MouseInput.cpp" />
-    <ClCompile Include="src\ObjFileParser.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Shader.cpp" />
@@ -177,6 +180,7 @@
     <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AVGNG\AssimpObjLoader.hpp" />
     <ClInclude Include="include\AVGNG\Camera.hpp" />
     <ClInclude Include="include\AVGNG\Component.hpp" />
     <ClInclude Include="include\AVGNG\ConsoleColors.hpp" />
@@ -193,17 +197,19 @@
     <ClInclude Include="include\AVGNG\KeyboardInput.hpp" />
     <ClInclude Include="include\AVGNG\LuaManager.hpp" />
     <ClInclude Include="include\AVGNG\Material.hpp" />
+    <ClInclude Include="include\AVGNG\MaterialData.hpp" />
     <ClInclude Include="include\AVGNG\Mesh.hpp" />
     <ClInclude Include="include\AVGNG\MeshRenderer.hpp" />
     <ClInclude Include="include\AVGNG\MouseInput.hpp" />
-    <ClInclude Include="include\AVGNG\ObjFileParser.hpp" />
     <ClInclude Include="include\AVGNG\Renderer.hpp" />
     <ClInclude Include="include\AVGNG\Scene.hpp" />
     <ClInclude Include="include\AVGNG\Shader.hpp" />
     <ClInclude Include="include\AVGNG\ShaderLoader.hpp" />
     <ClInclude Include="include\AVGNG\TexCoord.hpp" />
+    <ClInclude Include="include\AVGNG\Texture.hpp" />
     <ClInclude Include="include\AVGNG\Time.hpp" />
     <ClInclude Include="include\AVGNG\Transform.hpp" />
+    <ClInclude Include="include\AVGNG\Utility.hpp" />
     <ClInclude Include="include\AVGNG\Vertex.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
