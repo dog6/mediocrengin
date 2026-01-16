@@ -24,5 +24,7 @@
 <details>
   <summary>Started work on Editor Tools</summary>
   <img width="997" alt="image" src="https://github.com/user-attachments/assets/35f107cb-8706-4163-b092-65feae3f181d" />
+  <p></p>Albedo, Ambient, Diffuse, Specular, Emissive colors all modifiable during runtime</p>
+  <img width="1810" height="996" alt="image" src="https://github.com/user-attachments/assets/c1f12290-64f8-4977-a793-b49e7ed5c5f1" />
 
 </details>
