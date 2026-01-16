@@ -60,52 +60,7 @@ namespace ng::Assets {
         Debug::Log(DEBUG, "Loaded texture %s -> ID %u", path.c_str(), tex->id);
 
         return tex;
-  //      filesystem::path texture_file(path);
-  //      std::string texture_fullpath = absolute(texture_file).string();
 
-		//Debug::Log(DEV, "Loading texture from %s", texture_fullpath.c_str());
-
-  //      if (!filesystem::exists(texture_file)) {
-  //          Debug::Log(ERROR, "Failed to load texture from '%s'", texture_fullpath);
-  //          return 0;
-  //      }
-
-  //      Debug::Log(DEBUG, "Attempting to load texture from '%s'", texture_fullpath.c_str());
-
-  //      unsigned int textureID;
-  //      glGenTextures(1, &textureID);
-
-  //      int width, height, nrChannels;
-  //     
-  //      // May cause issues
-  //      stbi_set_flip_vertically_on_load(true);
-
-  //      // Load texture image data
-  //      unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-  //      if (data) {
-  //          GLenum format = GL_RGB;
-  //          if (nrChannels == 1) format = GL_RED;
-  //          else if (nrChannels == 4) format = GL_RGBA;
-  //          Debug::Log(DEBUG, "Binding to textureID: %d", textureID);
-  //          glBindTexture(GL_TEXTURE_2D, textureID);
-  //          glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-  //          glGenerateMipmap(GL_TEXTURE_2D);
-
-  //          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  //          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  //          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  //          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  //          stbi_image_free(data);
-  //          Debug::Log(LOG, "Successfully loaded texture ID: %d", textureID);
-  //      }
-  //      else {
-  //          Debug::Log(ERROR, "STB Failed to decode: %s", path.c_str());
-  //          glDeleteTextures(1, &textureID);
-  //          return 0;
-  //      }
-
-  //      return textureID;
     }
 
 
@@ -169,34 +124,12 @@ namespace ng::Assets {
         }
     }
 
-
-    // Load model from file
-    vector<AssimpMesh> AssimpObjLoader::LoadModel(const string& path) {
-        Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(path,
-            aiProcess_Triangulate |
-            aiProcess_FlipUVs |
-            aiProcess_CalcTangentSpace
-        );
-
-        if (!scene || !scene->mRootNode) {
-            Debug::Log(ERROR, "Assimp failed to load %s: %s", path.c_str(), importer.GetErrorString());
-            return {};
-        }
-
-        vector<AssimpMesh> meshes;
-        string directory = filesystem::path(path).parent_path().string();
-        ProcessNode(scene->mRootNode, scene, meshes, directory);
-        return meshes;
-    }
-
-
     // AssimpMesh --> Mesh
     Mesh* AssimpObjLoader::LoadObjAsMesh(const string& path) {
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(path,
             aiProcess_Triangulate |
-            //aiProcess_FlipUVs |       // flip once
+            aiProcess_FlipUVs |       // flip once
             aiProcess_GenNormals |
             aiProcess_CalcTangentSpace);
 
@@ -265,7 +198,7 @@ namespace ng::Assets {
                     }
 
                     filesystem::path fullPath = objDir / texPath.C_Str();
-                    //texID = LoadTextureFromFile(fullPath.string());
+
 					Texture* texture = LoadTextureFromFile(fullPath.string());
                     if (texture == nullptr) {
                         Debug::Log(ERROR, "Failed to load texture '%s'", fullPath.string().c_str());

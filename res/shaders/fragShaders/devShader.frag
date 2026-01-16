@@ -7,7 +7,12 @@ in vec2 TexCoords;
 out vec4 FragColor;
 
 // Material colors
-uniform vec3 Albedo;
+uniform vec3 Albedo;          // Base color
+uniform vec3 AmbientColor;
+uniform vec3 DiffuseColor;
+uniform vec3 SpecularColor;
+uniform vec3 EmissiveColor;
+uniform float Shininess;
 
 // Texture maps
 uniform sampler2D diffuseMap;
@@ -32,57 +37,65 @@ uniform vec3 viewPos;
 
 void main()
 {
-    // Base normal
+    // ------------------------
+    // 1. Compute normal
+    // ------------------------
     vec3 norm = normalize(Normal);
 
-    // If a normal map exists, modify the normal (basic tangent-space not implemented here yet)
     if (hasNormalMap) {
         vec3 normalTex = texture(normalMap, TexCoords).rgb;
-        normalTex = normalTex * 2.0 - 1.0; // convert from [0,1] to [-1,1]
-        norm = normalize(normalTex);       // simple replacement; tangent-space needed for proper normals
+        normalTex = normalTex * 2.0 - 1.0; // [0,1] -> [-1,1]
+        norm = normalize(normalTex);       // note: tangent-space not implemented yet
     }
 
-    // Light calculations
+    // ------------------------
+    // 2. Compute lighting
+    // ------------------------
     vec3 lightDir = normalize(-sunDirection);
-    float ambientStrength = 0.4;
-    vec3 ambient = ambientStrength * sunColor;
 
+    // Ambient
+    vec3 ambient = AmbientColor * 0.4; // ambient strength, can be uniform if needed
+    // Diffuse
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * sunColor;
-
-    float specularStrength = 0.3;
+    vec3 diffuse = DiffuseColor * diff * sunColor;
+    // Specular
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16);
-    vec3 specular = specularStrength * spec * sunColor;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Shininess);
+    vec3 specular = SpecularColor * 0.3 * spec * sunColor;
 
-    vec3 lighting = ambient + diffuse + specular;
+    vec3 lighting = ambient + diffuse;
 
-    // Start with base color
+    // ------------------------
+    // 3. Apply textures
+    // ------------------------
     vec3 result = Albedo;
 
-    // Apply diffuse texture
+    // Diffuse map
     if (hasDiffuseMap) {
         result *= texture(diffuseMap, TexCoords).rgb;
     }
 
-    // Apply specular intensity modulation
+    // Specular map (modulates specular intensity)
     if (hasSpecularMap) {
-        float specIntensity = texture(specularMap, TexCoords).r; // usually stored in red channel
+        float specIntensity = texture(specularMap, TexCoords).r;
         specular *= specIntensity;
     }
 
-    // Apply emissive texture
+    // Emissive map
+    vec3 emissive = EmissiveColor;
     if (hasEmissiveMap) {
-        vec3 emissive = texture(emissiveMap, TexCoords).rgb;
-        result += emissive; // add light directly
+        emissive += texture(emissiveMap, TexCoords).rgb;
     }
 
-    // Apply alpha mask
+    // Alpha map
     float alpha = 1.0;
     if (hasAlphaMap) {
         alpha = texture(alphaMap, TexCoords).r;
     }
 
-    FragColor = vec4(result * lighting + specular, alpha);
+    // ------------------------
+    // 4. Final color
+    // ------------------------
+    FragColor = vec4(result * lighting + specular + emissive, alpha);
 }

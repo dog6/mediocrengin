@@ -12,11 +12,12 @@ Cursor.SetCursorLockMode(CursorLockMode.LOCKED)
 function ListenForCursorLockToggle()
  if (KeyboardInput.IsKeyPressed(Key.KEY_ESCAPE)) then
         cursorLocked = not cursorLocked
-
         if (cursorLocked) then
             Cursor.SetCursorLockMode(CursorLockMode.LOCKED)
+            print("Cursor locked")
         else
             Cursor.SetCursorLockMode(CursorLockMode.NONE)
+            print("Cursor unlocked")
         end
 
     end
@@ -137,5 +138,9 @@ end
 
 function OnUpdate(dt)
     ListenForCursorLockToggle()
-    HandleNoclip(dt)
+
+    if (cursorLocked) then
+        HandleNoclip(dt)
+    end
+    
 end

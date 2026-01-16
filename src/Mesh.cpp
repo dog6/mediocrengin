@@ -78,6 +78,7 @@ namespace ng::Graphics {
 
         Shader shader = ng::Assets::ShaderLoader::LoadDefaultShader();
         this->material->SetShader(shader);
+        Debug::Log(DEV, "Vertex[0] texCoord: (%f, %f)", vertices[0].texCoord.x, vertices[0].texCoord.y);
 
         glGenVertexArrays(1, &VAO);
         CheckGLError("glGenVertexArrays");
@@ -188,7 +189,7 @@ namespace ng::Graphics {
         if (diffuseTexture != nullptr && diffuseTexture->id > 0) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, diffuseTexture->id);
-            Debug::Log(DEV, "Binding to texture ID %d", diffuseTexture->id);
+            //Debug::Log(DEV, "Binding to texture ID %d", diffuseTexture->id);
             shader->SetBool("hasDiffuseMap", true);
         }
         else {

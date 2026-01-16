@@ -30,7 +30,6 @@ namespace ng::Assets {
         static Texture* LoadTextureFromFile(const string& path);
         static AssimpMesh ProcessMesh(aiMesh* mesh, const aiScene* scene, const string& directory);
         static void ProcessNode(aiNode* node, const aiScene* scene, vector<AssimpMesh>& meshes, const string& directory);
-        static std::vector<AssimpMesh> LoadModel(const string& path);
         static ng::Graphics::Mesh* LoadObjAsMesh(const string& path);
     };
 
