@@ -6,7 +6,29 @@ using namespace ng::Core; // for debug
 
 namespace ng::Graphics {
 
-	std::vector<ng::Graphics::Texture> textures(5);
+	std::vector<ng::Graphics::Texture> textures;
+
+	TextureType GetTextureTypeFromCStr(const char* texture_type) {
+		if (strcmp(texture_type, TEXTURE_TYPE_DIFFUSE) == 0) {
+			return TextureType::DIFFUSE;
+		}
+		else if (strcmp(texture_type, TEXTURE_TYPE_SPECULAR) == 0) {
+			return TextureType::SPECULAR;
+		}
+		else if (strcmp(texture_type, TEXTURE_TYPE_NORMAL) == 0) {
+			return TextureType::NORMAL;
+		}
+		else if (strcmp(texture_type, TEXTURE_TYPE_EMISSIVE) == 0) {
+			return TextureType::EMISSIVE;
+		}
+		else if (strcmp(texture_type, TEXTURE_TYPE_ALPHA) == 0) {
+			return TextureType::ALPHA;
+		}
+		else {
+			Debug::Log(WARN, "Unknown texture type string: '%s'", texture_type);
+			return TextureType::DIFFUSE; // default
+		}
+	}
 
 	MaterialData::MaterialData() {
 		// Default constructor
@@ -15,6 +37,8 @@ namespace ng::Graphics {
 		MaterialData::Diffuse = glm::vec3(1.0f);
 		MaterialData::Specular = glm::vec3(0.0f);
 		MaterialData::Emissive = glm::vec3(0.0f);
+		textures.resize(5);
+
 	}
 
 	MaterialData::~MaterialData()
@@ -35,44 +59,21 @@ namespace ng::Graphics {
 			Debug::Log(WARN, "SetTexture called with texture ID 0 for type '%s'!", texture_type);
 		}
 
-		if (textures.size() > 0) {
-			// Check if texture of this type already exists
-			for (auto& tex : textures) {
-				if (tex->type.c_str() == texture_type) {
-					tex = texture; // Replace existing texture
-					return;
-				}
-			}
-		}
 
 		// If not found, add new texture
 		texture->type = std::string(texture_type);
-		textures.push_back(texture);
+		//textures.push_back(texture);
+		textures[(int)GetTextureTypeFromCStr(texture_type)] = texture;
 	}
 
 
-	Texture* MaterialData::FindTexture(const char* texture_type) {
-
-		if (!texture_type || texture_type[0] == '\0') {
-			Debug::Log(ERROR, "FindTexture called with empty texture_type!");
+	Texture* MaterialData::FindTexture(TextureType type) {
+		if (type < 0 || type >= textures.size()) {
 			return nullptr;
 		}
-
-		if (textures.empty()) {
-			Debug::Log(WARN, "No textures available when searching for: '%s'", texture_type);
-			return nullptr;
+		else {
+			return textures[type];
 		}
-
-		std::string typeStr(texture_type);
-
-		for (auto& tex : textures) {
-			if (tex->type == typeStr) {
-				return tex;
-			}
-		}
-
-		Debug::Log(WARN, "Failed to find texture type: '%s'", texture_type);
-		return nullptr;
 	}
 
 }

@@ -132,11 +132,11 @@ namespace ng::Graphics {
 
         MaterialData* matData = mesh->material->GetMaterialData();
 
-		Texture* diffTex = matData->FindTexture(TEXTURE_TYPE_DIFFUSE);
-		Texture* specTex = matData->FindTexture(TEXTURE_TYPE_SPECULAR);
-		Texture* normTex = matData->FindTexture(TEXTURE_TYPE_NORMAL);
-		Texture* emissiveTex = matData->FindTexture(TEXTURE_TYPE_EMISSIVE);
-		Texture* alphaTex = matData->FindTexture(TEXTURE_TYPE_ALPHA);
+		Texture* diffTex = matData->FindTexture(TextureType::DIFFUSE);
+		Texture* specTex = matData->FindTexture(TextureType::SPECULAR);
+		Texture* normTex = matData->FindTexture(TextureType::NORMAL);
+		Texture* emissiveTex = matData->FindTexture(TextureType::EMISSIVE);
+		Texture* alphaTex = matData->FindTexture(TextureType::ALPHA);
 
         if (matData != nullptr) {
 

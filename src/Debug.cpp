@@ -26,6 +26,25 @@ namespace ng::Core {
 		return std::string(buffer.data(), buffer.size() - 1); // remove null terminator
 	}
 
+	const char* GetColorCode(LogLevel level)
+	{
+		switch (level) {
+		case LogLevel::LOG:
+			return CONSOLE_WHITE;
+		case LogLevel::DEBUG:
+			return CONSOLE_CYAN;
+		case LogLevel::WARN:
+			return CONSOLE_YELLOW;
+		case LogLevel::ERROR:
+			return CONSOLE_RED;
+		case LogLevel::FATAL:
+			return CONSOLE_MAGENTA;
+		case LogLevel::DEV:
+			return CONSOLE_GREEN;
+		default:
+			return CONSOLE_WHITE;
+		}
+	}
 
 	// Define the static member
 	std::ofstream ng::Core::Debug::s_file;
@@ -83,31 +102,15 @@ namespace ng::Core {
 		vsnprintf(buffer, sizeof(buffer), msg, args);
 		va_end(args);
 
-#ifdef NG_DEVELOPER_MODE
-		ng::Editor::ConsoleView::Log(msg);
-#endif
 
-		WriteConsole(level, buffer);
+
+		const char* cc = GetColorCode(level);
+#ifdef NG_DEVELOPER_MODE
+		ng::Editor::ConsoleView::Log(buffer);
+#endif
+		WriteConsole(level, buffer, cc);
 		WriteFile(level, buffer);
 	}
-
-	//void Debug::Log(LogLevel level, const char* asciiColorCode, const char* msg, ...) {
-
-
-	//	// Format the message once
-	//	char buffer[4096];
-	//	va_list args;
-	//	va_start(args, msg);
-	//	vsnprintf(buffer, sizeof(buffer), msg, args);
-	//	va_end(args);
-
-	//	WriteConsole(level, buffer, asciiColorCode);
-	//	WriteFile(level, buffer);
-	//	#ifdef NG_DEVELOPER_MODE
-	//			ng::Editor::ConsoleView::Log(buffer);
-	//	#endif
-
-	//}
 
 	void Debug::Log(LogMessage logMessage)
 	{

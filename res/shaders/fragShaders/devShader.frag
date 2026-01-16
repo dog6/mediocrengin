@@ -1,4 +1,4 @@
-#version 330
+#version 330 core
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -6,54 +6,83 @@ in vec2 TexCoords;
 
 out vec4 FragColor;
 
+// Material colors
 uniform vec3 Albedo;
 
+// Texture maps
 uniform sampler2D diffuseMap;
 uniform bool hasDiffuseMap;
 
-uniform vec3 sunDirection;   // Direction the sun is shining
-uniform vec3 sunColor;       // Color of sunlight (usually warm white/yellow)
-uniform vec3 viewPos;        // Camera position for specular
+uniform sampler2D specularMap;
+uniform bool hasSpecularMap;
+
+uniform sampler2D normalMap;
+uniform bool hasNormalMap;
+
+uniform sampler2D emissiveMap;
+uniform bool hasEmissiveMap;
+
+uniform sampler2D alphaMap;
+uniform bool hasAlphaMap;
+
+// Lighting
+uniform vec3 sunDirection;
+uniform vec3 sunColor;
+uniform vec3 viewPos;
 
 void main()
 {
-
-    // Normalize the normal vector
+    // Base normal
     vec3 norm = normalize(Normal);
-    
-    // Sun is a directional light (all rays parallel)
-    vec3 lightDir = normalize(-sunDirection);  // -sunDirection because we want direction TO light
-    
-    // Ambient lighting
-    // Minimum light level (prevents completely black shadows)
-    float ambientStrength = 0.4;  // Minecraft-style has fairly bright ambient
+
+    // If a normal map exists, modify the normal (basic tangent-space not implemented here yet)
+    if (hasNormalMap) {
+        vec3 normalTex = texture(normalMap, TexCoords).rgb;
+        normalTex = normalTex * 2.0 - 1.0; // convert from [0,1] to [-1,1]
+        norm = normalize(normalTex);       // simple replacement; tangent-space needed for proper normals
+    }
+
+    // Light calculations
+    vec3 lightDir = normalize(-sunDirection);
+    float ambientStrength = 0.4;
     vec3 ambient = ambientStrength * sunColor;
-    
-    // Diffuse lighting
-    // Surfaces facing the sun are brighter
+
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * sunColor;
-    
-    // Shiny highlights where sun reflects into camera
+
     float specularStrength = 0.3;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16);  // Lower shininess for blocks
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16);
     vec3 specular = specularStrength * spec * sunColor;
-    
-    // Combine lighting
-    vec3 lighting = ambient + diffuse + specular;
-    
-    // Apply to texture/color
 
-    vec3 result;
+    vec3 lighting = ambient + diffuse + specular;
+
+    // Start with base color
+    vec3 result = Albedo;
+
+    // Apply diffuse texture
     if (hasDiffuseMap) {
-        vec4 texColor = texture(diffuseMap, TexCoords);
-        result = lighting * Albedo * texColor.rgb;
-    }else {
-        result = lighting * Albedo;
+        result *= texture(diffuseMap, TexCoords).rgb;
     }
-    
-    FragColor = vec4(result, 1.0);
-    
+
+    // Apply specular intensity modulation
+    if (hasSpecularMap) {
+        float specIntensity = texture(specularMap, TexCoords).r; // usually stored in red channel
+        specular *= specIntensity;
+    }
+
+    // Apply emissive texture
+    if (hasEmissiveMap) {
+        vec3 emissive = texture(emissiveMap, TexCoords).rgb;
+        result += emissive; // add light directly
+    }
+
+    // Apply alpha mask
+    float alpha = 1.0;
+    if (hasAlphaMap) {
+        alpha = texture(alphaMap, TexCoords).r;
+    }
+
+    FragColor = vec4(result * lighting + specular, alpha);
 }

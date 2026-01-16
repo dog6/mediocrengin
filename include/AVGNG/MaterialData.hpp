@@ -12,7 +12,11 @@ namespace ng::Graphics {
     {
         std::string name;
         std::vector<ng::Graphics::Texture*> textures;
-
+        bool hasDiffuseTexture = false;
+		bool hasSpecularTexture = false;
+		bool hasNormalTexture = false;
+		bool hasEmissiveTexture = false;
+		bool hasAlphaTexture = false;
     public:
         MaterialData();
         ~MaterialData();
@@ -31,7 +35,7 @@ namespace ng::Graphics {
         /// <param name="texture">Texture</param>
         void SetTexture(const char* texture_type, Texture* texture);
 
-		Texture* FindTexture(const char* texture_type);
+		Texture* FindTexture(TextureType type);
 
     };
 

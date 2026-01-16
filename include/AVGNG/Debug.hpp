@@ -37,7 +37,6 @@ namespace ng::Core {
 		static void Init(const std::string& filePath);     // opens log file
 		static void Shutdown();                       // closed log file
 		static void Log(LogLevel level, const char* msg, ...);
-		//static void Log(LogLevel level, const char* asciiColorCode, const char* msg, ...);
 		static void Log(LogMessage logMessage);
 
 	};

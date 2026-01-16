@@ -12,6 +12,13 @@ namespace ng::Graphics {
     constexpr const char* TEXTURE_TYPE_EMISSIVE = "emissiveMap";
     constexpr const char* TEXTURE_TYPE_ALPHA = "alphaMap";
 
+	enum TextureType {
+		DIFFUSE = 0,
+		SPECULAR,
+		NORMAL,
+		EMISSIVE,
+		ALPHA
+	};
 
     class Texture {
 

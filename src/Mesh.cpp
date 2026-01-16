@@ -165,19 +165,19 @@ namespace ng::Graphics {
         }
 
         // Find textures
-        Texture* diffuseTexture = m->FindTexture(TEXTURE_TYPE_DIFFUSE);
-        /*Texture* specularTexture = m->FindTexture(TEXTURE_TYPE_SPECULAR);
-        Texture* normalTexture = m->FindTexture(TEXTURE_TYPE_NORMAL);
-        Texture* emissiveTexture = m->FindTexture(TEXTURE_TYPE_EMISSIVE);
-        Texture* alphaTexture = m->FindTexture(TEXTURE_TYPE_ALPHA);*/
+        Texture* diffuseTexture = m->FindTexture(TextureType::DIFFUSE);
+        Texture* specularTexture = m->FindTexture(TextureType::SPECULAR);
+        Texture* normalTexture = m->FindTexture(TextureType::NORMAL);
+        Texture* emissiveTexture = m->FindTexture(TextureType::EMISSIVE);
+        Texture* alphaTexture = m->FindTexture(TextureType::ALPHA);
 
         // Material properties
         shader->SetVec3("Albedo", m->Albedo);
-       /* shader->SetVec3("AmbientColor", m->Ambient);
+        shader->SetVec3("AmbientColor", m->Ambient);
         shader->SetVec3("DiffuseColor", m->Diffuse);
         shader->SetVec3("SpecularColor", m->Specular);
         shader->SetVec3("EmissiveColor", m->Emissive);
-        shader->SetFloat("Shininess", m->Shininess);*/
+        shader->SetFloat("Shininess", m->Shininess);
 
         // Lighting
         shader->SetVec3("sunDirection", glm::normalize(glm::vec3(-0.3f, -1.0f, -0.5f)));
@@ -197,47 +197,42 @@ namespace ng::Graphics {
         shader->SetInt("diffuseMap", 0);
 
 
-        //// Specular texture (texture unit 1) 
-        //if (specularTexture != nullptr && specularTexture->id > 0) {
-        //    glActiveTexture(GL_TEXTURE1);
-        //    glBindTexture(GL_TEXTURE_2D, specularTexture->id);
-        //    shader->SetBool("hasSpecularMap", true);
-        //}
-        //else {
-        //    shader->SetBool("hasSpecularMap", false);
-        //}
-        //shader->SetInt("specularMap", 1);
-
-
-        //// Emissive map (texture unit 3)
-        //if (emissiveTexture != nullptr && emissiveTexture->id > 0) {
-        //    glActiveTexture(GL_TEXTURE3);
-        //    glBindTexture(GL_TEXTURE_2D, emissiveTexture->id);
-        //    shader->SetBool("hasEmissiveMap", true);
-        //}
-        //else shader->SetBool("hasEmissiveMap", false);
-        //shader->SetInt("emissiveMap", 3);
-
-        //// Normal map (texture unit 3)
-        //if (normalTexture != nullptr && normalTexture->id > 0) {
-        //    glActiveTexture(GL_TEXTURE2);
-        //    glBindTexture(GL_TEXTURE_2D, normalTexture->id);
-        //    shader->SetBool("hasNormalMap", true);
-        //}
-        //else shader->SetBool("hasNormalMap", false);
-        //shader->SetInt("normalMap", 2);
-
-
-        //// Alpha map (texture unit 4)
-        //if (alphaTexture != nullptr && alphaTexture->id > 0) {
-        //    glActiveTexture(GL_TEXTURE4);
-        //    glBindTexture(GL_TEXTURE_2D, alphaTexture->id);
-        //    shader->SetBool("hasAlphaMap", true);
-        //}
-        //else {
-        //    shader->SetBool("hasAlphaMap", false);
-        //}
-        //shader->SetInt("alphaMap", 4);
+        // Specular texture (texture unit 1) 
+        if (specularTexture != nullptr && specularTexture->id > 0) {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, specularTexture->id);
+            shader->SetBool("hasSpecularMap", true);
+        }
+        else {
+            shader->SetBool("hasSpecularMap", false);
+        }
+        shader->SetInt("specularMap", 1);
+       // Emissive map (texture unit 3)
+        if (emissiveTexture != nullptr && emissiveTexture->id > 0) {
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, emissiveTexture->id);
+            shader->SetBool("hasEmissiveMap", true);
+        }
+        else shader->SetBool("hasEmissiveMap", false);
+        shader->SetInt("emissiveMap", 3);
+       // Normal map (texture unit 3)
+        if (normalTexture != nullptr && normalTexture->id > 0) {
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, normalTexture->id);
+            shader->SetBool("hasNormalMap", true);
+        }
+        else shader->SetBool("hasNormalMap", false);
+        shader->SetInt("normalMap", 2);
+       // Alpha map (texture unit 4)
+        if (alphaTexture != nullptr && alphaTexture->id > 0) {
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, alphaTexture->id);
+            shader->SetBool("hasAlphaMap", true);
+        }
+        else {
+            shader->SetBool("hasAlphaMap", false);
+        }
+        shader->SetInt("alphaMap", 4);
 
 
 
