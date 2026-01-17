@@ -236,6 +236,7 @@ namespace ng::Assets {
 
         Mesh* newMesh = new Mesh(vertices, indices);
         newMesh->material->SetMaterialData(mat_data);
+        newMesh->filepath = path;
         return newMesh;
     }
 

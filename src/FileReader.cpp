@@ -64,4 +64,24 @@ namespace ng::Assets {
         return content;
     }
 
+    bool FileReader::WriteFile(const std::string& filepath, const std::string& content)
+    {
+       
+        std::ofstream file(filepath);
+
+        // Open file
+        if (!file.is_open()) {
+            Debug::Log(ERROR, "Failed to save scene with path: '%s'", filepath.c_str());
+            return false;
+        }
+
+        // Write to opened file
+        file << content;
+
+        file.close();
+
+        return true;
+
+    }
+
 }

@@ -11,7 +11,7 @@ namespace ng::Editor {
 
 	//std::vector<std::unique_ptr<ng::Core::Component>> InspectorView::s_inspectedComponents;
 
-	std::vector<Component*> InspectorView::s_inspectedComponents;
+	std::vector<IComponent*> InspectorView::s_inspectedComponents;
 
 	void InspectorView::CreateUI()
 	{

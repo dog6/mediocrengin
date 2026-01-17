@@ -13,6 +13,8 @@ namespace ng::Graphics {
             ~Shader();
             unsigned int ID = 0; // default ID to 0
 
+            std::string vertex_shader_path;
+            std::string fragment_shader_path;
    
             void Build(const char* vertexCode, const char* fragmentCode);
 

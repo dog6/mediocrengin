@@ -2,7 +2,7 @@
 
 #include <AVGNG/MeshRenderer.hpp>
 #include <AVGNG/Transform.hpp>
-#include <AVGNG/Component.hpp>
+#include <AVGNG/IComponent.hpp>
 #include <iostream>
 
 #include <memory>
@@ -15,7 +15,7 @@ namespace ng::Core {
 	class GameObject {
 
     private:
-        std::vector<std::unique_ptr<ng::Core::Component>> components;
+        std::vector<std::unique_ptr<ng::Core::IComponent>> components;
 
 
 	public:
@@ -27,11 +27,11 @@ namespace ng::Core {
 
         GameObject(const GameObject&) = delete;
         GameObject& operator=(const GameObject&) = delete;
-        Component* AddComponentByName(const std::string& type);
-        Component* GetComponentByName(const std::string& type);
+        IComponent* AddComponentByName(const std::string& type);
+        IComponent* GetComponentByName(const std::string& type);
 
-        std::vector<Component*> GetAttachedComponents() {
-            std::vector<Component*> result;
+        std::vector<IComponent*> GetAttachedComponents() {
+            std::vector<IComponent*> result;
             for (auto& comp : components)
             {
                 result.push_back(comp.get());  // get raw pointer, no ownership transfer
@@ -41,7 +41,7 @@ namespace ng::Core {
 
         template<typename T, typename... Args> T*
             AddComponent(Args&&... args) {
-            static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");
+            static_assert(std::is_base_of<IComponent, T>::value, "T must inherit from IComponent");
 
             auto comp = std::make_unique<T>(std::forward<Args>(args)...);
             comp->owner = this; // set owner

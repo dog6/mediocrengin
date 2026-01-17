@@ -3,18 +3,22 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <AVGNG/Component.hpp>
+#include <nlohmann/json.hpp>
+#include <AVGNG/IComponent.hpp>
 
 namespace ng::Core {
 
 
-	class Transform : public Component {
+	class Transform : public IComponent {
 
 		glm::vec3 position{ 0.0f };
 		glm::vec3 rotation{ 0.0f }; // in radians (pitch, yaw, roll)
 		glm::vec3 scale{ 1.0f };
 
 	public:
+		Transform();
+		~Transform();
+
 		glm::mat4 GetModelMatrix() const
 		{
 
@@ -40,7 +44,8 @@ namespace ng::Core {
 
 		void OnInspectorGUI() override;
 
-	
+		void Save(nlohmann::json& j, int componentIndex) override;
+
 	};
 
 }

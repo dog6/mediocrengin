@@ -25,9 +25,10 @@ namespace ng::Graphics {
         glm::vec3 Diffuse;              // Diffuse
         glm::vec3 Specular;             // Specular
         glm::vec3 Emissive;             // Emissive
-        float IOR = 1.5f;					              // Index of Refraction
-        float Shininess = 1.0f;                           // Shininess 0 = dull, 2000 = shiny, sharp reflections
-
+        float IOR = 1.5f;					              // Index of Refraction 0-128 (non-metallic vs metallic)
+        float Shininess = 1.0f;                           // Shininess 0 = dull, 128 = shiny, sharp reflections
+        float Opacity = 1.0f; // 1 opaque, 0 transparent
+       
         /// <summary>Sets a texture of a specific type (e.g., diffuse, specular)</summary>
         /// <details>If texture type already exists, it replaces it.
         /// If texture type does NOT already exist, it adds a new texture.</details>
@@ -35,6 +36,11 @@ namespace ng::Graphics {
         /// <param name="texture">Texture</param>
         void SetTexture(const char* texture_type, Texture* texture);
 
+		/// <summary>
+		/// Finds a texture of a given TextureType
+		/// </summary>
+		/// <param name="type">TextureType</param>
+		/// <returns>ptr* to found Texture object, or nullptr if not found</returns>
 		Texture* FindTexture(TextureType type);
 
     };

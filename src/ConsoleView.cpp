@@ -6,7 +6,6 @@ using namespace ng::Core;
 
 namespace ng::Editor {
 
-
 	bool ConsoleView::s_isVisible = false;
 	std::vector<std::string> ConsoleView::s_logs;
 

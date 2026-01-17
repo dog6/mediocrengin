@@ -45,7 +45,6 @@ namespace ng::Graphics {
     }
     Mesh* MeshRenderer::GetMesh() { return this->mesh; }
 
-
     /// <summary>
     /// Loads a mesh for this->mesh using a given .obj file path
     /// </summary>
@@ -73,47 +72,6 @@ namespace ng::Graphics {
         this->SetMesh(loadedMesh);
 
     }
-
-   /* /// <summary>
-    /// Loads a shader for this->mesh using given vertex and fragment shader path.
-    /// </summary>
-    /// <param name="vertShaderPath">path to shader.vert file</param>
-    /// <param name="fragShaderPath">path to shader.frag file</param>
-    void MeshRenderer::LoadShader(const char* shaderName, const char* vertShaderPath, const char* fragShaderPath) {
-
-        Debug::Log(DEBUG, "LoadShader called on MeshRenderer %p", (void*)this);
-        Debug::Log(DEBUG, "    Vertex: '%s'", vertShaderPath);
-        Debug::Log(DEBUG, "    Fragment: '%s'", fragShaderPath);
-
-        if (!std::filesystem::exists(vertShaderPath)) {
-            Debug::Log(ERROR, "Failed to load vertex shader for MeshRenderer %p", (void*)this);
-            Debug::Log(ERROR, "    Path: '%s'", vertShaderPath);
-            return;
-        }
-
-        if (!std::filesystem::exists(fragShaderPath)) {
-            Debug::Log(ERROR, "Failed to load fragment shader for MeshRenderer %p", (void*)this);
-            Debug::Log(ERROR, "    Path: '%s'", fragShaderPath);
-            return;
-        }
-
-        Shader* loadedShader = ng::Assets::ShaderLoader::LoadShader(shaderName, vertShaderPath, fragShaderPath);
-
-
-        if (!loadedShader) {
-            Debug::Log(ERROR, "Failed to load mesh shader.\n    Vertex Shader: '%s'\n    Fragment Shader: '%s'", vertShaderPath, fragShaderPath);
-            this->shader = nullptr;
-            return;
-        }
-
-        this->shader = loadedShader;
-        Debug::Log(LOG, "Sucessfully loaded shader for MeshRenderer %p", (void*)this);
-        Debug::Log(LOG, "    Vertex: '%s'", vertShaderPath);
-        Debug::Log(LOG, "    Fragment: '%s'", fragShaderPath);
-        
-    
-    }*/
-
 
     void MeshRenderer::OnInspectorGUI() {
 
@@ -152,8 +110,9 @@ namespace ng::Graphics {
                 ImGui::ColorPicker3("Specular Color", (float*)&matData->Specular, ImGuiColorEditFlags_NoAlpha);
                 ImGui::ColorPicker3("Emissive Color", (float*)&matData->Emissive, ImGuiColorEditFlags_NoAlpha);
                 ImGui::ColorPicker3("Ambient Color", (float*)&matData->Ambient, ImGuiColorEditFlags_NoAlpha);
-                ImGui::SliderFloat("Index of Refraction", &matData->IOR, 1.0f, 3.0f);
-                ImGui::SliderFloat("Shininess", &matData->Shininess, 0.0f, 2000.0f);
+                ImGui::SliderFloat("Index of Refraction", &matData->IOR, .0f, 1.0f);
+                ImGui::SliderFloat("Shininess", &matData->Shininess, 0.0f, 1.0f);
+                ImGui::SliderFloat("Opacity", &matData->Opacity, 0.0f, 1.0f); // new
             }
 
         }
@@ -162,6 +121,46 @@ namespace ng::Graphics {
         }
 
        
+    }
+
+    void MeshRenderer::Save(nlohmann::json& j, int componentIndex)
+    {
+        MaterialData* meshMat = mesh->GetMaterial()->GetMaterialData();
+        Shader* meshShader = mesh->GetMaterial()->GetShader();
+        // Save mesh data
+        j["meshRenderer"]["path"] = mesh->filepath;
+
+        Debug::Log(DEBUG, "Saving MeshRenderer %p...", mesh);
+        
+      // Save material properties
+      j["meshRenderer"]["material"]["mat_albedo_color"] = {meshMat->Albedo.x, meshMat->Albedo.y, meshMat->Albedo.z};
+      j["meshRenderer"]["material"]["mat_ambient_color"] = { meshMat->Ambient.x, meshMat->Ambient.y, meshMat->Ambient.z };
+      j["meshRenderer"]["material"]["mat_diffuse_color"] = { meshMat->Diffuse.x, meshMat->Diffuse.y, meshMat->Diffuse.z };
+      j["meshRenderer"]["material"]["mat_specular_color"] = { meshMat->Specular.x, meshMat->Specular.y, meshMat->Specular.z };
+      j["meshRenderer"]["material"]["mat_emissive_color"] = { meshMat->Emissive.x, meshMat->Emissive.y, meshMat->Emissive.z };
+      j["meshRenderer"]["material"]["mat_shininess"] = meshMat->Shininess;
+      j["meshRenderer"]["material"]["mat_ior"] = meshMat->IOR;
+      j["meshRenderer"]["material"]["mat_opacity"] = meshMat->Opacity;
+      
+      // Find all existing texture paths
+      Texture* diffuseTex = meshMat->FindTexture(TextureType::DIFFUSE);
+      Texture* specularTex = meshMat->FindTexture(TextureType::SPECULAR);
+      Texture* emissiveTex = meshMat->FindTexture(TextureType::EMISSIVE);
+      Texture* normalTex = meshMat->FindTexture(TextureType::NORMAL);
+      Texture* alphaTex = meshMat->FindTexture(TextureType::ALPHA);
+
+      // Save texture data
+      j["meshRenderer"]["material"]["mat_specular_texture_path"] = specularTex ? specularTex->path : "";
+      j["meshRenderer"]["material"]["mat_emissive_texture_path"] = emissiveTex ? emissiveTex->path : "";
+      j["meshRenderer"]["material"]["mat_normal_texture_path"] = normalTex ? normalTex->path : "";
+      j["meshRenderer"]["material"]["mat_alpha_texture_path"] = alphaTex ? alphaTex->path : "";
+
+      // Save shader data
+      j["meshRenderer"]["shader"]["vertex_shader_path"] = meshShader->vertex_shader_path;
+      j["meshRenderer"]["shader"]["fragment_shader_path"] = meshShader->fragment_shader_path;
+
+      Debug::Log(DEBUG, "Finished saving MeshRenderer %p", mesh);
+
     }
 
 

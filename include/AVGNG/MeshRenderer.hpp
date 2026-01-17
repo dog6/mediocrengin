@@ -1,12 +1,12 @@
 #pragma once
 
 #include <AVGNG/Mesh.hpp>
-#include <AVGNG/Component.hpp>
+#include <AVGNG/IComponent.hpp>
 #include <filesystem>
 
 namespace ng::Graphics {
 
-	class MeshRenderer : public ng::Core::Component {
+	class MeshRenderer : public ng::Core::IComponent {
 		Mesh* mesh = nullptr;
 		Texture* diffuseTexture = nullptr;
 		Texture* specularTexture = nullptr;
@@ -24,6 +24,7 @@ namespace ng::Graphics {
 
 		void OnInspectorGUI() override;
 
+		void Save(nlohmann::json& j, int componentIndex);
 
 	};
 

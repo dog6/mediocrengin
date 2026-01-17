@@ -50,6 +50,8 @@ namespace ng::Assets {
 
         Debug::Log(DEBUG, "Shader linked successfully! ID: %d", result->ID);
 
+        result->vertex_shader_path = vertex_shader_filePath;
+        result->fragment_shader_path = frag_shader_filePath;
         return result;
 
     }

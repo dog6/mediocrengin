@@ -59,7 +59,7 @@ namespace ng::Scripting {
 		
 		void RegisterTransform(sol::state& lua) {
 			lua.new_usertype<ng::Core::Transform>("Transform",
-		  		sol::base_classes, sol::bases<ng::Core::Component>(),
+		  		sol::base_classes, sol::bases<ng::Core::IComponent>(),
 		  		"SetPosition", [](ng::Core::Transform& self, float x, float y, float z) {
 		  			self.SetPosition(glm::vec3(x, y, z));
 		  		},
@@ -121,7 +121,7 @@ namespace ng::Scripting {
 
 		void RegisterMeshRenderer(sol::state& lua) {
 			lua.new_usertype<ng::Graphics::MeshRenderer>("MeshRenderer",
-		  		sol::base_classes, sol::bases<ng::Core::Component>(),
+		  		sol::base_classes, sol::bases<ng::Core::IComponent>(),
 		  		"LoadMesh", &ng::Graphics::MeshRenderer::LoadMesh,
 				"GetMesh", &ng::Graphics::MeshRenderer::GetMesh
 			);

@@ -15,6 +15,7 @@ namespace ng::Assets {
 			static int safe_stoi(const std::string& s);
 			static std::vector<int> split_ints(const std::string& s, const std::string& delimiter);
 			static std::string ReadFile(const std::string& filePath);
+			static bool WriteFile(const std::string& filepath, const std::string& content);
 		};
 
 }

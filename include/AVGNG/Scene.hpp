@@ -1,10 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <memory>
 
 #include <AVGNG/GameObject.hpp>
-#include <AVGNG/Component.hpp>
+#include <AVGNG/IComponent.hpp>
 #include <AVGNG/MeshRenderer.hpp>
 
 #include <AVGNG/LuaManager.hpp>
@@ -15,7 +16,7 @@ namespace ng::Core {
 
 	private:
 		ng::Graphics::Camera* mainCamera;
-		std::vector<std::unique_ptr<Component>> components;
+		std::vector<std::unique_ptr<IComponent>> components;
 		std::vector<GameObject*> gameObjectsInScene;
 
 
@@ -40,12 +41,11 @@ namespace ng::Core {
 		void SetActiveCamera(ng::Graphics::Camera* cam);
 		ng::Graphics::Camera* GetActiveCamera() const;
 
-		const std::string& GetName() const { return sceneName; }
+		const std::string GetName() const { return std::string(sceneName); }
 		const std::vector<GameObject*>& GetGameObjects() const { return gameObjectsInScene; }
 
 		bool IsActive() const { return isActive; }
 		void SetActive(bool active) { isActive = active; }
-
 
 	};
 

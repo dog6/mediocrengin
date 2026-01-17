@@ -8,11 +8,12 @@ namespace ng::Editor {
 	class InspectorView : public EditorUIElement {
 
 	private:
-		static ng::Core::GameObject* s_inspectedObject;
-		//static std::vector<std::unique_ptr<ng::Core::Component>> s_inspectedComponents;
-		static std::vector<ng::Core::Component*> s_inspectedComponents;
+
 		static bool s_isVisible;
 		static void CreateUI(); // updates UI elements
+
+		static ng::Core::GameObject* s_inspectedObject;
+		static std::vector<ng::Core::IComponent*> s_inspectedComponents;
 
 	public:
 
@@ -22,8 +23,7 @@ namespace ng::Editor {
 		
 		static void Inspect(int objIndex, ng::Core::GameObject* object); // sets object to be inspected
 
-		static void Update() { CreateUI(); }
-
+		static void EditorUIElement::Update() { CreateUI(); }
 
 	};
 

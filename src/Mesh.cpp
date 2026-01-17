@@ -179,7 +179,8 @@ namespace ng::Graphics {
         shader->SetVec3("SpecularColor", m->Specular);
         shader->SetVec3("EmissiveColor", m->Emissive);
         shader->SetFloat("Shininess", m->Shininess);
-
+        shader->SetFloat("IOR", m->IOR);
+        shader->SetFloat("Opacity", m->Opacity);
         // Lighting
         shader->SetVec3("sunDirection", glm::normalize(glm::vec3(-0.3f, -1.0f, -0.5f)));
         shader->SetVec3("sunColor", glm::vec3(1.0f, 0.95f, 0.8f));

@@ -3,6 +3,7 @@
 #include <AVGNG/InspectorView.hpp>
 #include <AVGNG/HierarchyView.hpp>
 #include <AVGNG/ConsoleView.hpp>
+#include <AVGNG/MenuStripView.hpp>
 
 #include <AVGNG/KeyboardInput.hpp>
 
@@ -15,6 +16,7 @@ namespace ng::Editor {
 	bool EditorUI::s_isInspectorVisible;
 	bool EditorUI::s_isConsoleVisible;
 	bool EditorUI::s_isHierarchyVisible;
+	bool EditorUI::s_isMenuStripVisible;
 	bool EditorUI::s_allVisible;
 	// Inspector View
 	void EditorUI::ShowInspector()
@@ -56,31 +58,53 @@ namespace ng::Editor {
 		HierarchyView::Show();
 	}
 
+	// MenuStrip View
+	void EditorUI::ShowMenuStrip() {
+		Debug::Log(DEBUG, "Showing Menu Strip View");
+		MenuStripView::Show();
+	}
+
+	void EditorUI::HideMenuStrip() {
+		Debug::Log(DEBUG, "Hiding Menu Strip View");
+		MenuStripView::Hide();
+	}
 
 	// All Views
 	void EditorUI::ShowAllElements()
 	{
 		Debug::Log(DEBUG, "Showing All Editor UI Elements");
-		InspectorView::Show();
-		HierarchyView::Show();
-		ConsoleView::Show();
+		ShowInspector();
+		ShowHierarchy();
+		ShowConsole();
+		ShowMenuStrip();
+
 	}
 
 	void EditorUI::HideAllElements()
 	{
 		Debug::Log(DEBUG, "Hiding All Editor UI Elements");
-		InspectorView::Hide();
-		HierarchyView::Hide();
-		ConsoleView::Hide();
+		HideInspector();
+		HideHierarchy();
+		HideConsole();
+		HideMenuStrip();
 	}
 
 
 	// Handler Methods
 	void EditorUI::Update()
 	{
-		HierarchyView::Update();
-		InspectorView::Update();
-		ConsoleView::Update();
+
+		// Get states
+		s_isHierarchyVisible = HierarchyView::IsVisible();
+		s_isInspectorVisible = InspectorView::IsVisible();
+		s_isMenuStripVisible = MenuStripView::IsVisible();
+		s_isConsoleVisible = ConsoleView::IsVisible();
+		
+		// Update if visible
+		if (s_isHierarchyVisible) HierarchyView::Update();
+		if (s_isInspectorVisible) InspectorView::Update();
+		if (s_isConsoleVisible) ConsoleView::Update();
+		if (s_isMenuStripVisible) MenuStripView::Update();
 
 		// ~ to toggle all UI elements
 		if (KeyboardInput::IsKeyPressed(Key::KEY_GRAVE_ACCENT)) {
@@ -96,33 +120,29 @@ namespace ng::Editor {
 
 		}
 
+		// Hierarchy
 		if (KeyboardInput::IsKeyPressed(Key::KEY_F1)) {
-			if (HierarchyView::IsVisible()) {
-				HideHierarchy();
-			}
-			else {
-				ShowHierarchy();
-			}
+			if (s_isHierarchyVisible) HideHierarchy();
+			else ShowHierarchy();
 		}
 
+		// Inspector
 		if (KeyboardInput::IsKeyPressed(Key::KEY_F2)) {
-			if (InspectorView::IsVisible()) {
-				HideInspector();
-			}
-			else {
-				ShowInspector();
-			}
+			if (InspectorView::IsVisible()) HideInspector();
+			else ShowInspector();
 		}
 
+		// Console
 		if (KeyboardInput::IsKeyPressed(Key::KEY_F3)) {
-			if (ConsoleView::IsVisible()) {
-				HideConsole();
-			}
-			else {
-				ShowConsole();
-			}
+			if (ConsoleView::IsVisible()) HideConsole();
+			else ShowConsole();
 		}
 
+		// MenuStrip
+		if (KeyboardInput::IsKeyPressed(Key::KEY_F4)) {
+			if (MenuStripView::IsVisible()) HideMenuStrip();
+			else ShowMenuStrip();
+		}
 
 	}
 

@@ -47,7 +47,6 @@
 #include <AVGNG/Shader.hpp>
 #include <AVGNG/Mesh.hpp>
 #include <AVGNG/MeshRenderer.hpp>
-#include <AVGNG/Renderer.hpp>
 
 // Core
 #include <AVGNG/Time.hpp>

@@ -1,5 +1,4 @@
-#include "Texture.hpp"
-
+#include <AVGNG/Texture.hpp>
 #include <string>
 
 namespace ng::Graphics {

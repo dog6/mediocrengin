@@ -1,11 +1,20 @@
 #include <AVGNG/Transform.hpp>
-
+#include <AVGNG/Debug.hpp>
 #include <imgui.h>
 
 using namespace ng::Core;
 
 
-	void Transform::SetPosition(glm::vec3 pos) {
+Transform::Transform()
+{
+	this->SetPosition(glm::vec3(0));
+	this->SetRotation(glm::vec3(0));
+	this->SetScale(glm::vec3(1));
+}
+
+Transform::~Transform() {}
+
+void Transform::SetPosition(glm::vec3 pos) {
 		this->position = pos;
 	}
 
@@ -42,5 +51,25 @@ using namespace ng::Core;
 		}
 
 
+
+	}
+
+	void Transform::Save(nlohmann::json& j, int componentIndex)
+	{
+
+		glm::vec3 pos = this->GetPosition();
+		glm::vec3 rot = this->GetRotation();
+		glm::vec3 scl = this->GetScale();
+
+		Debug::Log(DEBUG, "Saving Transform %p...", this);
+
+		//j = nlohmann::json::array();
+
+		// Save transform data
+		j["transform"]["position"] = { pos.x, pos.y, pos.z };
+		j["transform"]["rotation"] = { rot.x, rot.y, rot.z };
+		j["transform"]["scale"] = { scl.x, scl.y, scl.z };
+
+		Debug::Log(DEBUG, "Finished saving Transform %p", this);
 
 	}

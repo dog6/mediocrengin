@@ -11,9 +11,10 @@ namespace ng::Editor
 	class ConsoleView : public EditorUIElement {
 
 		private:
-			static std::vector<std::string> s_logs;
 			static bool s_isVisible;
 			static void CreateUI(); // updates UI elements
+
+			static std::vector<std::string> s_logs;
 			static int DeveloperCommandSent(ImGuiInputTextCallbackData* data);
 
 		public:
@@ -22,7 +23,8 @@ namespace ng::Editor
 			static void EditorUIElement::Hide() { s_isVisible = false; }
 			static bool EditorUIElement::IsVisible() { return s_isVisible; }
 
-			static void Update() { CreateUI(); }
+			static void EditorUIElement::Update() { CreateUI(); }
+
 			static void Log(const char* msg);
 			static void Clear();
 
