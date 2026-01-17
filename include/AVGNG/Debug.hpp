@@ -35,7 +35,7 @@ namespace ng::Core {
 		static const char* GetLogLevelAsString(LogLevel level);
 	public:
 		static void Init(const std::string& filePath);     // opens log file
-		static void Shutdown();                       // closed log file
+		static void Shutdown();							   // closed log file
 		static void Log(LogLevel level, const char* msg, ...);
 		static void Log(LogMessage logMessage);
 

@@ -17,8 +17,6 @@ namespace ng::Assets {
 
 		json jsonData;
 
-		//jsonData = nlohmann::json::array(); // ensures numeric indexing works
-
 		jsonData["scene"]["sceneName"] = scene_name;
 
 		// Save scene camera data

@@ -190,7 +190,7 @@
                             ],
                             "rotation": [
                                 0.0,
-                                1.9187616109848022,
+                                21.702905654907227,
                                 0.0
                             ],
                             "scale": [
@@ -257,7 +257,7 @@
                             ],
                             "rotation": [
                                 0.0,
-                                1.9187616109848022,
+                                21.702905654907227,
                                 0.0
                             ],
                             "scale": [
@@ -269,18 +269,85 @@
                     }
                 ],
                 "name": "Ball"
+            },
+            {
+                "active": true,
+                "components": [
+                    null,
+                    {
+                        "meshRenderer": {
+                            "material": {
+                                "mat_albedo_color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "mat_alpha_texture_path": "",
+                                "mat_ambient_color": [
+                                    0.8901734352111816,
+                                    0.5840155482292175,
+                                    0.5840155482292175
+                                ],
+                                "mat_diffuse_color": [
+                                    0.9971098303794861,
+                                    0.9971098303794861,
+                                    0.9971098303794861
+                                ],
+                                "mat_emissive_color": [
+                                    0.7572254538536072,
+                                    0.11161414533853531,
+                                    0.11161414533853531
+                                ],
+                                "mat_emissive_texture_path": "",
+                                "mat_ior": 1.5,
+                                "mat_normal_texture_path": "",
+                                "mat_opacity": 1.0,
+                                "mat_shininess": 250.0,
+                                "mat_specular_color": [
+                                    0.5991012454032898,
+                                    0.9508670568466187,
+                                    0.6458677053451538
+                                ],
+                                "mat_specular_texture_path": ""
+                            },
+                            "path": "./res/models/mdl_grass_cube.obj",
+                            "shader": {
+                                "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
+                                "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
+                            }
+                        },
+                        "transform": {
+                            "position": [
+                                8.0,
+                                -5.0,
+                                -8.0
+                            ],
+                            "rotation": [
+                                5.829607009887695,
+                                0.0,
+                                5.829607009887695
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    }
+                ],
+                "name": "Cube"
             }
         ],
         "sceneCamera": {
             "position": [
                 0.0,
-                0.0,
+                -3.6054229736328125,
                 5.0
             ],
             "target": [
-                0.002162869554013014,
-                -0.3801460862159729,
-                4.075076103210449
+                0.5842645168304443,
+                -3.807055711746216,
+                4.213883399963379
             ]
         },
         "sceneName": "Development Scene"

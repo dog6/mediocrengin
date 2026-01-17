@@ -2,16 +2,19 @@
 #include <AVGNG/LuaManager.hpp>
 
 
-#include <AVGNG/Scene.hpp>
-#include <AVGNG/GameObject.hpp>
-#include <AVGNG/Transform.hpp>
-#include <AVGNG/MeshRenderer.hpp>
-#include <AVGNG/ObjFileParser.hpp>
+//#include <AVGNG/Scene.hpp>
+//#include <AVGNG/GameObject.hpp>
+//#include <AVGNG/Transform.hpp>
+//#include <AVGNG/MeshRenderer.hpp>
 
-#include <AVGNG/KeyboardInput.hpp>
-#include <AVGNG/MouseInput.hpp>
+//#include <AVGNG/KeyboardInput.hpp>
+//#include <AVGNG/MouseInput.hpp>
 
-#include <AVGNG/Cursor.hpp>
+//#include <AVGNG/Cursor.hpp>
+
+#include <AVGNG/Game.hpp>
+
+#include <AVGNG/FileReader.hpp>
 
 #ifdef NG_DEVELOPER_MODE
 #include <AVGNG/ConsoleView.hpp>
@@ -25,6 +28,13 @@ namespace ng::Scripting {
 		//// Helper Methods
 		//// Register Lua Bindings
 		////
+		
+		void RegisterGame(sol::state& lua) {
+			lua.new_usertype<ng::Core::Game>("Game",
+				"GetActiveScene", &ng::Core::Game::GetActiveScene
+			);
+		}
+	
 		void RegisterScene(sol::state& lua) {
 			lua.new_usertype<ng::Core::Scene>("Scene",
 				"CreateGameObject", &ng::Core::Scene::CreateGameObject,
@@ -162,6 +172,7 @@ namespace ng::Scripting {
 				std::cout << std::endl;
 				};
 			lua.set_function("clear", &ng::Editor::ConsoleView::Clear);
+			lua.set_function("load", &LuaManager::Load);
 		}
 
 
@@ -172,7 +183,7 @@ namespace ng::Scripting {
 		/// </summary>
 		/// <param name="scene">Scene* reference</param>
 		/// <param name="filepath">Path to lua script</param>
-		void LuaManager::Load(ng::Core::Scene* scene, const char* filepath) {
+		void LuaManager::Load(const char* filepath) {
 			
 			Debug::Log(LOG, "Loading Lua script: '%s'", filepath);
 
@@ -189,8 +200,10 @@ namespace ng::Scripting {
 
 			BindToLua(script.lua);
 
-			script.lua["scene"] = scene;
-			script.lua["camera"] = scene->GetActiveCamera();
+			Game* instance = ng::Core::Game::GetInstance();
+
+			script.lua["game"] = instance;
+			script.lua["camera"] = instance->activeScene->GetActiveCamera();
 
 			try {
 				auto result = script.lua.script_file(filepath);
@@ -243,6 +256,7 @@ namespace ng::Scripting {
 		/// <param name="lua">sol::state& reference</param>
 		void LuaManager::BindToLua(sol::state& lua) {
 		
+			RegisterGame(lua);
 			RegisterScene(lua);
 			RegisterGameObject(lua);
 			RegisterTransform(lua);
@@ -258,7 +272,6 @@ namespace ng::Scripting {
 
 		}
 
-
 		/// <summary>
 		/// Unloads all loaded lua scripts.
 		/// </summary>
@@ -267,7 +280,11 @@ namespace ng::Scripting {
 			s_scripts.clear();
 		}
 
-		void LuaManager::Execute(const char* luaCode)
+		/// <summary>
+		/// Executes lua code
+		/// </summary>
+		/// <param name="luaCode">lua code to execute</param>
+		void LuaManager::Execute(std::string luaCode)
 		{
 			LuaScript cmdScript = LuaScript();
 			sol::state& lua = cmdScript.lua;
@@ -282,16 +299,13 @@ namespace ng::Scripting {
 
 			BindToLua(lua);
 
-			LogMessage log;
-
 			try {
 				// Run lua code
 				sol::load_result script = lua.load(luaCode);
 
 				if (!script.valid()) {
 					sol::error err = script;
-					log.level = ERROR;
-					log.message = std::string("Compile Error: ") + err.what();
+					Debug::Log(ERROR, "Compile Error: %s", err.what());
 				}
 				else {
 					sol::protected_function func = script;
@@ -299,22 +313,14 @@ namespace ng::Scripting {
 
 					if (!result.valid()) {
 						sol::error err = result;
-						log.level = WARN;
-						log.message = std::string("Runtime Error: ") + err.what();
-					}
-					else {
-						log.level = LOG;
-						log.message = std::string("Successfully executed lua command");
+						Debug::Log(WARN, "Runtime Error: %s", err.what());
 					}
 
 				}
 			}
 			catch (const std::exception& e) {
-				log.level = ERROR;
-				log.message = std::string("Exception: ") + e.what();
+				Debug::Log(ERROR, "Exception: %s", e.what());
 			}
-
-			Debug::Log(log);
 
 		}
 

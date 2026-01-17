@@ -12,6 +12,7 @@ namespace ng {
     GLFWwindow* Game::gameWindow = nullptr;
     Camera* Game::camera = new ng::Graphics::Camera();
     Scene* Game::activeScene = new Scene(camera, "Development Scene");
+    Game* Game::Instance;
 
     // Helper methods
     void SetupImGUI(GLFWwindow* window) {
@@ -75,11 +76,13 @@ namespace ng {
         this->windowTitle = "AvgNGin | v0.0.0";
         this->defaultWindowSize = glm::uvec2(1280, 720);
 		this->currentWindowSize = this->defaultWindowSize;
+        Game::Instance = this;
     }
     Game::Game(const char* title, glm::uvec2 size) {
         this->windowTitle = title;
         this->defaultWindowSize = size;
         this->currentWindowSize = this->defaultWindowSize;
+        Game::Instance = this;
     }
     
     // Destructor
@@ -109,6 +112,9 @@ namespace ng {
         glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
         ImGui_ImplOpenGL3_Init("#version 330");
         ImGui_ImplGlfw_InitForOpenGL(gameWindow, true);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     // Game Methods
@@ -116,9 +122,8 @@ namespace ng {
     {
 
         // Load lua scene script
-        //ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/voxel_wg.lua");
-         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/scene.lua");
-		 ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/noclip.lua");
+         ng::Scripting::LuaManager::Load("./res/scripts/scene.lua");
+		 ng::Scripting::LuaManager::Load("./res/scripts/noclip.lua");
         
 
 

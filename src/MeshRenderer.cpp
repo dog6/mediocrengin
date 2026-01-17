@@ -110,9 +110,10 @@ namespace ng::Graphics {
                 ImGui::ColorPicker3("Specular Color", (float*)&matData->Specular, ImGuiColorEditFlags_NoAlpha);
                 ImGui::ColorPicker3("Emissive Color", (float*)&matData->Emissive, ImGuiColorEditFlags_NoAlpha);
                 ImGui::ColorPicker3("Ambient Color", (float*)&matData->Ambient, ImGuiColorEditFlags_NoAlpha);
-                ImGui::SliderFloat("Index of Refraction", &matData->IOR, .0f, 1.0f);
-                ImGui::SliderFloat("Shininess", &matData->Shininess, 0.0f, 1.0f);
+                ImGui::SliderFloat("Index of Refraction", &matData->IOR, 1.0f, 128.0f);
+                ImGui::SliderFloat("Shininess", &matData->Shininess, 0.01f, 1.0f);
                 ImGui::SliderFloat("Opacity", &matData->Opacity, 0.0f, 1.0f); // new
+
             }
 
         }

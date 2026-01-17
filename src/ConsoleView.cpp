@@ -3,6 +3,7 @@
 
 
 using namespace ng::Core;
+using namespace ng::Scripting;
 
 namespace ng::Editor {
 
@@ -15,10 +16,9 @@ namespace ng::Editor {
 
 		const char* cmd = data->Buf;
 
-		Debug::Log(DEV, "> %s", cmd);
+		Debug::Log(DEV, "Executed command: '%s'", cmd);
 
-		// TODO:
-		ng::Scripting::LuaManager::Execute(cmd);
+		LuaManager::Execute(cmd);
 
 
 
@@ -50,6 +50,15 @@ namespace ng::Editor {
 		ImGui::End();
 
 		}
+
+	int EnterKeyPressed() {
+		if (KeyboardInput::IsKeyPressed(Key::KEY_ENTER)) {
+			return 1;
+		}
+		else {
+			return 0;
+		}
+	}
 
 	void ConsoleView::Log(const char* msg) {
 		s_logs.push_back(std::string(msg));

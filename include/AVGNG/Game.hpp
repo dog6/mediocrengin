@@ -86,6 +86,7 @@ namespace ng::Core {
 
 		public:
 
+			static Game* Instance;
 			static GLFWwindow* gameWindow;
 			static ng::Core::Scene* activeScene;
 			static ng::Graphics::Camera* camera;
@@ -93,6 +94,10 @@ namespace ng::Core {
 			Game();
 			Game(const char* title, glm::uvec2 size);
 			~Game();
+
+			// Getters required for lua bindings
+			static ng::Core::Scene* GetActiveScene() { return activeScene; }
+			static ng::Core::Game* GetInstance() { return Game::Instance; }
 
 			void Init();    // Called when game first starts up
 			void Load();    // Called before game loop starts

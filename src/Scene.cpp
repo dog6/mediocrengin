@@ -12,6 +12,7 @@ namespace ng::Core {
 	{
 		this->sceneName = _sceneName;
 		this->mainCamera = _mainCamera;
+		this->isActive = true;
 		Debug::Log(LOG, "Scene created: %s", sceneName);
 	}
 

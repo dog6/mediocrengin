@@ -1,4 +1,7 @@
 print("--- scene.lua started ---")
+
+local scene = game:GetActiveScene()
+
 print("Scene exists: ", scene ~= nil)
 print("Scene Type: ", type(scene))
 
@@ -13,13 +16,6 @@ function CreateMeshObject(name, modelPath)
 
     -- 3. Load the mesh
     renderer:LoadMesh(modelPath)
-
-    -- local m = renderer:GetMesh()
-    -- local mat = m.material
-
-    -- local defaultShader = ShaderLoader:LoadDefaultShader()
-
-    -- mat:SetShader(defaultShader)
     return go
 end
 
