@@ -20,7 +20,6 @@ namespace ng::Scripting {
 
 		static std::vector<LuaScript> s_scripts;
 
-
 	public:
 
 		static void Load(const char* scriptPath);
@@ -29,6 +28,7 @@ namespace ng::Scripting {
 		static void Cleanup();
 		static void Execute(std::string luaCode);
 
+		static void LoadNoclip(); // should be moved eventually
 	};
 
 }

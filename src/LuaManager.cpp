@@ -1,17 +1,6 @@
 
 #include <AVGNG/LuaManager.hpp>
 
-
-//#include <AVGNG/Scene.hpp>
-//#include <AVGNG/GameObject.hpp>
-//#include <AVGNG/Transform.hpp>
-//#include <AVGNG/MeshRenderer.hpp>
-
-//#include <AVGNG/KeyboardInput.hpp>
-//#include <AVGNG/MouseInput.hpp>
-
-//#include <AVGNG/Cursor.hpp>
-
 #include <AVGNG/Game.hpp>
 
 #include <AVGNG/FileReader.hpp>
@@ -173,8 +162,15 @@ namespace ng::Scripting {
 				};
 			lua.set_function("clear", &ng::Editor::ConsoleView::Clear);
 			lua.set_function("load", &LuaManager::Load);
+			lua.set_function("execute", &LuaManager::Execute);
+			lua.set_function("noclip", &LuaManager::LoadNoclip);
+
 		}
 
+		// Temp method to enable noclip via dev console
+		void LuaManager::LoadNoclip() {
+			LuaManager::Load("./res/scripts/noclip.lua");
+		}
 
 		std::vector<LuaScript> LuaManager::s_scripts;
 

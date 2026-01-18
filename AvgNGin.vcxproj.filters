@@ -165,11 +165,17 @@
     <ClCompile Include="src\AssimpObjLoader.cpp">
       <Filter>Source Files\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="include\AVGNG\SceneJsonSerializer.cpp">
-      <Filter>Source Files\Assets</Filter>
-    </ClCompile>
     <ClCompile Include="src\MenuStripView.cpp">
       <Filter>Source Files\Editor\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneJsonSerializer.cpp">
+      <Filter>Source Files\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Skybox.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AVGNG\CubemapTexture.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +277,12 @@
     </ClInclude>
     <ClInclude Include="include\AVGNG\IJsonSerializable.hpp">
       <Filter>Header Files\Core\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\Skybox.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AVGNG\CubemapTexture.hpp">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

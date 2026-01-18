@@ -7,7 +7,8 @@
 #include <AVGNG/GameObject.hpp>
 #include <AVGNG/IComponent.hpp>
 #include <AVGNG/MeshRenderer.hpp>
-
+#include <AVGNG/Camera.hpp>
+#include <AVGNG/Skybox.hpp>
 #include <AVGNG/LuaManager.hpp>
 
 namespace ng::Core {
@@ -18,10 +19,11 @@ namespace ng::Core {
 		ng::Graphics::Camera* mainCamera;
 		std::vector<std::unique_ptr<IComponent>> components;
 		std::vector<GameObject*> gameObjectsInScene;
-
+		glm::uvec2& viewportSize;
+		ng::Graphics::Skybox* skybox;
 
 	public:
-		Scene(ng::Graphics::Camera* _mainCamera, const char* _sceneName = "New Scene");
+		Scene(ng::Graphics::Camera* _mainCamera, glm::uvec2& viewportSize, const char* _sceneName = "New Scene");
 		~Scene();
 
 		const char* sceneName;

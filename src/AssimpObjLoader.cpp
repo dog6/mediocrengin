@@ -107,6 +107,7 @@ namespace ng::Assets {
             loadTextures(aiTextureType_HEIGHT, "normalMap");
             loadTextures(aiTextureType_EMISSIVE, "emissiveMap");
             loadTextures(aiTextureType_OPACITY, "alphaMap");
+            loadTextures(aiTextureType_DIFFUSE_ROUGHNESS, "metallicMap");
         }
 
         return result;
@@ -214,6 +215,7 @@ namespace ng::Assets {
                 loadTexture(aiTextureType_HEIGHT, TEXTURE_TYPE_NORMAL);
                 loadTexture(aiTextureType_EMISSIVE, TEXTURE_TYPE_EMISSIVE);
                 loadTexture(aiTextureType_OPACITY, TEXTURE_TYPE_ALPHA);
+                loadTexture(aiTextureType_DIFFUSE_ROUGHNESS, TEXTURE_TYPE_METALLIC);
 
                 // --- Material colors ---
                 aiColor3D color;

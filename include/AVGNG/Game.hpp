@@ -24,7 +24,6 @@
 #include <fstream>
 #include <sstream>
 
-
 // external libs
 #include<glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -82,6 +81,7 @@ namespace ng::Core {
 		private:
 			const char* windowTitle;
 			glm::uvec2 defaultWindowSize;
+			glm::uvec2 viewportSize; // same as current window size, just unsigned int* instead
 			glm::vec<2, int> currentWindowSize;
 
 		public:

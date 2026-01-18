@@ -1,0 +1,13 @@
+# Blender 5.0.0 MTL File: 'None'
+# www.blender.org
+
+newmtl mat_demosphere
+Ns 761.652893
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Users/dog/Desktop/textures_demo_sphere/tex_demosphere.png
+map_refl C:/Users/dog/Desktop/textures_demo_sphere/tex_demosphere_metallic.png
+map_Ke C:/Users/dog/Desktop/textures_demo_sphere/tex_demosphere_emissive.png

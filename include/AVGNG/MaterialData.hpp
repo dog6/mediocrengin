@@ -17,18 +17,24 @@ namespace ng::Graphics {
 		bool hasNormalTexture = false;
 		bool hasEmissiveTexture = false;
 		bool hasAlphaTexture = false;
+        bool hasMetallicTexture = false;
     public:
         MaterialData();
         ~MaterialData();
+
+        // Color values
         glm::vec3 Albedo;               // Albedo
         glm::vec3 Ambient;              // Ambient
         glm::vec3 Diffuse;              // Diffuse
         glm::vec3 Specular;             // Specular
         glm::vec3 Emissive;             // Emissive
+
+        // Properties
         float IOR = 1.5f;					              // Index of Refraction 0-128 (non-metallic vs metallic)
         float Shininess = 1.0f;                           // Shininess 0 = dull, 128 = shiny, sharp reflections
-        float Opacity = 1.0f; // 1 opaque, 0 transparent
-       
+        float Opacity = 1.0f;                             // 1 opaque, 0 transparent
+        float Metallicness = 0.0f;                        // 0-1, 0 = plastic, 1 = metallic
+
         /// <summary>Sets a texture of a specific type (e.g., diffuse, specular)</summary>
         /// <details>If texture type already exists, it replaces it.
         /// If texture type does NOT already exist, it adds a new texture.</details>

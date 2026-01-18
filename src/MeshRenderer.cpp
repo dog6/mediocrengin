@@ -94,16 +94,19 @@ namespace ng::Graphics {
 		Texture* specTex = matData->FindTexture(TextureType::SPECULAR);
 		Texture* normTex = matData->FindTexture(TextureType::NORMAL);
 		Texture* emissiveTex = matData->FindTexture(TextureType::EMISSIVE);
-		Texture* alphaTex = matData->FindTexture(TextureType::ALPHA);
+        Texture* alphaTex = matData->FindTexture(TextureType::ALPHA);
+		Texture* metallicTex = matData->FindTexture(TextureType::METALLIC);
 
         if (matData != nullptr) {
 
             if (ImGui::CollapsingHeader("Material Properties", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick)) {
-                if (diffTex) ImGui::Text("Diffuse Map: %d", diffTex->id);
-                if (specTex) ImGui::Text("Specular Map: %d", specTex->id);
-                if (emissiveTex) ImGui::Text("Emissive Map: %d", emissiveTex->id);
-                if (normTex) ImGui::Text("Normal Map: %d", normTex->id);
-                if (alphaTex) ImGui::Text("Alpha Map: %d", alphaTex->id);
+
+                ImGui::Text("Diffuse Map: %s", diffTex ? to_string(diffTex->id).c_str() : "NULL");
+                ImGui::Text("Specular Map: %s", specTex ? to_string(specTex->id).c_str() : "NULL");
+                ImGui::Text("Emissive Map: %s", emissiveTex ? to_string(emissiveTex->id).c_str() : "NULL");
+                ImGui::Text("Normal Map: %s", normTex ? to_string(normTex->id).c_str() : "NULL");
+                ImGui::Text("Alpha Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
+                ImGui::Text("Metallic Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
 
 				ImGui::ColorPicker3("Albedo Color", (float*)&matData->Albedo, ImGuiColorEditFlags_NoAlpha);
                 ImGui::ColorPicker3("Diffuse Color", (float*)&matData->Diffuse, ImGuiColorEditFlags_NoAlpha);
@@ -113,6 +116,7 @@ namespace ng::Graphics {
                 ImGui::SliderFloat("Index of Refraction", &matData->IOR, 1.0f, 128.0f);
                 ImGui::SliderFloat("Shininess", &matData->Shininess, 0.01f, 1.0f);
                 ImGui::SliderFloat("Opacity", &matData->Opacity, 0.0f, 1.0f); // new
+                ImGui::SliderFloat("Metallicness", &matData->Metallicness, 0.0f, 1.0f); // new
 
             }
 

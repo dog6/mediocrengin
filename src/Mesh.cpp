@@ -171,6 +171,7 @@ namespace ng::Graphics {
         Texture* normalTexture = m->FindTexture(TextureType::NORMAL);
         Texture* emissiveTexture = m->FindTexture(TextureType::EMISSIVE);
         Texture* alphaTexture = m->FindTexture(TextureType::ALPHA);
+        Texture* metallicTexture = m->FindTexture(TextureType::METALLIC);
 
         // Material properties
         shader->SetVec3("Albedo", m->Albedo);
@@ -181,7 +182,8 @@ namespace ng::Graphics {
         shader->SetFloat("Shininess", m->Shininess);
         shader->SetFloat("IOR", m->IOR);
         shader->SetFloat("Opacity", m->Opacity);
-        // Lighting
+        shader->SetFloat("Metallic", m->Metallicness);
+        // Lighting 
         shader->SetVec3("sunDirection", glm::normalize(glm::vec3(-0.3f, -1.0f, -0.5f)));
         shader->SetVec3("sunColor", glm::vec3(1.0f, 0.95f, 0.8f));
         shader->SetVec3("viewPos", camera.GetPosition());
@@ -190,7 +192,6 @@ namespace ng::Graphics {
         if (diffuseTexture != nullptr && diffuseTexture->id > 0) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, diffuseTexture->id);
-            //Debug::Log(DEV, "Binding to texture ID %d", diffuseTexture->id);
             shader->SetBool("hasDiffuseMap", true);
         }
         else {
@@ -225,7 +226,8 @@ namespace ng::Graphics {
         }
         else shader->SetBool("hasNormalMap", false);
         shader->SetInt("normalMap", 2);
-       // Alpha map (texture unit 4)
+       
+        // Alpha map (texture unit 4)
         if (alphaTexture != nullptr && alphaTexture->id > 0) {
             glActiveTexture(GL_TEXTURE4);
             glBindTexture(GL_TEXTURE_2D, alphaTexture->id);
@@ -236,6 +238,15 @@ namespace ng::Graphics {
         }
         shader->SetInt("alphaMap", 4);
 
+        if (metallicTexture != nullptr && metallicTexture->id > 0) {
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_2D, metallicTexture->id);
+            shader->SetBool("hasMetallicMap", true);
+        }
+        else {
+            shader->SetBool("hasMetallicMap", false);
+        }
+        shader->SetInt("metallicMap", 4);
 
 
     }

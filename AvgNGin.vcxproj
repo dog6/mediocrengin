@@ -144,7 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\AVGNG\SceneJsonSerializer.cpp" />
+    <ClCompile Include="include\AVGNG\CubemapTexture.cpp" />
     <ClCompile Include="src\AssimpObjLoader.cpp" />
     <ClCompile Include="src\ConsoleView.cpp" />
     <ClCompile Include="src\Cursor.cpp" />
@@ -173,8 +173,10 @@
     <ClCompile Include="src\MeshRenderer.cpp" />
     <ClCompile Include="src\MouseInput.cpp" />
     <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\SceneJsonSerializer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ShaderLoader.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
@@ -183,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="include\AVGNG\AssimpObjLoader.hpp" />
     <ClInclude Include="include\AVGNG\Camera.hpp" />
+    <ClInclude Include="include\AVGNG\CubemapTexture.hpp" />
     <ClInclude Include="include\AVGNG\IComponent.hpp" />
     <ClInclude Include="include\AVGNG\ConsoleColors.hpp" />
     <ClInclude Include="include\AVGNG\ConsoleView.hpp" />
@@ -208,6 +211,7 @@
     <ClInclude Include="include\AVGNG\SceneJsonSerializer.hpp" />
     <ClInclude Include="include\AVGNG\Shader.hpp" />
     <ClInclude Include="include\AVGNG\ShaderLoader.hpp" />
+    <ClInclude Include="include\AVGNG\Skybox.hpp" />
     <ClInclude Include="include\AVGNG\TexCoord.hpp" />
     <ClInclude Include="include\AVGNG\Texture.hpp" />
     <ClInclude Include="include\AVGNG\Time.hpp" />

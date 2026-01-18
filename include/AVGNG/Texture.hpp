@@ -11,13 +11,15 @@ namespace ng::Graphics {
     constexpr const char* TEXTURE_TYPE_NORMAL = "normalMap";
     constexpr const char* TEXTURE_TYPE_EMISSIVE = "emissiveMap";
     constexpr const char* TEXTURE_TYPE_ALPHA = "alphaMap";
+    constexpr const char* TEXTURE_TYPE_METALLIC = "metallicMap";
 
 	enum TextureType {
 		DIFFUSE = 0,
 		SPECULAR,
 		NORMAL,
 		EMISSIVE,
-		ALPHA
+		ALPHA,
+        METALLIC
 	};
 
     class Texture {
@@ -37,7 +39,7 @@ namespace ng::Graphics {
         bool hasNormalTexture = type == TEXTURE_TYPE_NORMAL && id > 0;
         bool hasEmissiveTexture = type == TEXTURE_TYPE_EMISSIVE && id > 0;
         bool hasAlphaTexture = type == TEXTURE_TYPE_ALPHA && id > 0;
-
+        bool hasMetallicTexture = type == TEXTURE_TYPE_METALLIC && id > 0;
 
     };
 

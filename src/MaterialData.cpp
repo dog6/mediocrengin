@@ -24,6 +24,9 @@ namespace ng::Graphics {
 		else if (strcmp(texture_type, TEXTURE_TYPE_ALPHA) == 0) {
 			return TextureType::ALPHA;
 		}
+		else if (strcmp(texture_type, TEXTURE_TYPE_METALLIC) == 0) {
+			return TextureType::METALLIC;
+		}
 		else {
 			Debug::Log(WARN, "Unknown texture type string: '%s'", texture_type);
 			return TextureType::DIFFUSE; // default
@@ -37,7 +40,7 @@ namespace ng::Graphics {
 		MaterialData::Diffuse = glm::vec3(1.0f);
 		MaterialData::Specular = glm::vec3(0.0f);
 		MaterialData::Emissive = glm::vec3(0.0f);
-		textures.resize(5);
+		textures.resize(6);
 
 	}
 
@@ -62,7 +65,6 @@ namespace ng::Graphics {
 
 		// If not found, add new texture
 		texture->type = std::string(texture_type);
-		//textures.push_back(texture);
 		textures[(int)GetTextureTypeFromCStr(texture_type)] = texture;
 	}
 

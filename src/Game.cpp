@@ -11,7 +11,7 @@ namespace ng {
 
     GLFWwindow* Game::gameWindow = nullptr;
     Camera* Game::camera = new ng::Graphics::Camera();
-    Scene* Game::activeScene = new Scene(camera, "Development Scene");
+    Scene* Game::activeScene;
     Game* Game::Instance;
 
     // Helper methods
@@ -29,8 +29,6 @@ namespace ng {
         style.FontScaleDpi = main_scale;
     }
 
-
-
     // Helper Methods
     static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
 
@@ -46,7 +44,7 @@ namespace ng {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        /* Create a windowed mode window and its OpenGL context */
+        // Create a windowed mode window and its OpenGL context
         Game::gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
 
         if (!Game::gameWindow) {
@@ -95,8 +93,11 @@ namespace ng {
     {
         Debug::Log(LogLevel::LOG, "Loading game..");
         InitializeGameWindow(this->defaultWindowSize.x, this->defaultWindowSize.y, this->windowTitle);
-        
+        this->viewportSize = this->defaultWindowSize;
+
+        activeScene = new Scene(camera, this->viewportSize, "Development Scene");
         Time::Init();
+
 
         // Setup IMGUI
         SetupImGUI(gameWindow);
@@ -115,6 +116,7 @@ namespace ng {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     }
 
     // Game Methods
@@ -122,9 +124,7 @@ namespace ng {
     {
 
         // Load lua scene script
-         ng::Scripting::LuaManager::Load("./res/scripts/scene.lua");
-		 ng::Scripting::LuaManager::Load("./res/scripts/noclip.lua");
-        
+        ng::Scripting::LuaManager::Load("./res/scripts/scene.lua");
 
 
         // Load active scene
@@ -164,11 +164,10 @@ namespace ng {
 
             // Update everything in scene
             activeScene->Update();
-            
+            viewportSize = glm::uvec2(currentWindowSize.x, currentWindowSize.y);
             glfwGetFramebufferSize(gameWindow, &currentWindowSize.x, &currentWindowSize.y);
             glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
-
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClearColor(0.3f, 0.5f, 0.5f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             // Render to game window

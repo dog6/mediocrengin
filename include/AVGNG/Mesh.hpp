@@ -28,7 +28,6 @@ namespace ng::Graphics {
                 glDeleteBuffers(1, &EBO);
             }
 
-            //const char* filepath;
             std::string filepath;
 
             // Vertex shape

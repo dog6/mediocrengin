@@ -190,7 +190,7 @@
                             ],
                             "rotation": [
                                 0.0,
-                                21.702905654907227,
+                                88.87126159667969,
                                 0.0
                             ],
                             "scale": [
@@ -257,7 +257,7 @@
                             ],
                             "rotation": [
                                 0.0,
-                                21.702905654907227,
+                                88.87126159667969,
                                 0.0
                             ],
                             "scale": [
@@ -278,25 +278,25 @@
                         "meshRenderer": {
                             "material": {
                                 "mat_albedo_color": [
+                                    0.6000000238418579,
+                                    0.6000000238418579,
+                                    0.6000000238418579
+                                ],
+                                "mat_alpha_texture_path": "",
+                                "mat_ambient_color": [
                                     1.0,
                                     1.0,
                                     1.0
                                 ],
-                                "mat_alpha_texture_path": "",
-                                "mat_ambient_color": [
-                                    0.8901734352111816,
-                                    0.5840155482292175,
-                                    0.5840155482292175
-                                ],
                                 "mat_diffuse_color": [
-                                    0.9971098303794861,
-                                    0.9971098303794861,
-                                    0.9971098303794861
+                                    0.6000000238418579,
+                                    0.6000000238418579,
+                                    0.6000000238418579
                                 ],
                                 "mat_emissive_color": [
-                                    0.7572254538536072,
-                                    0.11161414533853531,
-                                    0.11161414533853531
+                                    0.0,
+                                    0.0,
+                                    0.0
                                 ],
                                 "mat_emissive_texture_path": "",
                                 "mat_ior": 1.5,
@@ -304,13 +304,13 @@
                                 "mat_opacity": 1.0,
                                 "mat_shininess": 250.0,
                                 "mat_specular_color": [
-                                    0.5991012454032898,
-                                    0.9508670568466187,
-                                    0.6458677053451538
+                                    0.5,
+                                    0.5,
+                                    0.5
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "./res/models/mdl_grass_cube.obj",
+                            "path": "./res/models/mdl_bridge.obj",
                             "shader": {
                                 "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
                                 "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
@@ -318,14 +318,14 @@
                         },
                         "transform": {
                             "position": [
-                                8.0,
-                                -5.0,
-                                -8.0
+                                0.0,
+                                -10.0,
+                                -10.0
                             ],
                             "rotation": [
-                                5.829607009887695,
                                 0.0,
-                                5.829607009887695
+                                0.0,
+                                0.0
                             ],
                             "scale": [
                                 1.0,
@@ -340,14 +340,14 @@
         ],
         "sceneCamera": {
             "position": [
-                0.0,
-                -3.6054229736328125,
-                5.0
+                15.171509742736816,
+                0.5428695678710938,
+                -12.582758903503418
             ],
             "target": [
-                0.5842645168304443,
-                -3.807055711746216,
-                4.213883399963379
+                14.369140625,
+                0.004381966311484575,
+                -12.325397491455078
             ]
         },
         "sceneName": "Development Scene"
