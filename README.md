@@ -28,3 +28,10 @@
   <img width="997" alt="image" src="https://github.com/user-attachments/assets/c1f12290-64f8-4977-a793-b49e7ed5c5f1" />
 
 </details>
+
+
+<details>
+  <summary>Added skyboxes</summary>
+  <img width="997" alt="image"  src="https://github.com/user-attachments/assets/e128d933-aa6b-4522-a483-e89db5b23aaf" />
+
+</details>
