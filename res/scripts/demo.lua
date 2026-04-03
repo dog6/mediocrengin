@@ -6,7 +6,7 @@ local go = scene:CreateGameObject("Cube")
 go:AddComponent("MeshRenderer")
 
 local mr = go:GetComponent("MeshRenderer")
-mr:LoadMesh("./res/models/mdl_bridge.obj")
+mr:LoadMesh("D:/Projects/CPP/smallengine/res/models/mdl_bridge.obj")
 
 local tf = go:GetComponent("Transform")
 tf:SetPosition(0,-5,0)

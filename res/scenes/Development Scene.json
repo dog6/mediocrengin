@@ -42,10 +42,10 @@
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "./res/models/mdl_skyscraper.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_skyscraper.obj",
                             "shader": {
-                                "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
-                                "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
+                                "fragment_shader_path": "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag",
+                                "vertex_shader_path": "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
                             }
                         },
                         "transform": {
@@ -109,7 +109,7 @@
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "./res/models/mdl_world.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_world.obj",
                             "shader": {
                                 "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
                                 "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
@@ -176,7 +176,7 @@
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "./res/models/mdl_ball.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_ball.obj",
                             "shader": {
                                 "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
                                 "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
@@ -243,7 +243,7 @@
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "./res/models/mdl_isosphere.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_isosphere.obj",
                             "shader": {
                                 "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
                                 "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
@@ -310,7 +310,7 @@
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "./res/models/mdl_bridge.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_bridge.obj",
                             "shader": {
                                 "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
                                 "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"

@@ -19,16 +19,16 @@ function CreateMeshObject(name, modelPath)
     return go
 end
 
-local towerGO = CreateMeshObject("Skyscraper", "./res/models/mdl_skyscraper.obj")
+local towerGO = CreateMeshObject("Skyscraper", "D:/Projects/CPP/smallengine/res/models/mdl_skyscraper.obj")
 local towerTF = towerGO:GetComponent("Transform")
 
-local terrainGO = CreateMeshObject("Terrain", "./res/models/mdl_world.obj")
+local terrainGO = CreateMeshObject("Terrain", "D:/Projects/CPP/smallengine/res/models/mdl_world.obj")
 local terrainTF = terrainGO:GetComponent("Transform")
 
-local ballGO = CreateMeshObject("Ball", "./res/models/mdl_ball.obj")
+local ballGO = CreateMeshObject("Ball", "D:/Projects/CPP/smallengine/res/models/mdl_ball.obj")
 local ballTF = ballGO:GetComponent("Transform")
 
-local isoGO = CreateMeshObject("Ball", "./res/models/mdl_isosphere.obj")
+local isoGO = CreateMeshObject("Ball", "D:/Projects/CPP/smallengine/res/models/mdl_isosphere.obj")
 local isoTF = isoGO:GetComponent("Transform")
 
 towerTF:SetPosition(0,0,0)

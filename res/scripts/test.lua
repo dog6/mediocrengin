@@ -6,7 +6,7 @@ local go = scene:CreateGameObject("Cube")
 go:AddComponent("MeshRenderer")
 
 local mr = go:GetComponent("MeshRenderer")
-mr:LoadMesh("./res/models/mdl_grass_cube.obj")
+mr:LoadMesh("D:/Projects/CPP/smallengine/res/models/mdl_grass_cube.obj")
 
 local tf = go:GetComponent("Transform")
 tf:SetPosition(8, -5, -8)
