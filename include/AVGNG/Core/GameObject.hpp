@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AVGNG/Renderer/MeshRenderer.hpp"
+#include "AVGNG/Graphics/MeshRenderer.hpp"
 #include "AVGNG/Core/Transform.hpp"
 #include "AVGNG/Core/IComponent.hpp"
 #include <iostream>

@@ -7,7 +7,7 @@ using namespace ng::Assets;
 
 #ifdef NG_DEVELOPER_MODE
 using namespace ng::Editor;
-#include "AVGNG/UI/EditorUI.hpp"
+#include "AVGNG/Editor/EditorUI.hpp"
 #endif
 namespace ng {
 
@@ -84,7 +84,7 @@ namespace ng {
         this->currentWindowSize = this->defaultWindowSize;
         Game::Instance = this;
     }
-    // / ./res/images/skyboxes/cloudy/blue/bluecloud_rt.jpg
+
     // Destructor
     Game::~Game() {
         this->activeScene->Unload();
@@ -126,7 +126,7 @@ namespace ng {
     {
 
         // Load lua scene script
-        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/demo.lua");
+        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/example.lua");
         ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/noclip.lua");
 
 

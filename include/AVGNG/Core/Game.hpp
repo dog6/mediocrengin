@@ -38,37 +38,37 @@
 // Inputs
 #include "AVGNG/Core/KeyboardInput.hpp"
 #include "AVGNG/Core/MouseInput.hpp"
-#include "AVGNG/UI/Cursor.hpp"
+#include "AVGNG/Core/Cursor.hpp"
 
 // Graphics
-#include "AVGNG/Renderer/Camera.hpp"
-#include "AVGNG/Renderer/Shader.hpp"
-#include "AVGNG/Renderer/Mesh.hpp"
-#include "AVGNG/Renderer/MeshRenderer.hpp"
+#include "AVGNG/Graphics/Camera.hpp"
+#include "AVGNG/Graphics/Shader.hpp"
+#include "AVGNG/Graphics/Mesh.hpp"
+#include "AVGNG/Graphics/MeshRenderer.hpp"
 
 // Core
 #include "AVGNG/Core/Time.hpp"
 #include "AVGNG/Core/Transform.hpp"
 #include "AVGNG/Core/GameObject.hpp"
 #include "AVGNG/Core/Scene.hpp"
-#include "AVGNG/Utilities/Debug.hpp"
+#include "AVGNG/Core/Debug.hpp"
 
 // Scripting
-#include "AVGNG/Core/LuaManager.hpp"
+#include "AVGNG/Scripting/LuaManager.hpp"
 
 // Assets
-#include "AVGNG/Renderer/ShaderLoader.hpp"
+#include "AVGNG/Graphics/ShaderLoader.hpp"
 
 
 #ifdef NG_DEVELOPER_MODE
 	// Editor UI
-	#include "AVGNG/UI/EditorUIElement.hpp"
-	#include "AVGNG/UI/EditorUI.hpp"
+	#include "AVGNG/Editor/EditorUIElement.hpp"
+	#include "AVGNG/Editor/EditorUI.hpp"
 
 	// Editor UI Views
-	#include "AVGNG/UI/InspectorView.hpp"
-	#include "AVGNG/UI/HierarchyView.hpp"
-	#include "AVGNG/UI/ConsoleView.hpp"
+	#include "AVGNG/Editor/InspectorView.hpp"
+	#include "AVGNG/Editor/HierarchyView.hpp"
+	#include "AVGNG/Editor/ConsoleView.hpp"
 #endif
 
 

@@ -1,5 +1,5 @@
 #include "AVGNG/Core/Transform.hpp"
-#include "AVGNG/Utilities/Debug.hpp"
+#include "AVGNG/Core/Debug.hpp"
 #include <imgui/imgui.h>
 
 using namespace ng::Core;

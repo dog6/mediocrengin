@@ -28,6 +28,21 @@
     <ClCompile Include="D:\Projects\CPP\smallengine\external\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\AssimpObjLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\FileReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\SceneJsonSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Cursor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,64 +67,49 @@
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Model Loading\AssimpObjLoader.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\ConsoleView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\CubemapTexture.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\EditorUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\Material.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\HierarchyView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\MaterialData.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\InspectorView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\Mesh.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\MenuStripView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\MeshRenderer.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\CubemapTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\Shader.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\ShaderLoader.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\MaterialData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\Skybox.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Renderer\Texture.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\MeshRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\UI\ConsoleView.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\UI\Cursor.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\ShaderLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\UI\EditorUI.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\UI\HierarchyView.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\UI\InspectorView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\UI\MenuStripView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Utilities\Debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Utilities\FileReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Utilities\SceneJsonSerializer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Utilities\Source.cpp">
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\external\glad\glad.c">

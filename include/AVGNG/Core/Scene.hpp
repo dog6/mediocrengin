@@ -6,10 +6,10 @@
 
 #include "AVGNG/Core/GameObject.hpp"
 #include "AVGNG/Core/IComponent.hpp"
-#include "AVGNG/Core/LuaManager.hpp"
-#include "AVGNG/Renderer/MeshRenderer.hpp"
-#include "AVGNG/Renderer/Camera.hpp"
-#include "AVGNG/Renderer/Skybox.hpp"
+#include "AVGNG/Scripting/LuaManager.hpp"
+#include "AVGNG/Graphics/MeshRenderer.hpp"
+#include "AVGNG/Graphics/Camera.hpp"
+#include "AVGNG/Graphics/Skybox.hpp"
 
 namespace ng::Core {
 
