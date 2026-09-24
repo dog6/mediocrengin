@@ -21,7 +21,7 @@ void MenuStripView::CreateUI()
 			if (ImGui::MenuItem("New Scene")) {
 				// New Scene
 			}
-			if (ImGui::MenuItem("Reload scene from latest save")) {
+			if (ImGui::MenuItem("Load last save")) {
 				// TODO: Create ImGui Open Dialog; for now reload the active scene's file
 				// Actually just reloading the current scene is also useful, so we'll add the opening dialog in the future as another option
 				Scene* activeScene = Game::GetActiveScene();
