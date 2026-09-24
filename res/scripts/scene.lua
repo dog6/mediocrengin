@@ -1,3 +1,4 @@
+-- older example scene
 print("--- scene.lua started ---")
 
 local scene = game:GetActiveScene()
@@ -22,11 +23,13 @@ end
 local towerGO = CreateMeshObject("Skyscraper", "D:/Projects/CPP/smallengine/res/models/mdl_skyscraper.obj")
 local towerTF = towerGO:GetComponent("Transform")
 
-local terrainGO = CreateMeshObject("Terrain", "D:/Projects/CPP/smallengine/res/models/mdl_world.obj")
+local terrainGO = CreateMeshObject("Terrain", "D:/Projects/CPP/smallengine/res/models/game_terrain.obj")
 local terrainTF = terrainGO:GetComponent("Transform")
 
+-- Create ball with physics
 local ballGO = CreateMeshObject("Ball", "D:/Projects/CPP/smallengine/res/models/mdl_ball.obj")
 local ballTF = ballGO:GetComponent("Transform")
+local ballPB = ballGO:AddComponent("PhysicsBody")
 
 local isoGO = CreateMeshObject("Ball", "D:/Projects/CPP/smallengine/res/models/mdl_isosphere.obj")
 local isoTF = isoGO:GetComponent("Transform")
@@ -47,6 +50,8 @@ function OnUpdate(deltaTime)
     rot = rot + (.5 * deltaTime)
 
     ballTF:SetRotation(0, rot, 0)
+    ballPB:SetLinearVelocity(0, 9.81*deltaTime, 0);
     isoTF:SetRotation(0, rot, 0)
+
    
 end

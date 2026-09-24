@@ -2,6 +2,7 @@
 
 namespace ng::Editor {
 
+	// Class that handles all editor UI elements
 	class EditorUI {
 
 		static bool s_isInspectorVisible;

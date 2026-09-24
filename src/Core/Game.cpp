@@ -13,7 +13,7 @@ namespace ng {
 
     GLFWwindow* Game::gameWindow = nullptr;
     Camera* Game::camera = new ng::Graphics::Camera();
-    Scene* Game::activeScene;
+    SceneManager* Game::sceneManager = new SceneManager();
     Game* Game::Instance;
 
     // Helper methods
@@ -87,7 +87,7 @@ namespace ng {
 
     // Destructor
     Game::~Game() {
-        this->activeScene->Unload();
+        this->sceneManager->Unload();
     }
 
     // Before Load
@@ -97,9 +97,8 @@ namespace ng {
         InitializeGameWindow(this->defaultWindowSize.x, this->defaultWindowSize.y, this->windowTitle);
         this->viewportSize = this->defaultWindowSize;
 
-        activeScene = new Scene(camera, this->viewportSize, "Development Scene");
+        sceneManager->CreateNewScene(camera, this->viewportSize, "Development Scene");
         Time::Init();
-
 
         // Setup IMGUI
         SetupImGUI(gameWindow);
@@ -126,16 +125,16 @@ namespace ng {
     {
 
         // Load lua scene script
-        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/example.lua");
+        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/phys_dev_scene.lua");
+        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/scene.lua");
         ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/noclip.lua");
 
 
-        // Load active scene
-        if (activeScene != nullptr) {
-            activeScene->Load();
-        }
+        // We should have a way of specifying scene load order, perhaps by storing in a json file
 
-        activeScene->Load();
+        // TODO: Load a scene from disk here once a scene file is chosen
+        // (see SceneJsonSerializer::DeserializeSceneFromJson). The scene is
+        // currently populated by res/scripts/scene.lua.
 
         Debug::Log(LogLevel::LOG, "Loading completed.");
 
@@ -144,7 +143,10 @@ namespace ng {
     void Game::Start() {
 
         Debug::Log(LogLevel::LOG, "Game started.");
-        activeScene->Start();
+        this->sceneManager->LoadActiveScene();
+
+        Scene* activeScene = sceneManager->GetActiveScene();
+        if (activeScene != nullptr) activeScene->Start();
 
 #ifdef NG_DEVELOPER_MODE
         EditorUI::ShowAllElements();
@@ -166,6 +168,7 @@ namespace ng {
             glfwPollEvents();
 
             // Update everything in scene
+            Scene* activeScene = sceneManager->GetActiveScene();
             activeScene->Update();
             viewportSize = glm::uvec2(currentWindowSize.x, currentWindowSize.y);
             glfwGetFramebufferSize(gameWindow, &currentWindowSize.x, &currentWindowSize.y);
@@ -214,7 +217,8 @@ namespace ng {
 
     glm::uvec2 Core::Game::GetWindowSize()
     {
-        return glm::uvec2();
+        if (Instance == nullptr) return glm::uvec2();
+        return glm::uvec2(Instance->currentWindowSize.x, Instance->currentWindowSize.y);
     }
 
 }

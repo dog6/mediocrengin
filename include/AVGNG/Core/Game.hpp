@@ -47,11 +47,16 @@
 #include "AVGNG/Graphics/MeshRenderer.hpp"
 
 // Core
+#include "AVGNG/Core/Scene.hpp"
+#include "AVGNG/Core/SceneManager.hpp"
 #include "AVGNG/Core/Time.hpp"
 #include "AVGNG/Core/Transform.hpp"
 #include "AVGNG/Core/GameObject.hpp"
-#include "AVGNG/Core/Scene.hpp"
 #include "AVGNG/Core/Debug.hpp"
+
+// Collision (Core)
+#include "AVGNG/Core/SphereCollider.hpp"
+
 
 // Scripting
 #include "AVGNG/Scripting/LuaManager.hpp"
@@ -73,8 +78,10 @@
 
 
 namespace ng::Core {
+	
+	class Scene;
 
-		class Game {
+	class Game {
 
 		private:
 			const char* windowTitle;
@@ -86,16 +93,21 @@ namespace ng::Core {
 
 			static Game* Instance;
 			static GLFWwindow* gameWindow;
-			static ng::Core::Scene* activeScene;
+			static ng::Core::SceneManager* sceneManager;
 			static ng::Graphics::Camera* camera;
 
 			Game();
 			Game(const char* title, glm::uvec2 size);
 			~Game();
 
+			static ng::Core::SceneManager* GetSceneManager() { return sceneManager; }
+			static ng::Core::Scene* GetActiveScene() { return sceneManager->GetActiveScene(); } // pass through function for lua scripting
+			
 			// Getters required for lua bindings
-			static ng::Core::Scene* GetActiveScene() { return activeScene; }
 			static ng::Core::Game* GetInstance() { return Game::Instance; }
+
+			// viewportSize is non-static; scenes keep a reference to it so they track window resizes
+			static glm::uvec2& GetViewportSize() { return Instance->viewportSize; }
 
 			void Init();    // Called when game first starts up
 			void Load();    // Called before game loop starts

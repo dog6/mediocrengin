@@ -36,4 +36,29 @@ namespace ng::Graphics {
 		return &shader;
 	}
 
+    void Material::SetAlbedoColor(glm::vec3 col)
+    {
+		this->data.Albedo = col;
+    }
+
+    void Material::SetAmbientColor(glm::vec3 col)
+    {
+		this->data.Ambient = col;
+    }
+
+    void Material::SetDiffuseColor(glm::vec3 col)
+    {
+		this->data.Diffuse = col;
+    }
+
+    void Material::SetSpecularColor(glm::vec3 col)
+    {
+		this->data.Specular = col;
+    }
+	
+    void Material::SetEmissiveColor(glm::vec3 col)
+    {
+		this->data.Emissive = col;
+    }
+
 }

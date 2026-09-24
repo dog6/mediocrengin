@@ -15,7 +15,7 @@ namespace ng::Graphics {
        
 
                 Camera() {
-                    position = glm::vec3(0.0f, 0.0f, 5.0f);  // Camera 5 units back
+                    position = glm::vec3(0.0f, 3.0f, 5.0f);  // Camera is 3 units up and 5 units back
                     target = glm::vec3(0.0f, 0.0f, 0.0f);    // Looking at origin
                     up = glm::vec3(0.0f, 1.0f, 0.0f);        // Y is up
                 }
@@ -26,7 +26,7 @@ namespace ng::Graphics {
                 }
 
                 glm::mat4 GetProjectionMatrix(float viewport_width, float viewport_height) {
-                    return glm::perspective(glm::radians(45.0f), viewport_width / viewport_height, 0.1f, 100.0f);
+                    return glm::perspective(glm::radians(90.0f), viewport_width / viewport_height, 0.1f, 100.0f); // width&height need to be normalized
                 }
 
                 glm::vec3 GetPosition() { return position; }

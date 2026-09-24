@@ -3,6 +3,7 @@
 #include "AVGNG/Graphics/Shader.hpp"
 #include "AVGNG/Graphics/ShaderLoader.hpp"
 #include "AVGNG/Core/GameObject.hpp"
+#include "AVGNG/Assets/JsonUtils.hpp"
 #include <imgui/imgui.h>
 
 using namespace ng::Core;
@@ -128,43 +129,106 @@ namespace ng::Graphics {
        
     }
 
-    void MeshRenderer::Save(nlohmann::json& j, int componentIndex)
+    void MeshRenderer::Save(nlohmann::json& j)
     {
-        MaterialData* meshMat = mesh->GetMaterial()->GetMaterialData();
-        Shader* meshShader = mesh->GetMaterial()->GetShader();
-        // Save mesh data
-        j["meshRenderer"]["path"] = mesh->filepath;
+        nlohmann::json& mr = j["meshRenderer"];
+
+        // A MeshRenderer without a mesh still round-trips (as an empty entry)
+        mr["path"] = mesh ? mesh->filepath : "";
+        if (!mesh) return;
 
         Debug::Log(DEBUG, "Saving MeshRenderer %p...", mesh);
+
+        Material* material = mesh->GetMaterial();
+        if (!material) {
+            Debug::Log(WARN, "MeshRenderer mesh '%s' has no material, skipping material save", mesh->filepath.c_str());
+            return;
+        }
+
+        MaterialData* meshMat = material->GetMaterialData();
+        nlohmann::json& mat = mr["material"];
+
+        // Save material properties
+        mat["mat_albedo_color"] = ng::Assets::Vec3ToJson(meshMat->Albedo);
+        mat["mat_ambient_color"] = ng::Assets::Vec3ToJson(meshMat->Ambient);
+        mat["mat_diffuse_color"] = ng::Assets::Vec3ToJson(meshMat->Diffuse);
+        mat["mat_specular_color"] = ng::Assets::Vec3ToJson(meshMat->Specular);
+        mat["mat_emissive_color"] = ng::Assets::Vec3ToJson(meshMat->Emissive);
+        mat["mat_shininess"] = meshMat->Shininess;
+        mat["mat_ior"] = meshMat->IOR;
+        mat["mat_opacity"] = meshMat->Opacity;
+
+        // Find all existing texture paths
+        Texture* diffuseTex = meshMat->FindTexture(TextureType::DIFFUSE);
+        Texture* specularTex = meshMat->FindTexture(TextureType::SPECULAR);
+        Texture* emissiveTex = meshMat->FindTexture(TextureType::EMISSIVE);
+        Texture* normalTex = meshMat->FindTexture(TextureType::NORMAL);
+        Texture* alphaTex = meshMat->FindTexture(TextureType::ALPHA);
+
+        // Save texture data
+        mat["mat_diffuse_texture_path"] = diffuseTex ? diffuseTex->path : "";
+        mat["mat_specular_texture_path"] = specularTex ? specularTex->path : "";
+        mat["mat_emissive_texture_path"] = emissiveTex ? emissiveTex->path : "";
+        mat["mat_normal_texture_path"] = normalTex ? normalTex->path : "";
+        mat["mat_alpha_texture_path"] = alphaTex ? alphaTex->path : "";
+
+        // Save shader data
+        Shader* meshShader = material->GetShader();
+        if (meshShader) {
+            mr["shader"]["vertex_shader_path"] = meshShader->vertex_shader_path;
+            mr["shader"]["fragment_shader_path"] = meshShader->fragment_shader_path;
+        }
+
+        Debug::Log(DEBUG, "Finished saving MeshRenderer %p", mesh);
+
+    }
+
+    void MeshRenderer::Load(const nlohmann::json& j)
+    {
+        if (!j.contains("meshRenderer")) return;
+        const nlohmann::json& mr = j.at("meshRenderer");
+
+        std::string meshPath = mr.value("path", "");
+        if (!meshPath.empty()) LoadMesh(meshPath.c_str()); // logs on failure
+
+        if (!mesh) return;
+
+        Material* material = mesh->GetMaterial();
+        if (!material) return;
+
+        // Restore material properties
+        if (mr.contains("material")) {
+
+            const nlohmann::json& mat = mr.at("material");
+            MaterialData* matData = material->GetMaterialData();
+
+            matData->Albedo = ng::Assets::ReadVec3(mat, "mat_albedo_color", matData->Albedo);
+            matData->Ambient = ng::Assets::ReadVec3(mat, "mat_ambient_color", matData->Ambient);
+            matData->Diffuse = ng::Assets::ReadVec3(mat, "mat_diffuse_color", matData->Diffuse);
+            matData->Specular = ng::Assets::ReadVec3(mat, "mat_specular_color", matData->Specular);
+            matData->Emissive = ng::Assets::ReadVec3(mat, "mat_emissive_color", matData->Emissive);
+            matData->Shininess = mat.value("mat_shininess", matData->Shininess);
+            matData->IOR = mat.value("mat_ior", matData->IOR);
+            matData->Opacity = mat.value("mat_opacity", matData->Opacity);
+
+            // TODO: Restore material textures from mat_*_texture_path entries
+            // ^^ bad comment, no clue what this means. if you can figure it out in the future, god speed.
+        }
+
+        // Restore shader
         
-      // Save material properties
-      j["meshRenderer"]["material"]["mat_albedo_color"] = {meshMat->Albedo.x, meshMat->Albedo.y, meshMat->Albedo.z};
-      j["meshRenderer"]["material"]["mat_ambient_color"] = { meshMat->Ambient.x, meshMat->Ambient.y, meshMat->Ambient.z };
-      j["meshRenderer"]["material"]["mat_diffuse_color"] = { meshMat->Diffuse.x, meshMat->Diffuse.y, meshMat->Diffuse.z };
-      j["meshRenderer"]["material"]["mat_specular_color"] = { meshMat->Specular.x, meshMat->Specular.y, meshMat->Specular.z };
-      j["meshRenderer"]["material"]["mat_emissive_color"] = { meshMat->Emissive.x, meshMat->Emissive.y, meshMat->Emissive.z };
-      j["meshRenderer"]["material"]["mat_shininess"] = meshMat->Shininess;
-      j["meshRenderer"]["material"]["mat_ior"] = meshMat->IOR;
-      j["meshRenderer"]["material"]["mat_opacity"] = meshMat->Opacity;
-      
-      // Find all existing texture paths
-      Texture* diffuseTex = meshMat->FindTexture(TextureType::DIFFUSE);
-      Texture* specularTex = meshMat->FindTexture(TextureType::SPECULAR);
-      Texture* emissiveTex = meshMat->FindTexture(TextureType::EMISSIVE);
-      Texture* normalTex = meshMat->FindTexture(TextureType::NORMAL);
-      Texture* alphaTex = meshMat->FindTexture(TextureType::ALPHA);
+        if (mr.contains("shader")) {
+            const nlohmann::json& sh = mr.at("shader");
+            std::string vertPath = sh.value("vertex_shader_path", "");
+            std::string fragPath = sh.value("fragment_shader_path", "");
 
-      // Save texture data
-      j["meshRenderer"]["material"]["mat_specular_texture_path"] = specularTex ? specularTex->path : "";
-      j["meshRenderer"]["material"]["mat_emissive_texture_path"] = emissiveTex ? emissiveTex->path : "";
-      j["meshRenderer"]["material"]["mat_normal_texture_path"] = normalTex ? normalTex->path : "";
-      j["meshRenderer"]["material"]["mat_alpha_texture_path"] = alphaTex ? alphaTex->path : "";
-
-      // Save shader data
-      j["meshRenderer"]["shader"]["vertex_shader_path"] = meshShader->vertex_shader_path;
-      j["meshRenderer"]["shader"]["fragment_shader_path"] = meshShader->fragment_shader_path;
-
-      Debug::Log(DEBUG, "Finished saving MeshRenderer %p", mesh);
+            if (!vertPath.empty() && !fragPath.empty()) {
+                // cache key: both paths, so distinct programs don't collide
+                std::string shaderName = vertPath + ";" + fragPath;
+                Shader shader = ng::Assets::ShaderLoader::LoadShader(shaderName.c_str(), vertPath.c_str(), fragPath.c_str());
+                material->SetShader(shader);
+            }
+        }
 
     }
 

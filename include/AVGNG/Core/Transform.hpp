@@ -45,7 +45,8 @@ namespace ng::Core {
 
 		void OnInspectorGUI() override;
 
-		void Save(nlohmann::json& j, int componentIndex) override;
+		void Save(nlohmann::json& j) override;
+		void Load(const nlohmann::json& j) override;
 
 	};
 

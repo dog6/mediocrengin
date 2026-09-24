@@ -23,7 +23,7 @@ namespace ng::Editor {
 		ImGui::TextColored(ImColor(0, 157, 255), "GameObjects");
 		ImGui::BeginChild("Scrolling");
 
-		SetGameObjects(Game::activeScene->GetGameObjects());
+		SetGameObjects(Game::GetSceneManager()->GetActiveScene()->GetGameObjects());
 
 		std::string currGoLabel = std::string();
 		GameObject* currGO;

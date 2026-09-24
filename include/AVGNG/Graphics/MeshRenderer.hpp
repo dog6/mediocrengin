@@ -7,13 +7,16 @@
 namespace ng::Graphics {
 
 	class MeshRenderer : public ng::Core::IComponent {
+		
 		Mesh* mesh = nullptr;
 		Texture* diffuseTexture = nullptr;
 		Texture* specularTexture = nullptr;
 		Texture* normalTexture = nullptr;
 		Texture* emissiveTexture = nullptr;
 		Texture* alphaTexture = nullptr;
+
 	public:
+
 		void Draw(ng::Graphics::Camera& camera, ng::Core::Transform& transform);
 		
 		// Getters & Setters
@@ -24,7 +27,8 @@ namespace ng::Graphics {
 
 		void OnInspectorGUI() override;
 
-		void Save(nlohmann::json& j, int componentIndex);
+		void Save(nlohmann::json& j) override;
+		void Load(const nlohmann::json& j) override;
 
 	};
 

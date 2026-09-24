@@ -1,57 +1,14 @@
 {
     "scene": {
         "gameObjects": [
-            null,
             {
                 "active": true,
                 "components": [
-                    null,
                     {
-                        "meshRenderer": {
-                            "material": {
-                                "mat_albedo_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
-                                ],
-                                "mat_alpha_texture_path": "",
-                                "mat_ambient_color": [
-                                    0.6616160273551941,
-                                    0.6616160273551941,
-                                    0.6616160273551941
-                                ],
-                                "mat_diffuse_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
-                                ],
-                                "mat_emissive_color": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "mat_emissive_texture_path": "",
-                                "mat_ior": 1.5,
-                                "mat_normal_texture_path": "",
-                                "mat_opacity": 1.0,
-                                "mat_shininess": 589.32763671875,
-                                "mat_specular_color": [
-                                    0.2777779996395111,
-                                    0.2777779996395111,
-                                    0.2777779996395111
-                                ],
-                                "mat_specular_texture_path": ""
-                            },
-                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_skyscraper.obj",
-                            "shader": {
-                                "fragment_shader_path": "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag",
-                                "vertex_shader_path": "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
-                            }
-                        },
                         "transform": {
                             "position": [
                                 0.0,
-                                0.0,
+                                1.350000023841858,
                                 0.0
                             ],
                             "rotation": [
@@ -60,19 +17,12 @@
                                 0.0
                             ],
                             "scale": [
-                                0.10000000149011612,
-                                0.10000000149011612,
-                                0.10000000149011612
+                                1.0,
+                                1.0,
+                                1.0
                             ]
                         }
-                    }
-                ],
-                "name": "Skyscraper"
-            },
-            {
-                "active": true,
-                "components": [
-                    null,
+                    },
                     {
                         "meshRenderer": {
                             "material": {
@@ -92,6 +42,7 @@
                                     0.6000000238418579,
                                     0.6000000238418579
                                 ],
+                                "mat_diffuse_texture_path": "",
                                 "mat_emissive_color": [
                                     0.0,
                                     0.0,
@@ -101,7 +52,7 @@
                                 "mat_ior": 1.5,
                                 "mat_normal_texture_path": "",
                                 "mat_opacity": 1.0,
-                                "mat_shininess": 1.6324899196624756,
+                                "mat_shininess": 12.221919059753418,
                                 "mat_specular_color": [
                                     0.5,
                                     0.5,
@@ -109,28 +60,11 @@
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_world.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_plane.obj",
                             "shader": {
-                                "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
-                                "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
+                                "fragment_shader_path": "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag",
+                                "vertex_shader_path": "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
                             }
-                        },
-                        "transform": {
-                            "position": [
-                                0.0,
-                                -10.0,
-                                -10.0
-                            ],
-                            "rotation": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
                         }
                     }
                 ],
@@ -139,215 +73,83 @@
             {
                 "active": true,
                 "components": [
-                    null,
+                    {
+                        "transform": {
+                            "position": [
+                                0.0,
+                                2.0,
+                                0.0
+                            ],
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                0.30000001192092896,
+                                0.6000000238418579,
+                                0.30000001192092896
+                            ]
+                        }
+                    },
                     {
                         "meshRenderer": {
                             "material": {
                                 "mat_albedo_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
-                                ],
-                                "mat_alpha_texture_path": "",
-                                "mat_ambient_color": [
                                     1.0,
                                     1.0,
                                     1.0
                                 ],
-                                "mat_diffuse_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
+                                "mat_alpha_texture_path": "",
+                                "mat_ambient_color": [
+                                    0.5749260187149048,
+                                    0.5854092836380005,
+                                    0.16458125412464142
                                 ],
+                                "mat_diffuse_color": [
+                                    0.05693948268890381,
+                                    0.6778157353401184,
+                                    1.0
+                                ],
+                                "mat_diffuse_texture_path": "",
                                 "mat_emissive_color": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    0.12811386585235596,
+                                    0.12811386585235596,
+                                    0.12811386585235596
                                 ],
                                 "mat_emissive_texture_path": "",
-                                "mat_ior": 1.5,
+                                "mat_ior": 1.0,
                                 "mat_normal_texture_path": "",
                                 "mat_opacity": 1.0,
-                                "mat_shininess": 250.0,
+                                "mat_shininess": 0.009999999776482582,
                                 "mat_specular_color": [
-                                    0.5,
-                                    0.5,
-                                    0.5
+                                    0.13167262077331543,
+                                    1.0,
+                                    0.0
                                 ],
                                 "mat_specular_texture_path": ""
                             },
                             "path": "D:/Projects/CPP/smallengine/res/models/mdl_ball.obj",
                             "shader": {
-                                "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
-                                "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
+                                "fragment_shader_path": "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag",
+                                "vertex_shader_path": "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
                             }
-                        },
-                        "transform": {
-                            "position": [
-                                -0.5,
-                                -7.0,
-                                0.0
-                            ],
-                            "rotation": [
-                                0.0,
-                                88.87126159667969,
-                                0.0
-                            ],
-                            "scale": [
-                                0.10000000149011612,
-                                0.10000000149011612,
-                                0.10000000149011612
-                            ]
                         }
                     }
                 ],
                 "name": "Ball"
-            },
-            {
-                "active": true,
-                "components": [
-                    null,
-                    {
-                        "meshRenderer": {
-                            "material": {
-                                "mat_albedo_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
-                                ],
-                                "mat_alpha_texture_path": "",
-                                "mat_ambient_color": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "mat_diffuse_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
-                                ],
-                                "mat_emissive_color": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "mat_emissive_texture_path": "",
-                                "mat_ior": 1.5,
-                                "mat_normal_texture_path": "",
-                                "mat_opacity": 1.0,
-                                "mat_shininess": 250.0,
-                                "mat_specular_color": [
-                                    0.5,
-                                    0.5,
-                                    0.5
-                                ],
-                                "mat_specular_texture_path": ""
-                            },
-                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_isosphere.obj",
-                            "shader": {
-                                "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
-                                "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
-                            }
-                        },
-                        "transform": {
-                            "position": [
-                                0.5,
-                                -7.0,
-                                0.0
-                            ],
-                            "rotation": [
-                                0.0,
-                                88.87126159667969,
-                                0.0
-                            ],
-                            "scale": [
-                                0.10000000149011612,
-                                0.10000000149011612,
-                                0.10000000149011612
-                            ]
-                        }
-                    }
-                ],
-                "name": "Ball"
-            },
-            {
-                "active": true,
-                "components": [
-                    null,
-                    {
-                        "meshRenderer": {
-                            "material": {
-                                "mat_albedo_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
-                                ],
-                                "mat_alpha_texture_path": "",
-                                "mat_ambient_color": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "mat_diffuse_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
-                                ],
-                                "mat_emissive_color": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "mat_emissive_texture_path": "",
-                                "mat_ior": 1.5,
-                                "mat_normal_texture_path": "",
-                                "mat_opacity": 1.0,
-                                "mat_shininess": 250.0,
-                                "mat_specular_color": [
-                                    0.5,
-                                    0.5,
-                                    0.5
-                                ],
-                                "mat_specular_texture_path": ""
-                            },
-                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_bridge.obj",
-                            "shader": {
-                                "fragment_shader_path": "res/shaders/fragShaders/devShader.frag",
-                                "vertex_shader_path": "res/shaders/vertexShaders/devShader.vert"
-                            }
-                        },
-                        "transform": {
-                            "position": [
-                                0.0,
-                                -10.0,
-                                -10.0
-                            ],
-                            "rotation": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    }
-                ],
-                "name": "Cube"
             }
         ],
         "sceneCamera": {
             "position": [
-                15.171509742736816,
-                0.5428695678710938,
-                -12.582758903503418
+                -0.48857367038726807,
+                2.064192771911621,
+                -1.8994691371917725
             ],
             "target": [
-                14.369140625,
-                0.004381966311484575,
-                -12.325397491455078
+                -0.42326807975769043,
+                2.0132663249969482,
+                -0.902904212474823
             ]
         },
         "sceneName": "Development Scene"

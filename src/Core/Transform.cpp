@@ -1,5 +1,6 @@
 #include "AVGNG/Core/Transform.hpp"
 #include "AVGNG/Core/Debug.hpp"
+#include "AVGNG/Assets/JsonUtils.hpp"
 #include <imgui/imgui.h>
 
 using namespace ng::Core;
@@ -54,22 +55,28 @@ void Transform::SetPosition(glm::vec3 pos) {
 
 	}
 
-	void Transform::Save(nlohmann::json& j, int componentIndex)
+	void Transform::Save(nlohmann::json& j)
 	{
-
-		glm::vec3 pos = this->GetPosition();
-		glm::vec3 rot = this->GetRotation();
-		glm::vec3 scl = this->GetScale();
 
 		Debug::Log(DEBUG, "Saving Transform %p...", this);
 
-		//j = nlohmann::json::array();
-
 		// Save transform data
-		j["transform"]["position"] = { pos.x, pos.y, pos.z };
-		j["transform"]["rotation"] = { rot.x, rot.y, rot.z };
-		j["transform"]["scale"] = { scl.x, scl.y, scl.z };
+		j["transform"]["position"] = ng::Assets::Vec3ToJson(position);
+		j["transform"]["rotation"] = ng::Assets::Vec3ToJson(rotation);
+		j["transform"]["scale"] = ng::Assets::Vec3ToJson(scale);
 
 		Debug::Log(DEBUG, "Finished saving Transform %p", this);
+
+	}
+
+	void Transform::Load(const nlohmann::json& j)
+	{
+
+		if (!j.contains("transform")) return;
+		const nlohmann::json& t = j.at("transform");
+
+		SetPosition(ng::Assets::ReadVec3(t, "position", position));
+		SetRotation(ng::Assets::ReadVec3(t, "rotation", rotation));
+		SetScale(ng::Assets::ReadVec3(t, "scale", scale));
 
 	}

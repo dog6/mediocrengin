@@ -10,6 +10,7 @@ local renderer = go:GetComponent("MeshRenderer")
 renderer:LoadMesh("res/models/mdl_grass_cube.obj")
 renderer:LoadShader("DefaultShader", "res/shaders/vertexShaders/devShader.vert", "res/shaders/fragShaders/devShader.frag")
 
+
 local transform = go:GetComponent("Transform")
 transform:SetPosition(0, 0, -10)
 

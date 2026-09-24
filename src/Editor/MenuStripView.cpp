@@ -2,6 +2,7 @@
 #include "AVGNG/Core/Game.hpp"
 #include "AVGNG/Assets/SceneJsonSerializer.hpp"
 #include "AVGNG/Editor/MenuStripView.hpp"
+#include "AVGNG/Editor/InspectorView.hpp"
 // #include <AVGNG/Scene.hpp>
 
 #include <imgui/imgui.h>
@@ -20,12 +21,25 @@ void MenuStripView::CreateUI()
 			if (ImGui::MenuItem("New Scene")) {
 				// New Scene
 			}
-			if (ImGui::MenuItem("Open Scene")) {
-				// Open Scene
+			if (ImGui::MenuItem("Reload scene from latest save")) {
+				// TODO: Create ImGui Open Dialog; for now reload the active scene's file
+				// Actually just reloading the current scene is also useful, so we'll add the opening dialog in the future as another option
+				Scene* activeScene = Game::GetActiveScene();
+
+				std::string load_path = std::string("D:/Projects/CPP/smallengine/res/scenes/") + activeScene->GetName() + ".json";
+				Debug::Log(LOG, "Opening scene file '%s'", load_path.c_str());
+
+				Scene* loadedScene = SceneJsonSerializer::DeserializeSceneFromJson(load_path.c_str(), Game::camera, Game::GetViewportSize());
+
+				if (loadedScene != nullptr) {
+					// the old scene's objects are about to be deleted, drop editor references to them
+					ng::Editor::InspectorView::Inspect(-1, nullptr);
+					SceneManager::SetActiveScene(loadedScene);
+				}
 			}
 			if (ImGui::MenuItem("Save Scene")) {
 				// Get active scene
-				Scene* activeScene = Game::activeScene;
+				Scene* activeScene = Game::GetActiveScene();
 
 				// Save scene
 				Debug::Log(LOG, "Saving active scene '%s'", activeScene->GetName().c_str());

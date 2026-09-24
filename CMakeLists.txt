@@ -10,6 +10,10 @@ find_package(OpenGL REQUIRED)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
+if(MSVC)
+    add_compile_options(/FS)
+endif()
+
 add_executable(smallengine ${source_files})
 target_include_directories(smallengine PRIVATE
     include/

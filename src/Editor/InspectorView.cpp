@@ -9,8 +9,6 @@ namespace ng::Editor {
 	bool InspectorView::s_isVisible = false;
 	GameObject* InspectorView::s_inspectedObject = nullptr;
 
-	//std::vector<std::unique_ptr<ng::Core::Component>> InspectorView::s_inspectedComponents;
-
 	std::vector<IComponent*> InspectorView::s_inspectedComponents;
 
 	void InspectorView::CreateUI()
@@ -58,9 +56,6 @@ namespace ng::Editor {
 		else {
 			Debug::Log(DEBUG, "Inspector no longer inspecting any object.");
 		}
-
-
-
 
 	}
 

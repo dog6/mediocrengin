@@ -10,6 +10,7 @@
 #include "AVGNG/Graphics/MeshRenderer.hpp"
 #include "AVGNG/Graphics/Camera.hpp"
 #include "AVGNG/Graphics/Skybox.hpp"
+#include "AVGNG/Core/Time.hpp"
 
 namespace ng::Core {
 
@@ -24,9 +25,10 @@ namespace ng::Core {
 
 	public:
 		Scene(ng::Graphics::Camera* _mainCamera, glm::uvec2& viewportSize, const char* _sceneName = "New Scene");
+		Scene();
 		~Scene();
 
-		const char* sceneName;
+		std::string sceneName;
 		bool isActive;
 
 		GameObject* CreateGameObject(const std::string& name = "GameObject");
@@ -34,7 +36,7 @@ namespace ng::Core {
 		void RemoveGameObject(GameObject* obj);
 		GameObject* FindGameObjectByName(const std::string& name);
 
-		void Load();
+		void Load(const std::string& filepath);
 		void Start();
 		void Update();
 		void Render();
@@ -43,7 +45,7 @@ namespace ng::Core {
 		void SetActiveCamera(ng::Graphics::Camera* cam);
 		ng::Graphics::Camera* GetActiveCamera() const;
 
-		const std::string GetName() const { return std::string(sceneName); }
+		const std::string GetName() const { return sceneName; }
 		const std::vector<GameObject*>& GetGameObjects() const { return gameObjectsInScene; }
 
 		bool IsActive() const { return isActive; }

@@ -28,6 +28,11 @@ namespace ng::Graphics {
                 void SetShader(Shader& shader) { this->shader = shader; }
                 ng::Graphics::Shader* GetShader();
 
+                void SetAlbedoColor(glm::vec3 col);
+                void SetAmbientColor(glm::vec3 col);
+                void SetDiffuseColor(glm::vec3 col);
+                void SetSpecularColor(glm::vec3 col);
+                void SetEmissiveColor(glm::vec3 col);
         };
     
 }

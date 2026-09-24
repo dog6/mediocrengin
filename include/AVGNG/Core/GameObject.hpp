@@ -2,6 +2,7 @@
 
 #include "AVGNG/Graphics/MeshRenderer.hpp"
 #include "AVGNG/Core/Transform.hpp"
+#include "AVGNG/Core/PhysicsBody.hpp"
 #include "AVGNG/Core/IComponent.hpp"
 #include <iostream>
 
@@ -10,7 +11,6 @@
 #include <type_traits>
 
 namespace ng::Core {
-
 
 	class GameObject {
 
@@ -32,15 +32,12 @@ namespace ng::Core {
 
         std::vector<IComponent*> GetAttachedComponents() {
             std::vector<IComponent*> result;
-            for (auto& comp : components)
-            {
-                result.push_back(comp.get());  // get raw pointer, no ownership transfer
-            }
+            for (auto& comp : components) result.push_back(comp.get());  // get raw pointer, no ownership transfer
             return result;
         }
 
-        template<typename T, typename... Args> T*
-            AddComponent(Args&&... args) {
+        template<typename T, typename... Args> T* AddComponent(Args&&... args) {
+
             static_assert(std::is_base_of<IComponent, T>::value, "T must inherit from IComponent");
 
             auto comp = std::make_unique<T>(std::forward<Args>(args)...);
@@ -52,9 +49,7 @@ namespace ng::Core {
         }
 
 
-        template<typename T> T*
-            GetComponent()
-        {
+        template<typename T> T* GetComponent() {
 
             for (auto& comp : components) {
                 if (T* casted = dynamic_cast<T*>(comp.get())) {
@@ -64,6 +59,7 @@ namespace ng::Core {
             return nullptr;
 
         }
+
         // Update all components
         void Update(float deltaTime);
 

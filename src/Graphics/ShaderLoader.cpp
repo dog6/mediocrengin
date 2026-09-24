@@ -116,12 +116,11 @@ namespace ng::Assets {
     /// <returns>Shader* shader</returns>
     Shader ShaderLoader::LoadDefaultShader() {
 
-        string vertShaderPath = "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert";
-        string fragShaderPath = "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag";
-        Debug::Log(DEBUG, "Loading default vertex shader: %s", vertShaderPath.c_str());
-        Debug::Log(DEBUG, "Loading default fragment shader: %s\n", fragShaderPath.c_str());
 
-        Shader shader = ShaderLoader::LoadShader("Default", vertShaderPath.c_str(), fragShaderPath.c_str());
+        Debug::Log(DEBUG, "Loading default vertex shader: %s", DEFAULT_VERTEX_SHADER_PATH);
+        Debug::Log(DEBUG, "Loading default fragment shader: %s\n", DEFAULT_FRAGMENT_SHADER_PATH);
+
+        Shader shader = ShaderLoader::LoadShader("Default", DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH);
 
         if (shader.ID == 0) {
 			Debug::Log(ERROR, "Failed to load default shader.");
