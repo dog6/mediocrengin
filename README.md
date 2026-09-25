@@ -42,3 +42,9 @@
   <img width="997" alt="image" src="https://github.com/user-attachments/assets/f1bf25ef-8770-4fe4-acc2-861f424187f1" />
 
 </details>
+
+<details>
+  <summary>Implemented basic AABB physics/collision system</summary>
+  <img width="800" height="428" alt="image" src="https://github.com/user-attachments/assets/b06ced10-53a5-4d67-87d3-1bc75bc87d6a" />
+
+</details>
