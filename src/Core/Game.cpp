@@ -9,6 +9,9 @@ using namespace ng::Assets;
 using namespace ng::Editor;
 #include "AVGNG/Editor/EditorUI.hpp"
 #endif
+
+#include "AVGNG/Scripting/LuaManager.hpp"
+
 namespace ng {
 
     GLFWwindow* Game::gameWindow = nullptr;

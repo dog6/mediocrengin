@@ -1,4 +1,3 @@
-
 #include "AVGNG/Graphics/Mesh.hpp"
 #include "AVGNG/Graphics/ShaderLoader.hpp"
 
@@ -25,8 +24,7 @@ namespace ng::Graphics {
         this->filepath = "";
     }
 
-    Mesh::Mesh(std::vector<glm::vec3> positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texCoords, std::vector<unsigned int> inds)
-    {
+    Mesh::Mesh(std::vector<glm::vec3> positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texCoords, std::vector<unsigned int> inds) {
         for (size_t i = 0; i < positions.size(); i++) {
             Vertex v = Vertex();
             v.position = positions[i];
@@ -41,16 +39,13 @@ namespace ng::Graphics {
         this->indices = inds;
         this->material = nullptr;
 
-        indices = inds;
         SetupMesh();
     }
 
-    Mesh::Mesh(std::vector<Vertex> verts, std::vector<unsigned int> inds)
-    {
+    Mesh::Mesh(std::vector<Vertex> verts, std::vector<unsigned int> inds) {
         this->vertices = verts;
         this->indices = inds;
 
-        // Extract positions, normals, texCoords for backward compatibility if needed
         for (const auto& v : verts) {
             this->positions.push_back(v.position);
             this->normals.push_back(v.normal);
@@ -64,116 +59,96 @@ namespace ng::Graphics {
         SetupMesh();
     }
 
-    void Mesh::SetupMesh()
-    {
-
+    void Mesh::SetupMesh() {
         Debug::Log(LogLevel::DEBUG, "SetupMesh called with %d vertices, %d indices",
             (int)vertices.size(), (int)indices.size());
 
         if (vertices.empty() || indices.empty()) {
             Debug::Log(LogLevel::ERROR, "SetupMesh: Empty vertices or indices!");
             return;
-
         }
 
-        Shader shader = ng::Assets::ShaderLoader::LoadDefaultShader();
-        this->material->SetShader(shader);
-        Debug::Log(DEV, "Vertex[0] texCoord: (%f, %f)", vertices[0].texCoord.x, vertices[0].texCoord.y);
+        // 1. Ensure material exists
+        if (this->material == nullptr) {
+            this->material = new Material();
+        }
+
+        // FIX: Only load default shader if material doesn't already have one
+        if (this->material->GetShader() == nullptr) {
+            Shader shader = ng::Assets::ShaderLoader::LoadDefaultShader();
+            this->material->SetShader(shader);
+        }
+
+        // 2. Set default material colors to White so multiplying by textures doesn't render Black
+        MaterialData* m = this->material->GetMaterialData();
+        if (m != nullptr) {
+            if (m->Albedo == glm::vec3(0.0f))  m->Albedo  = glm::vec3(1.0f);
+            if (m->Diffuse == glm::vec3(0.0f)) m->Diffuse = glm::vec3(1.0f);
+            if (m->Ambient == glm::vec3(0.0f)) m->Ambient = glm::vec3(1.0f);
+        }
 
         glGenVertexArrays(1, &VAO);
-        CheckGLError("glGenVertexArrays");
-
         glGenBuffers(1, &VBO);
-        CheckGLError("glGenBuffers VBO");
-
         glGenBuffers(1, &EBO);
-        CheckGLError("glGenBuffers EBO");
-
-        Debug::Log(LogLevel::DEBUG, "Generated VAO: %d, VBO: %d, EBO: %d", VAO, VBO, EBO);
 
         glBindVertexArray(VAO);
-        CheckGLError("glBindVertexArray");
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        CheckGLError("glBindBuffer VBO");
-
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
             &vertices[0], GL_STATIC_DRAW);
-        CheckGLError("glBufferData VBO");
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        CheckGLError("glBindBuffer EBO");
-
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
             &indices[0], GL_STATIC_DRAW);
-        CheckGLError("glBufferData EBO");
 
+        // Position Attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
             (void*)offsetof(Vertex, position));
-        CheckGLError("glVertexAttribPointer 0");
         glEnableVertexAttribArray(0);
-        CheckGLError("glEnableVertexAttribArray 0");
 
+        // Normal Attribute
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
             (void*)offsetof(Vertex, normal));
-        CheckGLError("glVertexAttribPointer 1");
         glEnableVertexAttribArray(1);
-        CheckGLError("glEnableVertexAttribArray 1");
 
+        // UV / TexCoord Attribute
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
             (void*)offsetof(Vertex, texCoord));
-        CheckGLError("glVertexAttribPointer 2");
         glEnableVertexAttribArray(2);
-        CheckGLError("glEnableVertexAttribArray 2");
 
         glBindVertexArray(0);
-        CheckGLError("glBindVertexArray 0");
-
-        Debug::Log(LogLevel::DEBUG, "SetupMesh completed");
-
-
     }
 
-    void Mesh::UseShader(ng::Graphics::Camera& camera, ng::Core::Transform& transform)
-    {
+    void Mesh::UseShader(ng::Graphics::Camera& camera, ng::Core::Transform& transform) {
+        if (material == nullptr) {
+            Debug::Log(LogLevel::ERROR, "Mesh has no material during UseShader!");
+            return;
+        }
 
         Shader* shader = material->GetShader();
         if (shader == nullptr) {
-            Debug::Log(ERROR, "No shader assigned to material!");
+            Debug::Log(LogLevel::ERROR, "No shader assigned to material!");
             return;
         }
 
         shader->Use();
 
-        // Get matrices
+        // Pass Matrix Uniforms
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = camera.GetProjectionMatrix(1280, 720);
         glm::mat4 model = transform.GetModelMatrix();
 
-        // Set matrices
         shader->SetMat4("view", view);
         shader->SetMat4("projection", projection);
         shader->SetMat4("model", model);
 
-        // Set material properties
-        // Even better: handle multiple texture types
         MaterialData* m = material->GetMaterialData();
-
-        // Populate material data
         if (m == nullptr) {
-            Debug::Log(ERROR, "MaterialData is null in MeshRenderer::Draw");
+            Debug::Log(LogLevel::ERROR, "MaterialData is null in Mesh::UseShader");
             return;
         }
 
-        // Find textures
-        Texture* diffuseTexture = m->FindTexture(TextureType::DIFFUSE);
-        Texture* specularTexture = m->FindTexture(TextureType::SPECULAR);
-        Texture* normalTexture = m->FindTexture(TextureType::NORMAL);
-        Texture* emissiveTexture = m->FindTexture(TextureType::EMISSIVE);
-        Texture* alphaTexture = m->FindTexture(TextureType::ALPHA);
-        Texture* metallicTexture = m->FindTexture(TextureType::METALLIC);
-
-        // Material properties
+        // Set Base Material Attributes
         shader->SetVec3("Albedo", m->Albedo);
         shader->SetVec3("AmbientColor", m->Ambient);
         shader->SetVec3("DiffuseColor", m->Diffuse);
@@ -183,74 +158,76 @@ namespace ng::Graphics {
         shader->SetFloat("IOR", m->IOR);
         shader->SetFloat("Opacity", m->Opacity);
         shader->SetFloat("Metallic", m->Metallicness);
-        // Lighting 
+
+        // Lighting Parameters
         shader->SetVec3("sunDirection", glm::normalize(glm::vec3(-0.3f, -1.0f, -0.5f)));
         shader->SetVec3("sunColor", glm::vec3(1.0f, 0.95f, 0.8f));
         shader->SetVec3("viewPos", camera.GetPosition());
 
-        // Diffuse texture (texture unit 0)
+        // Texture 0: Diffuse
+        Texture* diffuseTexture = m->FindTexture(TextureType::DIFFUSE);
         if (diffuseTexture != nullptr && diffuseTexture->id > 0) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, diffuseTexture->id);
             shader->SetBool("hasDiffuseMap", true);
-        }
-        else {
+        } else {
             shader->SetBool("hasDiffuseMap", false);
         }
         shader->SetInt("diffuseMap", 0);
 
-
-        // Specular texture (texture unit 1) 
+        // Texture 1: Specular
+        Texture* specularTexture = m->FindTexture(TextureType::SPECULAR);
         if (specularTexture != nullptr && specularTexture->id > 0) {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, specularTexture->id);
             shader->SetBool("hasSpecularMap", true);
-        }
-        else {
+        } else {
             shader->SetBool("hasSpecularMap", false);
         }
         shader->SetInt("specularMap", 1);
-       // Emissive map (texture unit 3)
-        if (emissiveTexture != nullptr && emissiveTexture->id > 0) {
-            glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, emissiveTexture->id);
-            shader->SetBool("hasEmissiveMap", true);
-        }
-        else shader->SetBool("hasEmissiveMap", false);
-        shader->SetInt("emissiveMap", 3);
-       // Normal map (texture unit 3)
+
+        // Texture 2: Normal Map
+        Texture* normalTexture = m->FindTexture(TextureType::NORMAL);
         if (normalTexture != nullptr && normalTexture->id > 0) {
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, normalTexture->id);
             shader->SetBool("hasNormalMap", true);
+        } else {
+            shader->SetBool("hasNormalMap", false);
         }
-        else shader->SetBool("hasNormalMap", false);
         shader->SetInt("normalMap", 2);
-       
-        // Alpha map (texture unit 4)
+
+        // Texture 3: Emissive Map
+        Texture* emissiveTexture = m->FindTexture(TextureType::EMISSIVE);
+        if (emissiveTexture != nullptr && emissiveTexture->id > 0) {
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, emissiveTexture->id);
+            shader->SetBool("hasEmissiveMap", true);
+        } else {
+            shader->SetBool("hasEmissiveMap", false);
+        }
+        shader->SetInt("emissiveMap", 3);
+
+        // Texture 4: Alpha Map
+        Texture* alphaTexture = m->FindTexture(TextureType::ALPHA);
         if (alphaTexture != nullptr && alphaTexture->id > 0) {
             glActiveTexture(GL_TEXTURE4);
             glBindTexture(GL_TEXTURE_2D, alphaTexture->id);
             shader->SetBool("hasAlphaMap", true);
-        }
-        else {
+        } else {
             shader->SetBool("hasAlphaMap", false);
         }
         shader->SetInt("alphaMap", 4);
 
+        // Texture 5: Metallic Map
+        Texture* metallicTexture = m->FindTexture(TextureType::METALLIC);
         if (metallicTexture != nullptr && metallicTexture->id > 0) {
             glActiveTexture(GL_TEXTURE5);
             glBindTexture(GL_TEXTURE_2D, metallicTexture->id);
             shader->SetBool("hasMetallicMap", true);
-        }
-        else {
+        } else {
             shader->SetBool("hasMetallicMap", false);
         }
-        shader->SetInt("metallicMap", 4);
-
-
+        shader->SetInt("metallicMap", 5);
     }
-
-   
-
 }

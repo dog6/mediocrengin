@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include "AVGNG/Graphics/Shader.hpp"
+#include "AVGNG/Assets/FileReader.hpp"
 
 using namespace ng::Core;
 using namespace ng::Assets;

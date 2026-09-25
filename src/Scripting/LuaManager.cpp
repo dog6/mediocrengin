@@ -8,160 +8,7 @@ namespace ng::Scripting {
 
 		//// Helper Methods
 		//// Register Lua Bindings
-		////
 		
-		void RegisterGame(sol::state& lua) {
-			lua.new_usertype<Game>("Game",
-				"GetActiveScene", [](Game& game) {
-            		return game.GetSceneManager()->GetActiveScene();
-        		}
-			);
-		}
-	
-		void RegisterScene(sol::state& lua) {
-			lua.new_usertype<Scene>("Scene",
-				"CreateGameObject", &Scene::CreateGameObject,
-				// Meta-functions satisfy the compiler's need for comparison operators
-				sol::meta_function::equal_to, [](const Scene& a, const Scene& b) { return &a == &b; },
-				sol::meta_function::less_than, [](const Scene& a, const Scene& b) { return &a < &b; }
-			);
-		}
-	
-		void RegisterGameObject(sol::state& lua) {
-			lua.new_usertype<GameObject>("GameObject",
-				"name", &GameObject::name,
-				"AddComponent", &GameObject::AddComponentByName,
-	
-				// Add this wrapper for GetComponent
-				"GetComponent", [](GameObject& self, std::string name, sol::this_state s) -> sol::object {
-					auto* comp = self.GetComponentByName(name);
-					if (!comp) return sol::nil;
-	
-					// Ensure Lua knows it's a Transform so we can call SetPosition
-					if (name == "Transform") {
-						return sol::make_object(s, static_cast<Transform*>(comp));
-					}
-					else if (name == "MeshRenderer") {
-						return sol::make_object(s, static_cast<MeshRenderer*>(comp));
-					}
-					else if (name == "PhysicsBody"){
-						return sol::make_object(s, static_cast<PhysicsBody*>(comp));
-					}
-	
-					return sol::make_object(s, comp);
-				}
-			);
-		}
-		
-		void RegisterTransform(sol::state& lua) {
-			lua.new_usertype<Transform>("Transform",
-		  		sol::base_classes, sol::bases<IComponent>(),
-		  		"SetPosition", [](Transform& self, float x, float y, float z) {
-		  			self.SetPosition(glm::vec3(x, y, z));
-		  		},
-		  		"SetRotation", [](Transform& self, float x, float y, float z) {
-		  			self.SetRotation(glm::vec3(x, y, z));
-		  		},
-		  		"SetScale", [](Transform& self, float x, float y, float z) {
-		  			self.SetScale(glm::vec3(x, y, z));
-		  		},
-		  		"GetPosition", [](Transform& self) { self.GetPosition(); },
-		  		"GetRotation", [](Transform& self) { self.GetRotation(); },
-		  		"GetScale", [](Transform& self) { self.GetScale(); }
-			);
-		}
-		  
-		void RegisterCamera(sol::state& lua) {
-
-			lua.new_usertype<Camera>("Camera",
-				"SetPosition", [](Camera& cam, float x, float y, float z) {
-					cam.SetPosition(glm::vec3(x, y, z));
-				},
-				"GetPosition", [](Camera& cam) {
-					glm::vec3 camPos = cam.GetPosition();
-					return std::make_tuple(camPos.x, camPos.y, camPos.z);
-				},
-				"SetTarget", [](Camera& cam, float x, float y, float z) {
-					cam.SetTarget(glm::vec3(x, y, z));
-				},
-				"GetTarget", [](Camera& cam) {
-					glm::vec3 camTarget = cam.GetTarget();
-					return std::make_tuple(camTarget.x, camTarget.y, camTarget.z);
-				}, 
-				"SetUpwardDirection", [](Camera& cam, float x, float y, float z) {
-					cam.SetUp(glm::vec3(x, y, z));
-				},
-				"GetUpwardDirection", [](Camera& cam) {
-					glm::vec3 camUp = cam.GetUp();
-					return std::make_tuple(camUp.x, camUp.y, camUp.z);
-				}
-			);
-		  
-		}
-
-
-		void RegisterSphereCollider(sol::state& lua){
-			lua.new_usertype<SphereCollider>("SphereCollider", 
-				"SetRadius", [](SphereCollider& self, float r) {
-		  			self.SetRadius(r);
-		  		}
-			);
-		}
-
-		
-		void RegisterMesh(sol::state& lua) {
-			lua.new_usertype<Mesh>("Mesh",
-				"filepath", &Mesh::filepath,
-				"material", &Mesh::GetMaterial
-			);
-		}
-
-		void RegisterMaterial(sol::state& lua) {
-			lua.new_usertype<Material>("Material",
-				"SetShader", &Material::SetShader,
-				"GetShader", &Material::GetShader,
-				"SetMaterialData", &Material::SetMaterialData,
-				"GetMaterialData", &Material::GetMaterialData
-			);
-		}
-
-		void RegisterMeshRenderer(sol::state& lua) {
-			lua.new_usertype<MeshRenderer>("MeshRenderer",
-		  		sol::base_classes, sol::bases<IComponent>(),
-		  		"LoadMesh", &MeshRenderer::LoadMesh,
-				"GetMesh", &MeshRenderer::GetMesh
-			);
-		}
-		
-		void RegisterPhysicsBody(sol::state& lua) {
-			lua.new_usertype<PhysicsBody>("PhysicsBody",
-				sol::base_classes, sol::bases<IComponent>(),
-
-				"SetLinearAcceleration", [](PhysicsBody& self, float x, float y, float z) {
-					self.SetLinearAcceleration(glm::vec3(x, y, z));
-				},
-
-				"SetLinearVelocity", [](PhysicsBody& self, float x, float y, float z) {
-					self.SetLinearVelocity(glm::vec3(x, y, z));
-				},
-
-				"SetAngularAcceleration", [](PhysicsBody& self, float x, float y, float z) {
-					self.SetAngularAcceleration(glm::vec3(x, y, z));
-				},
-
-				"SetAngularVelocity", [](PhysicsBody& self, float x, float y, float z) {
-					self.SetAngularVelocity(glm::vec3(x, y, z));
-				}
-			);
-		}
-
-		void RegisterShaderLoader(sol::state& lua) {
-			lua.new_usertype<ng::Assets::ShaderLoader>("ShaderLoader",
-				"LoadShaderFromFile", &ng::Assets::ShaderLoader::LoadShader,
-				"LoadDefaultShader", &ng::Assets::ShaderLoader::LoadDefaultShader
-			);
-		}
-
 		void RegisterDeveloperConsole(sol::state& lua) {
 			// override lua print function
 			lua["print"] = [](sol::variadic_args args) {
@@ -195,11 +42,6 @@ namespace ng::Scripting {
 			// lua.set_function("noclip", &LuaManager::LoadNoclip);
 
 		}
-
-		// Temp method to enable noclip via dev console
-		// void LuaManager::LoadNoclip() {
-		// 	LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/noclip.lua");
-		// }
 
 		std::vector<LuaScript> LuaManager::s_scripts;
 
@@ -281,21 +123,12 @@ namespace ng::Scripting {
 		/// <param name="lua">sol::state& reference</param>
 		void LuaManager::BindToLua(sol::state& lua) {
 		
-			RegisterGame(lua);
-			RegisterScene(lua);
-			RegisterGameObject(lua);
-			RegisterTransform(lua);
-			RegisterShaderLoader(lua);
-			RegisterMeshRenderer(lua);
-			RegisterPhysicsBody(lua);
-			RegisterSphereCollider(lua);
-			RegisterCamera(lua);
+			CoreRegistrar::Register(lua);
+			GraphicsRegistrar::Register(lua);
+			PhysicsRegistrar::Register(lua);
+			InputRegistrar::Register(lua);
+
 			RegisterDeveloperConsole(lua);
-
-			KeyboardInput::RegisterKeyboardWithLua(lua);
-			MouseInput::RegisterMouseWithLua(lua);
-
-			Cursor::RegisterCursorWithLua(lua);
 
 		}
 
@@ -350,4 +183,5 @@ namespace ng::Scripting {
 			}
 
 		}
+	
 	}

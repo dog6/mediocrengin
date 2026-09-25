@@ -34,14 +34,14 @@ namespace ng::Core {
 
 
 		// Getters/Setters
-		static  void SetCursorLockMode(CursorLockMode mode) {
-			Debug::Log(DEBUG, "Set cursor lock mode to: %d", (int)mode);
-			s_lockState.lockMode = mode;
-			OnCursorLockModeChanged();
-		}
-		static CursorLockMode GetCursorLockMode() {
-			return s_lockState.lockMode;
-		}
+		static  void SetCursorLockMode(CursorLockMode mode); //{
+		// 	Debug::Log(DEBUG, "Set cursor lock mode to: %d", (int)mode);
+		// 	s_lockState.lockMode = mode;
+		// 	OnCursorLockModeChanged();
+		// }
+		static CursorLockMode GetCursorLockMode(); //{
+		// 	return s_lockState.lockMode;
+		// }
 
 		// Methods
 		static void Init(GLFWwindow* gameWindow);

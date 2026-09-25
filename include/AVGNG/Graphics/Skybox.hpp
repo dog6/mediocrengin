@@ -2,7 +2,9 @@
 
 #include "AVGNG/Graphics/Camera.hpp"
 #include "AVGNG/Graphics/ShaderLoader.hpp"
+#include "AVGNG/Graphics/Shader.hpp"
 #include "AVGNG/Graphics/CubemapTexture.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

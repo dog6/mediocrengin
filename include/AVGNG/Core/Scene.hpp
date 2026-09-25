@@ -11,6 +11,7 @@
 #include "AVGNG/Graphics/Camera.hpp"
 #include "AVGNG/Graphics/Skybox.hpp"
 #include "AVGNG/Core/Time.hpp"
+#include "AVGNG/Core/collision/CollisionSystem.hpp"
 
 namespace ng::Core {
 
@@ -22,6 +23,7 @@ namespace ng::Core {
 		std::vector<GameObject*> gameObjectsInScene;
 		glm::uvec2& viewportSize;
 		ng::Graphics::Skybox* skybox;
+		CollisionSystem collisionSystem;
 
 	public:
 		Scene(ng::Graphics::Camera* _mainCamera, glm::uvec2& viewportSize, const char* _sceneName = "New Scene");

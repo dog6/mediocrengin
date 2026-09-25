@@ -10,14 +10,14 @@ namespace ng::Graphics {
 
     class MaterialData
     {
-        std::vector<ng::Graphics::Texture*> textures;
         bool hasDiffuseTexture = false;
 		bool hasSpecularTexture = false;
 		bool hasNormalTexture = false;
 		bool hasEmissiveTexture = false;
 		bool hasAlphaTexture = false;
         bool hasMetallicTexture = false;
-    public:
+        std::vector<ng::Graphics::Texture*> textures;
+        public:
         MaterialData();
         ~MaterialData();
         std::string name;

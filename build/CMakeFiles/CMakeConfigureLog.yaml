@@ -68,8 +68,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -97,7 +97,7 @@ events:
       The output was:
       0
       MSBuild version 17.12.6+db5f6012c for .NET Framework
-      Build started 9/23/2026 11:07:21 AM.
+      Build started 9/25/2026 5:28:49 PM.
       
       Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\4.1.1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -126,7 +126,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.84
+      Time Elapsed 00:00:00.57
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -187,14 +187,16 @@ events:
       - "C:/Program Files/doxygen/bin/"
       - "C:/Users/dog/AppData/Local/"
       - "C:/Program Files/CMake/bin/"
-      - "D:/nvm/"
-      - "C:/nvm4w/nodejs/"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/"
       - "C:/Program Files/nodejs/"
       - "C:/Users/dog/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "C:/Program Files/GPAC/"
       - "C:/Program Files/SatDump/bin/"
       - "C:/Users/dog/.dotnet/tools/"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/"
+      - "D:/nvm/"
+      - "C:/nvm4w/nodejs/"
       - "C:/Users/dog/AppData/Roaming/npm/"
       - "C:/Users/dog/AppData/Local/Programs/Antigravity/bin/"
       - "C:/Users/dog/AppData/Local/Programs/Ollama/"
@@ -236,8 +238,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -300,14 +302,16 @@ events:
       - "C:/Program Files/doxygen/bin/"
       - "C:/Users/dog/AppData/Local/"
       - "C:/Program Files/CMake/bin/"
-      - "D:/nvm/"
-      - "C:/nvm4w/nodejs/"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/"
       - "C:/Program Files/nodejs/"
       - "C:/Users/dog/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "C:/Program Files/GPAC/"
       - "C:/Program Files/SatDump/bin/"
       - "C:/Users/dog/.dotnet/tools/"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/"
+      - "D:/nvm/"
+      - "C:/nvm4w/nodejs/"
       - "C:/Users/dog/AppData/Roaming/npm/"
       - "C:/Users/dog/AppData/Local/Programs/Antigravity/bin/"
       - "C:/Users/dog/AppData/Local/Programs/Ollama/"
@@ -399,12 +403,12 @@ events:
       - "C:/Program Files/CMake/bin/lld-link.com"
       - "C:/Program Files/CMake/bin/lld-link.exe"
       - "C:/Program Files/CMake/bin/lld-link"
-      - "D:/nvm/lld-link.com"
-      - "D:/nvm/lld-link.exe"
-      - "D:/nvm/lld-link"
-      - "C:/nvm4w/nodejs/lld-link.com"
-      - "C:/nvm4w/nodejs/lld-link.exe"
-      - "C:/nvm4w/nodejs/lld-link"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/lld-link.com"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/lld-link.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/lld-link"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/lld-link.com"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/lld-link.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/lld-link"
       - "C:/Program Files/nodejs/lld-link.com"
       - "C:/Program Files/nodejs/lld-link.exe"
       - "C:/Program Files/nodejs/lld-link"
@@ -423,6 +427,12 @@ events:
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/lld-link.com"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/lld-link.exe"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/lld-link"
+      - "D:/nvm/lld-link.com"
+      - "D:/nvm/lld-link.exe"
+      - "D:/nvm/lld-link"
+      - "C:/nvm4w/nodejs/lld-link.com"
+      - "C:/nvm4w/nodejs/lld-link.exe"
+      - "C:/nvm4w/nodejs/lld-link"
       - "C:/Users/dog/AppData/Roaming/npm/lld-link.com"
       - "C:/Users/dog/AppData/Roaming/npm/lld-link.exe"
       - "C:/Users/dog/AppData/Roaming/npm/lld-link"
@@ -468,8 +478,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -530,14 +540,16 @@ events:
       - "C:/Program Files/doxygen/bin/"
       - "C:/Users/dog/AppData/Local/"
       - "C:/Program Files/CMake/bin/"
-      - "D:/nvm/"
-      - "C:/nvm4w/nodejs/"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/"
       - "C:/Program Files/nodejs/"
       - "C:/Users/dog/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "C:/Program Files/GPAC/"
       - "C:/Program Files/SatDump/bin/"
       - "C:/Users/dog/.dotnet/tools/"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/"
+      - "D:/nvm/"
+      - "C:/nvm4w/nodejs/"
       - "C:/Users/dog/AppData/Roaming/npm/"
       - "C:/Users/dog/AppData/Local/Programs/Antigravity/bin/"
       - "C:/Users/dog/AppData/Local/Programs/Ollama/"
@@ -579,8 +591,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -641,14 +653,16 @@ events:
       - "C:/Program Files/doxygen/bin/"
       - "C:/Users/dog/AppData/Local/"
       - "C:/Program Files/CMake/bin/"
-      - "D:/nvm/"
-      - "C:/nvm4w/nodejs/"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/"
       - "C:/Program Files/nodejs/"
       - "C:/Users/dog/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "C:/Program Files/GPAC/"
       - "C:/Program Files/SatDump/bin/"
       - "C:/Users/dog/.dotnet/tools/"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/"
+      - "D:/nvm/"
+      - "C:/nvm4w/nodejs/"
       - "C:/Users/dog/AppData/Roaming/npm/"
       - "C:/Users/dog/AppData/Local/Programs/Antigravity/bin/"
       - "C:/Users/dog/AppData/Local/Programs/Ollama/"
@@ -740,12 +754,12 @@ events:
       - "C:/Program Files/CMake/bin/mt.com"
       - "C:/Program Files/CMake/bin/mt.exe"
       - "C:/Program Files/CMake/bin/mt"
-      - "D:/nvm/mt.com"
-      - "D:/nvm/mt.exe"
-      - "D:/nvm/mt"
-      - "C:/nvm4w/nodejs/mt.com"
-      - "C:/nvm4w/nodejs/mt.exe"
-      - "C:/nvm4w/nodejs/mt"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/mt.com"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/mt.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/mt"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/mt.com"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/mt.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/mt"
       - "C:/Program Files/nodejs/mt.com"
       - "C:/Program Files/nodejs/mt.exe"
       - "C:/Program Files/nodejs/mt"
@@ -764,6 +778,12 @@ events:
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/mt.com"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/mt.exe"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/mt"
+      - "D:/nvm/mt.com"
+      - "D:/nvm/mt.exe"
+      - "D:/nvm/mt"
+      - "C:/nvm4w/nodejs/mt.com"
+      - "C:/nvm4w/nodejs/mt.exe"
+      - "C:/nvm4w/nodejs/mt"
       - "C:/Users/dog/AppData/Roaming/npm/mt.com"
       - "C:/Users/dog/AppData/Roaming/npm/mt.exe"
       - "C:/Users/dog/AppData/Roaming/npm/mt"
@@ -809,8 +829,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -871,14 +891,16 @@ events:
       - "C:/Program Files/doxygen/bin/"
       - "C:/Users/dog/AppData/Local/"
       - "C:/Program Files/CMake/bin/"
-      - "D:/nvm/"
-      - "C:/nvm4w/nodejs/"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/"
       - "C:/Program Files/nodejs/"
       - "C:/Users/dog/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "C:/Program Files/GPAC/"
       - "C:/Program Files/SatDump/bin/"
       - "C:/Users/dog/.dotnet/tools/"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/"
+      - "D:/nvm/"
+      - "C:/nvm4w/nodejs/"
       - "C:/Users/dog/AppData/Roaming/npm/"
       - "C:/Users/dog/AppData/Local/Programs/Antigravity/bin/"
       - "C:/Users/dog/AppData/Local/Programs/Ollama/"
@@ -920,8 +942,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -993,8 +1015,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -1022,7 +1044,7 @@ events:
       The output was:
       0
       MSBuild version 17.12.6+db5f6012c for .NET Framework
-      Build started 9/23/2026 11:07:23 AM.
+      Build started 9/25/2026 5:28:50 PM.
       
       Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\4.1.1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -1051,7 +1073,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.57
+      Time Elapsed 00:00:00.55
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -1112,14 +1134,16 @@ events:
       - "C:/Program Files/doxygen/bin/"
       - "C:/Users/dog/AppData/Local/"
       - "C:/Program Files/CMake/bin/"
-      - "D:/nvm/"
-      - "C:/nvm4w/nodejs/"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/"
       - "C:/Program Files/nodejs/"
       - "C:/Users/dog/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "C:/Program Files/GPAC/"
       - "C:/Program Files/SatDump/bin/"
       - "C:/Users/dog/.dotnet/tools/"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/"
+      - "D:/nvm/"
+      - "C:/nvm4w/nodejs/"
       - "C:/Users/dog/AppData/Roaming/npm/"
       - "C:/Users/dog/AppData/Local/Programs/Antigravity/bin/"
       - "C:/Users/dog/AppData/Local/Programs/Ollama/"
@@ -1211,12 +1235,12 @@ events:
       - "C:/Program Files/CMake/bin/lld-link.com"
       - "C:/Program Files/CMake/bin/lld-link.exe"
       - "C:/Program Files/CMake/bin/lld-link"
-      - "D:/nvm/lld-link.com"
-      - "D:/nvm/lld-link.exe"
-      - "D:/nvm/lld-link"
-      - "C:/nvm4w/nodejs/lld-link.com"
-      - "C:/nvm4w/nodejs/lld-link.exe"
-      - "C:/nvm4w/nodejs/lld-link"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/lld-link.com"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/lld-link.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/lld-link"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/lld-link.com"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/lld-link.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/lld-link"
       - "C:/Program Files/nodejs/lld-link.com"
       - "C:/Program Files/nodejs/lld-link.exe"
       - "C:/Program Files/nodejs/lld-link"
@@ -1235,6 +1259,12 @@ events:
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/lld-link.com"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/lld-link.exe"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/lld-link"
+      - "D:/nvm/lld-link.com"
+      - "D:/nvm/lld-link.exe"
+      - "D:/nvm/lld-link"
+      - "C:/nvm4w/nodejs/lld-link.com"
+      - "C:/nvm4w/nodejs/lld-link.exe"
+      - "C:/nvm4w/nodejs/lld-link"
       - "C:/Users/dog/AppData/Roaming/npm/lld-link.com"
       - "C:/Users/dog/AppData/Roaming/npm/lld-link.exe"
       - "C:/Users/dog/AppData/Roaming/npm/lld-link"
@@ -1280,8 +1310,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -1344,14 +1374,16 @@ events:
       - "C:/Program Files/doxygen/bin/"
       - "C:/Users/dog/AppData/Local/"
       - "C:/Program Files/CMake/bin/"
-      - "D:/nvm/"
-      - "C:/nvm4w/nodejs/"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/"
       - "C:/Program Files/nodejs/"
       - "C:/Users/dog/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "C:/Program Files/GPAC/"
       - "C:/Program Files/SatDump/bin/"
       - "C:/Users/dog/.dotnet/tools/"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/"
+      - "D:/nvm/"
+      - "C:/nvm4w/nodejs/"
       - "C:/Users/dog/AppData/Roaming/npm/"
       - "C:/Users/dog/AppData/Local/Programs/Antigravity/bin/"
       - "C:/Users/dog/AppData/Local/Programs/Ollama/"
@@ -1452,12 +1484,12 @@ events:
       - "C:/Program Files/CMake/bin/rc.com"
       - "C:/Program Files/CMake/bin/rc.exe"
       - "C:/Program Files/CMake/bin/rc"
-      - "D:/nvm/rc.com"
-      - "D:/nvm/rc.exe"
-      - "D:/nvm/rc"
-      - "C:/nvm4w/nodejs/rc.com"
-      - "C:/nvm4w/nodejs/rc.exe"
-      - "C:/nvm4w/nodejs/rc"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/rc.com"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/rc.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_HOME%/rc"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/rc.com"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/rc.exe"
+      - "D:/Projects/CPP/smallengine/%NVM_SYMLINK%/rc"
       - "C:/Program Files/nodejs/rc.com"
       - "C:/Program Files/nodejs/rc.exe"
       - "C:/Program Files/nodejs/rc"
@@ -1476,6 +1508,12 @@ events:
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/rc.com"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/rc.exe"
       - "C:/Program Files/Assimp/bin/x64/assimp.exe/rc"
+      - "D:/nvm/rc.com"
+      - "D:/nvm/rc.exe"
+      - "D:/nvm/rc"
+      - "C:/nvm4w/nodejs/rc.com"
+      - "C:/nvm4w/nodejs/rc.exe"
+      - "C:/nvm4w/nodejs/rc"
       - "C:/Users/dog/AppData/Roaming/npm/rc.com"
       - "C:/Users/dog/AppData/Roaming/npm/rc.exe"
       - "C:/Users/dog/AppData/Roaming/npm/rc"
@@ -1557,8 +1595,8 @@ events:
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Users\\dog\\AppData\\Local"
         - "C:\\Program Files\\CMake\\bin"
-        - "D:\\nvm"
-        - "C:\\nvm4w\\nodejs"
+        - "%NVM_HOME%"
+        - "%NVM_SYMLINK%"
         - "C:\\Program Files\\nodejs\\"
         - "C:\\Users\\dog\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
         - "C:\\Program Files\\GPAC"
@@ -1585,8 +1623,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-y5ic96"
-      binary: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-y5ic96"
+      source: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-b6b1jz"
+      binary: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-b6b1jz"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od"
@@ -1595,40 +1633,40 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-y5ic96'
+        Change Dir: 'D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-b6b1jz'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_14e27.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_85989.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.12.6+db5f6012c for .NET Framework
-        Build started 9/23/2026 11:07:23 AM.
+        Build started 9/25/2026 5:28:51 PM.
         
-        Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-y5ic96\\cmTC_14e27.vcxproj" on node 1 (default targets).
+        Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-b6b1jz\\cmTC_85989.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_14e27.dir\\Debug\\".
+          Creating directory "cmTC_85989.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-y5ic96\\Debug\\".
-          Creating directory "cmTC_14e27.dir\\Debug\\cmTC_14e27.tlog\\".
+          Creating directory "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-b6b1jz\\Debug\\".
+          Creating directory "cmTC_85989.dir\\Debug\\cmTC_85989.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_14e27.dir\\Debug\\cmTC_14e27.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_14e27.dir\\Debug\\cmTC_14e27.tlog\\unsuccessfulbuild".
+          Creating "cmTC_85989.dir\\Debug\\cmTC_85989.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_85989.dir\\Debug\\cmTC_85989.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_14e27.dir\\Debug\\\\" /Fd"cmTC_14e27.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_85989.dir\\Debug\\\\" /Fd"cmTC_85989.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.42.34433 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_14e27.dir\\Debug\\\\" /Fd"cmTC_14e27.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_85989.dir\\Debug\\\\" /Fd"cmTC_85989.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-y5ic96\\Debug\\cmTC_14e27.exe" /INCREMENTAL /ILK:"cmTC_14e27.dir\\Debug\\cmTC_14e27.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-y5ic96/Debug/cmTC_14e27.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-y5ic96/Debug/cmTC_14e27.lib" /MACHINE:X64 cmTC_14e27.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_14e27.vcxproj -> D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-y5ic96\\Debug\\cmTC_14e27.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-b6b1jz\\Debug\\cmTC_85989.exe" /INCREMENTAL /ILK:"cmTC_85989.dir\\Debug\\cmTC_85989.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-b6b1jz/Debug/cmTC_85989.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-b6b1jz/Debug/cmTC_85989.lib" /MACHINE:X64 cmTC_85989.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_85989.vcxproj -> D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-b6b1jz\\Debug\\cmTC_85989.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_14e27.dir\\Debug\\cmTC_14e27.tlog\\unsuccessfulbuild".
-          Touching "cmTC_14e27.dir\\Debug\\cmTC_14e27.tlog\\cmTC_14e27.lastbuildstate".
-        Done Building Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-y5ic96\\cmTC_14e27.vcxproj" (default targets).
+          Deleting file "cmTC_85989.dir\\Debug\\cmTC_85989.tlog\\unsuccessfulbuild".
+          Touching "cmTC_85989.dir\\Debug\\cmTC_85989.tlog\\cmTC_85989.lastbuildstate".
+        Done Building Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-b6b1jz\\cmTC_85989.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.97
+        Time Elapsed 00:00:00.52
         
       exitCode: 0
   -
@@ -1668,8 +1706,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-s8yd90"
-      binary: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-s8yd90"
+      source: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-psiojj"
+      binary: "D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-psiojj"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od"
@@ -1679,40 +1717,40 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-s8yd90'
+        Change Dir: 'D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-psiojj'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_e7619.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b0a85.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.12.6+db5f6012c for .NET Framework
-        Build started 9/23/2026 11:07:25 AM.
+        Build started 9/25/2026 5:28:51 PM.
         
-        Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s8yd90\\cmTC_e7619.vcxproj" on node 1 (default targets).
+        Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-psiojj\\cmTC_b0a85.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_e7619.dir\\Debug\\".
+          Creating directory "cmTC_b0a85.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s8yd90\\Debug\\".
-          Creating directory "cmTC_e7619.dir\\Debug\\cmTC_e7619.tlog\\".
+          Creating directory "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-psiojj\\Debug\\".
+          Creating directory "cmTC_b0a85.dir\\Debug\\cmTC_b0a85.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_e7619.dir\\Debug\\cmTC_e7619.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_e7619.dir\\Debug\\cmTC_e7619.tlog\\unsuccessfulbuild".
+          Creating "cmTC_b0a85.dir\\Debug\\cmTC_b0a85.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_b0a85.dir\\Debug\\cmTC_b0a85.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Fo"cmTC_e7619.dir\\Debug\\\\" /Fd"cmTC_e7619.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Fo"cmTC_b0a85.dir\\Debug\\\\" /Fd"cmTC_b0a85.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.42.34433 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Fo"cmTC_e7619.dir\\Debug\\\\" /Fd"cmTC_e7619.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Fo"cmTC_b0a85.dir\\Debug\\\\" /Fd"cmTC_b0a85.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s8yd90\\Debug\\cmTC_e7619.exe" /INCREMENTAL /ILK:"cmTC_e7619.dir\\Debug\\cmTC_e7619.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-s8yd90/Debug/cmTC_e7619.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-s8yd90/Debug/cmTC_e7619.lib" /MACHINE:X64 cmTC_e7619.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_e7619.vcxproj -> D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s8yd90\\Debug\\cmTC_e7619.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-psiojj\\Debug\\cmTC_b0a85.exe" /INCREMENTAL /ILK:"cmTC_b0a85.dir\\Debug\\cmTC_b0a85.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-psiojj/Debug/cmTC_b0a85.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/Projects/CPP/smallengine/build/CMakeFiles/CMakeScratch/TryCompile-psiojj/Debug/cmTC_b0a85.lib" /MACHINE:X64 cmTC_b0a85.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_b0a85.vcxproj -> D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-psiojj\\Debug\\cmTC_b0a85.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_e7619.dir\\Debug\\cmTC_e7619.tlog\\unsuccessfulbuild".
-          Touching "cmTC_e7619.dir\\Debug\\cmTC_e7619.tlog\\cmTC_e7619.lastbuildstate".
-        Done Building Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s8yd90\\cmTC_e7619.vcxproj" (default targets).
+          Deleting file "cmTC_b0a85.dir\\Debug\\cmTC_b0a85.tlog\\unsuccessfulbuild".
+          Touching "cmTC_b0a85.dir\\Debug\\cmTC_b0a85.tlog\\cmTC_b0a85.lastbuildstate".
+        Done Building Project "D:\\Projects\\CPP\\smallengine\\build\\CMakeFiles\\CMakeScratch\\TryCompile-psiojj\\cmTC_b0a85.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.81
+        Time Elapsed 00:00:00.88
         
       exitCode: 0
   -

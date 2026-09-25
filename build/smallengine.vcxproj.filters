@@ -37,9 +37,6 @@
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\SceneJsonSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Collider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Cursor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,15 +49,6 @@
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\KeyboardInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\MouseInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\PhysicsBody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,6 +59,30 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\collision\BoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\collision\BoxShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\collision\Collider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\collision\CollisionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\collision\SphereShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\input\KeyboardInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\input\MouseInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\physics\PhysicsBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\ConsoleView.cpp">
@@ -89,6 +101,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\CubemapTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\DebugDraw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\Material.cpp">
@@ -115,7 +130,19 @@
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Graphics\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Scripting\CoreRegistrar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Scripting\GraphicsRegistrar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Scripting\InputRegistrar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Scripting\LuaManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Scripting\PhysicsRegistrar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Source.cpp">

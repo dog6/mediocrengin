@@ -4,6 +4,8 @@
 #include "AVGNG/Graphics/ShaderLoader.hpp"
 #include "AVGNG/Core/GameObject.hpp"
 #include "AVGNG/Assets/JsonUtils.hpp"
+#include "AVGNG/Graphics/Mesh.hpp"
+
 #include <imgui/imgui.h>
 
 using namespace ng::Core;
@@ -13,13 +15,12 @@ namespace ng::Graphics {
     void MeshRenderer::Draw(Camera& camera, Transform& transform)
     {
         // Early validation checks
-
         if (!this->mesh) {
             Debug::Log(LogLevel::ERROR, "Mesh is null in MeshRenderer::Draw");
             return;
         }
 
-        if (this->mesh->indices.size() == 0) {
+        if (this->mesh->indices.empty()) {
             Debug::Log(LogLevel::WARN, "Mesh has no indices");
             return;
         }
@@ -29,14 +30,26 @@ namespace ng::Graphics {
             return;
         }
 
+        // 1. Get the shader assigned to the mesh material
+        Shader* shader = this->mesh->material->GetShader();
+        if (!shader) {
+            Debug::Log(LogLevel::WARN, "Mesh material has no valid shader assigned");
+            return;
+        }
+
+        // 2. ACTIVATE THE SHADER PROGRAM ON THE GPU
+        shader->Use(); // Ensures glUseProgram(shader->ID) is executed
+
+        // 3. Upload uniforms (Model, View, Projection, Light, Material data)
         this->mesh->UseShader(camera, transform);
 
-        // Use shader
-        // 
-        // Bind, Draw, Cleanup
+        // 4. Bind VAO and draw
         glBindVertexArray(mesh->VAO);
-        glDrawElements(GL_TRIANGLES, (GLsizei)mesh->indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(mesh->drawMode, (GLsizei)mesh->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
+        // 5. Unbind shader program (good practice)
+        glUseProgram(0);
     }
 
     // Getters & Setters
@@ -102,22 +115,27 @@ namespace ng::Graphics {
 
             if (ImGui::CollapsingHeader("Material Properties", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick)) {
 
-                ImGui::Text("Diffuse Map: %s", diffTex ? to_string(diffTex->id).c_str() : "NULL");
-                ImGui::Text("Specular Map: %s", specTex ? to_string(specTex->id).c_str() : "NULL");
-                ImGui::Text("Emissive Map: %s", emissiveTex ? to_string(emissiveTex->id).c_str() : "NULL");
-                ImGui::Text("Normal Map: %s", normTex ? to_string(normTex->id).c_str() : "NULL");
-                ImGui::Text("Alpha Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
-                ImGui::Text("Metallic Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
+                // For testing, should be replaced with way to change texture per mesh
+                // ImGui::Text("Diffuse Map: %s", diffTex ? to_string(diffTex->id).c_str() : "NULL");
+                // ImGui::Text("Specular Map: %s", specTex ? to_string(specTex->id).c_str() : "NULL");
+                // ImGui::Text("Emissive Map: %s", emissiveTex ? to_string(emissiveTex->id).c_str() : "NULL");
+                // ImGui::Text("Normal Map: %s", normTex ? to_string(normTex->id).c_str() : "NULL");
+                // ImGui::Text("Alpha Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
+                // ImGui::Text("Metallic Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
+                
 
-				ImGui::ColorPicker3("Albedo Color", (float*)&matData->Albedo, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorPicker3("Diffuse Color", (float*)&matData->Diffuse, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorPicker3("Specular Color", (float*)&matData->Specular, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorPicker3("Emissive Color", (float*)&matData->Emissive, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorPicker3("Ambient Color", (float*)&matData->Ambient, ImGuiColorEditFlags_NoAlpha);
                 ImGui::SliderFloat("Index of Refraction", &matData->IOR, 1.0f, 128.0f);
                 ImGui::SliderFloat("Shininess", &matData->Shininess, 0.01f, 1.0f);
                 ImGui::SliderFloat("Opacity", &matData->Opacity, 0.0f, 1.0f); // new
                 ImGui::SliderFloat("Metallicness", &matData->Metallicness, 0.0f, 1.0f); // new
+
+                ImGui::PushItemWidth(100);
+				ImGui::ColorEdit3("Albedo Color", (float*)&matData->Albedo, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorEdit3("Diffuse Color", (float*)&matData->Diffuse, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorEdit3("Specular Color", (float*)&matData->Specular, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorEdit3("Emissive Color", (float*)&matData->Emissive, ImGuiColorEditFlags_NoAlpha);
+                ImGui::ColorEdit3("Ambient Color", (float*)&matData->Ambient, ImGuiColorEditFlags_NoAlpha);
+
 
             }
 

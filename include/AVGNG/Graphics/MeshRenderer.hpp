@@ -1,10 +1,19 @@
 #pragma once
 
-#include "AVGNG/Graphics/Mesh.hpp"
 #include "AVGNG/Core/IComponent.hpp"
+#include "AVGNG/Core/Transform.hpp"
+
 #include <filesystem>
 
+// Forward declare ALL underlying pointer types inside their exact matching nested namespaces:
 namespace ng::Graphics {
+	class Mesh; 
+	class Texture;
+	class Camera;
+}
+namespace ng::Graphics {
+
+	class Mesh; 
 
 	class MeshRenderer : public ng::Core::IComponent {
 		

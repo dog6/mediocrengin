@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
-#include "AVGNG/Assets/FileReader.hpp"
+// #include "AVGNG/Assets/FileReader.hpp"
 
 namespace ng::Graphics {
 

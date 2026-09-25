@@ -110,6 +110,9 @@ namespace ng::Core {
 			}
 		}
 
+		// Collision runs after movement
+		collisionSystem.Step(gameObjectsInScene);
+
 		// Update Lua VM
 		ng::Scripting::LuaManager::Update(deltaTime);
 
@@ -130,6 +133,8 @@ namespace ng::Core {
 			}
 		}
 
+		collisionSystem.DrawDebug(*mainCamera);
+		
 		if (skybox != nullptr)
 			this->skybox->Render(*mainCamera);
 	}

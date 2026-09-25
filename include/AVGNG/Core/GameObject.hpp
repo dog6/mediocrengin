@@ -2,8 +2,9 @@
 
 #include "AVGNG/Graphics/MeshRenderer.hpp"
 #include "AVGNG/Core/Transform.hpp"
-#include "AVGNG/Core/PhysicsBody.hpp"
+#include "AVGNG/Core/physics/PhysicsBody.hpp"
 #include "AVGNG/Core/IComponent.hpp"
+#include "AVGNG/Core/collision/Collider.hpp"
 #include <iostream>
 
 #include <memory>

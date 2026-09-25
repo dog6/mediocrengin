@@ -1,5 +1,6 @@
+#include <glad/glad.h> 
+
 #include "AVGNG/Graphics/Material.hpp"
-#include "AVGNG/Graphics/ShaderLoader.hpp"
 #include "AVGNG/Core/Debug.hpp"
 // Default material constructor
 

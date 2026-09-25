@@ -37,6 +37,7 @@ namespace ng::Graphics {
             std::vector<glm::vec3> normals;
             std::vector<glm::vec2> texCoords;
             std::vector<unsigned int> indices;
+            GLenum drawMode = GL_TRIANGLES;
 
             Material* material = new Material();
 

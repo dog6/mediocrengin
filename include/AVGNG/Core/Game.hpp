@@ -36,8 +36,8 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 // Inputs
-#include "AVGNG/Core/KeyboardInput.hpp"
-#include "AVGNG/Core/MouseInput.hpp"
+#include "AVGNG/Core/input/KeyboardInput.hpp"
+#include "AVGNG/Core/input/MouseInput.hpp"
 #include "AVGNG/Core/Cursor.hpp"
 
 // Graphics
@@ -55,11 +55,16 @@
 #include "AVGNG/Core/Debug.hpp"
 
 // Collision (Core)
-#include "AVGNG/Core/SphereCollider.hpp"
+#include "AVGNG/Core/collision/AABB.hpp"
+#include "AVGNG/Core/collision/BoundingBox.hpp"
+#include "AVGNG/Core/collision/BoxShape.hpp"
+#include "AVGNG/Core/collision/SphereShape.hpp"
+#include "AVGNG/Core/collision/ColliderShape.hpp"
+#include "AVGNG/Core/collision/Collider.hpp"
+#include "AVGNG/Core/collision/CollisionSystem.hpp"
 
 
 // Scripting
-#include "AVGNG/Scripting/LuaManager.hpp"
 
 // Assets
 #include "AVGNG/Graphics/ShaderLoader.hpp"

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <imgui/imgui.h>
+#include "AVGNG/Scripting/LuaManager.hpp"
 
 namespace ng::Editor 
 {

@@ -1,8 +1,6 @@
 @echo off
 echo.
-echo _ ._  _   _. ^| ^|  _  ._   _  o ._   _  
-echo _> ^| ^| ^| (_. ^| ^| (/_ ^| ^| (_^ ^| ^| ^| (/_ 
-echo                            _^|
+type "./banner.txt"
 echo Rebuilding..
 timeout /t 3
 set build_dir="D:\Projects\CPP\smallengine\build"
@@ -16,3 +14,4 @@ cmake --build build
 echo.
 echo Finished building smallengine! :D
 echo.
+

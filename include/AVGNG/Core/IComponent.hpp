@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AVGNG/Core/IJsonSerializable.hpp"
-
 namespace ng::Core {
 
 	class GameObject;

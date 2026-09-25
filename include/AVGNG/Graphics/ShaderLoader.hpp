@@ -1,15 +1,13 @@
 #pragma once
 
 #include "AVGNG/Graphics/Shader.hpp"
-#include <string>
-// #include <xstring>
-#include <unordered_map>
 
-        // string vertShaderPath = ;
-        // string fragShaderPath = ;
+#include <string>
+#include <unordered_map>
 
 #define DEFAULT_VERTEX_SHADER_PATH "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
 #define DEFAULT_FRAGMENT_SHADER_PATH "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag"
+
 
 namespace ng::Assets {
 

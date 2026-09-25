@@ -3,8 +3,13 @@
 #include <sol/sol.hpp>
 #include <string>
 #include "AVGNG/Core/Game.hpp"
-
 #include "AVGNG/Assets/FileReader.hpp"
+
+#include "AVGNG/Scripting/CoreRegistrar.hpp"
+#include "AVGNG/Scripting/GraphicsRegistrar.hpp"
+#include "AVGNG/Scripting/PhysicsRegistrar.hpp"
+#include "AVGNG/Scripting/InputRegistrar.hpp"
+
 
 #ifdef NG_DEVELOPER_MODE
 #include "AVGNG/Editor/ConsoleView.hpp"

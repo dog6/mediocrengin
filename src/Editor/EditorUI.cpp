@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-#include "AVGNG/Core/KeyboardInput.hpp"
+#include "AVGNG/Core/input/KeyboardInput.hpp"
 #include "AVGNG/Core/Debug.hpp"
 
 #include "AVGNG/Editor/EditorUI.hpp"

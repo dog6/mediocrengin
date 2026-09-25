@@ -35,3 +35,10 @@
   <img width="997" alt="image"  src="https://github.com/user-attachments/assets/e128d933-aa6b-4522-a483-e89db5b23aaf" />
 
 </details>
+
+
+<details>
+  <summary>Added bounding boxes and a basic physics system using AABB</summary>
+  <img width="997" alt="image" src="https://github.com/user-attachments/assets/f1bf25ef-8770-4fe4-acc2-861f424187f1" />
+
+</details>

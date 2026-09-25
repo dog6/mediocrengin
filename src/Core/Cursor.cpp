@@ -1,12 +1,20 @@
 #include "AVGNG/Core/Cursor.hpp"
+#include "AVGNG/Core/Debug.hpp"
 
 namespace ng::Core {
 
 	GLFWwindow* Cursor::s_gameWindow;
 	CursorLockState Cursor::s_lockState;
 
-	void Cursor::Init(GLFWwindow* gameWindow)
-	{
+    void Cursor::SetCursorLockMode(CursorLockMode mode)
+    {
+		Debug::Log(DEBUG, "Set cursor lock mode to: %d", (int)mode);
+		s_lockState.lockMode = mode;
+		OnCursorLockModeChanged();
+    }
+
+    void Cursor::Init(GLFWwindow *gameWindow)
+    {
 		Cursor::s_gameWindow = gameWindow;
 	}
 
@@ -38,22 +46,6 @@ namespace ng::Core {
 
 	}
 
-	void Cursor::RegisterCursorWithLua(sol::state& lua)
-	{
-		// Cursor lock modes
-		lua["CursorLockMode"] = lua.create_table();
-		lua["CursorLockMode"]["NONE"] = CursorLockMode::NONE;
-		lua["CursorLockMode"]["LOCKED"] = CursorLockMode::LOCKED;
-		lua["CursorLockMode"]["CONFINED"] = CursorLockMode::CONFINED;
-
-		auto cursor = lua.create_table();
-
-		cursor.set_function("SetCursorLockMode", [](int mode) {
-			ng::Core::Cursor::SetCursorLockMode(static_cast<CursorLockMode>(mode));
-		});
-
-		lua["Cursor"] = cursor;
-
-	}
+	
 
 }

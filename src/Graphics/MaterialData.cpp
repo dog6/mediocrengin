@@ -1,3 +1,5 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include "AVGNG/Graphics/MaterialData.hpp"
 #include "AVGNG/Core/Debug.hpp"
 

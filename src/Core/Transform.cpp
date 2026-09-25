@@ -37,17 +37,17 @@ void Transform::SetPosition(glm::vec3 pos) {
 
 		ImGui::Text("Transform Component [%p]", tf);
 		
-		if (ImGui::InputFloat3("Position", glm::value_ptr(tfPos))) {
+		if (ImGui::DragFloat3("Position", glm::value_ptr(tfPos))) {
 			if (tfPos != tf->GetPosition()) {
 				static_cast<Transform*>(this)->SetPosition(tfPos);
 			}
 		}
 
-		if (ImGui::InputFloat3("Rotation", glm::value_ptr(tfRot))) {
+		if (ImGui::DragFloat3("Rotation", glm::value_ptr(tfRot))) {
 			static_cast<Transform*>(this)->SetRotation(tfRot);
 		}
 
-		if (ImGui::InputFloat3("Scale", glm::value_ptr(tfScale))) {
+		if (ImGui::DragFloat3("Scale", glm::value_ptr(tfScale))) {
 			static_cast<Transform*>(this)->SetScale(tfScale);
 		}
 
