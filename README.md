@@ -29,6 +29,10 @@
 
 </details>
 
+<details>
+  <summary>Got basic AABB collision system implemented</summary>
+  <img width="800" height="428" alt="image" src="https://github.com/user-attachments/assets/a7d2474a-a039-4af4-b65e-92ba6c82a327" />
+</details>
 
 <details>
   <summary>Added skyboxes</summary>
