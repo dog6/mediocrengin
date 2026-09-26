@@ -7,9 +7,6 @@
 #include "AVGNG/Core/collision/ColliderShape.hpp"
 #include "AVGNG/Core/IComponent.hpp"
 
-// Do not include GameObject.hpp here.
-// GameObject.hpp includes this file, so it would make a circular include.
-
 namespace ng::Core {
 
     class Collider : public IComponent {
@@ -17,6 +14,7 @@ namespace ng::Core {
         glm::vec3 positionOffset{0.0f};
         glm::vec3 colliderScale{1.0f};
         std::unique_ptr<ColliderShape> colliderShape;
+        Collider* other = nullptr; // the other collider we're colliding with if IsOverlapping
         AABB worldBounds;
         bool gizmoVisible = false;
         glm::vec3 gizmoColor{0.0f, 1.0f, 0.0f}; // RGB, each value 0 to 1
@@ -34,6 +32,9 @@ namespace ng::Core {
 
         void SetShape(std::unique_ptr<ColliderShape> shape) { colliderShape = std::move(shape); }
         ColliderShape* GetShape() const { return colliderShape.get(); }
+
+        void SetOtherCollider(Collider* other) { this->other = other; }
+        Collider* GetOtherCollider() { return this->other; }
 
         void SetOverlapping(bool hasCol) { overlapping = hasCol; }
         bool IsOverlapping() { return overlapping; }

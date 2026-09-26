@@ -1,6 +1,5 @@
 #include <glad/glad.h> 
 #include "AVGNG/Scripting/InputRegistrar.hpp"
-// 🔌 Concrete input engine targets are safely linked here:
 #include "AVGNG/Core/input/KeyboardInput.hpp"
 #include "AVGNG/Core/input/MouseInput.hpp"
 #include "AVGNG/Core/Cursor.hpp"
@@ -38,6 +37,7 @@ namespace ng::Scripting {
     }
 
     static void RegisterCursor(sol::state& lua) {
+
         // Cursor lock modes
         lua["CursorLockMode"] = lua.create_table();
         lua["CursorLockMode"]["NONE"] = CursorLockMode::NONE;

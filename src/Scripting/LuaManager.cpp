@@ -88,7 +88,7 @@ namespace ng::Scripting {
 
 			s_scripts.push_back(std::move(script));
 
-			Debug::Log(LOG, " -> Loaded Lua script: '%s'\n\n", filepath);
+			Debug::Log(LOG, " -> Finished loading Lua script: '%s'\n\n", filepath);
 
 		}
 

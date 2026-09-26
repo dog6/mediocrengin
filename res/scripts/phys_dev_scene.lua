@@ -70,7 +70,7 @@ local ballTF = ballGO:GetComponent("Transform")
 -- Add physics
 ballGO:AddComponent("PhysicsBody")
 local ballPB = ballGO:GetComponent("PhysicsBody")
-ballPB:SetLinearVelocity(0, -2, 0)
+ballPB:SetLinearAcceleration(0, -1, 0)
 
 -- Add collider
 ballGO:AddComponent("Collider")
@@ -90,12 +90,15 @@ function OnUpdate(deltaTime)
 
     if ballCO:HasCollision() then 
         ballCO:SetGizmoColor(255,0,0)
-        -- local linv = ballPB:GetLinearVelocity()
-        -- ballPB:SetLinearVelocity(-linv[0], -linv[1], -linv[2])
 
         local vx, vy, vz = ballPB:GetLinearVelocity()
-        ballPB:SetLinearVelocity(-vx, -vy, -vz)
-
+        local bounceVelocity = math.abs(vy) * 0.66
+        if (bounceVelocity > 0.1) then 
+            ballPB:SetLinearVelocity(0, bounceVelocity, 0)
+        else 
+            ballPB:SetLinearVelocity(0, 0, 0)
+            ballPB:SetLinearAcceleration(0, 0, 0)
+        end
     else 
         ballCO:SetGizmoColor(0,0,255)
     end

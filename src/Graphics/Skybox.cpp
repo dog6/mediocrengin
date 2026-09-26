@@ -130,7 +130,7 @@ namespace ng::Graphics {
 
 		// Load skybox shader
 		skyboxShader = ng::Assets::ShaderLoader::LoadShader("Skybox Shader", "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/shader_skybox.vert", "D:/Projects/CPP/smallengine/res/shaders/fragShaders/shader_skybox.frag");
-		if (!&skyboxShader) {
+		if (skyboxShader.ID == 0) {
 			ng::Core::Debug::Log(ng::Core::LogLevel::ERROR, "Failed to load shader for skybox");
 			return;
 		}

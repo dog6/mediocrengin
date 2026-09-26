@@ -1,15 +1,13 @@
 #include "AVGNG/Scripting/CoreRegistrar.hpp"
 
-// 🔌 Concrete engine types are safely included together here:
 #include "AVGNG/Core/Game.hpp"
 #include "AVGNG/Core/Scene.hpp"
 #include "AVGNG/Core/GameObject.hpp"
 #include "AVGNG/Core/Transform.hpp"
 #include "AVGNG/Graphics/MeshRenderer.hpp"
-// #include "AVGNG/Physics/PhysicsBody.hpp" // Uncomment these if needed for your tags
-// #include "AVGNG/Physics/Collider.hpp"
+#include "AVGNG/Core/physics/PhysicsBody.hpp"
+#include "AVGNG/Core/collision/Collider.hpp"
 
-// Assuming these live in your physics system namespaces if they exist
 using namespace ng::Core;
 using namespace ng::Graphics;
 
@@ -27,7 +25,9 @@ namespace ng::Scripting {
         lua.new_usertype<Scene>("Scene",
             "CreateGameObject", &Scene::CreateGameObject,
             sol::meta_function::equal_to, [](const Scene& a, const Scene& b) { return &a == &b; },
-            sol::meta_function::less_than, [](const Scene& a, const Scene& b) { return &a < &b; }
+            sol::meta_function::less_than, [](const Scene& a, const Scene& b) { return &a < &b; },
+
+            "FindGameObject", &Scene::FindGameObjectByName//, [](Scene& self, const std::string& name) { return self.FindGameObjectByName(name); }
         );
     }
 		
@@ -76,7 +76,7 @@ namespace ng::Scripting {
     void CoreRegistrar::Register(sol::state& lua) {
         RegisterGame(lua);
         RegisterScene(lua);
-        RegisterTransform(lua);      // 🔌 Added this so Transform bindings actually load!
+        RegisterTransform(lua);
         RegisterGameObject(lua);
     }
 

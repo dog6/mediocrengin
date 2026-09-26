@@ -57,6 +57,7 @@ namespace ng::Graphics {
     {
         this->mesh = mesh;
     }
+    
     Mesh* MeshRenderer::GetMesh() { return this->mesh; }
 
     /// <summary>

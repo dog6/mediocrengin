@@ -84,9 +84,6 @@ namespace ng::Core {
 			Debug::Log(ERROR, "Failed loading scene %s", filepath.c_str());
 			return;
 		}
-
-
-
 		Debug::Log(LOG, "Loading scene: %s", sceneName.c_str());
 	}
 

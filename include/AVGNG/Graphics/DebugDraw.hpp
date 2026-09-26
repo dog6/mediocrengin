@@ -14,9 +14,9 @@ namespace ng::Graphics {
         static GLuint VBO;
         static GLuint shaderID;
 
+        
+        public:
         static void Initialize();
-
-    public:
         // Draws the AABB as 12 lines.
         static void Box(
             ng::Graphics::Camera& cam,

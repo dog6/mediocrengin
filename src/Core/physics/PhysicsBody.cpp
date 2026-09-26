@@ -7,9 +7,10 @@
 using namespace ng::Core;
 
 PhysicsBody::PhysicsBody(){
-
+    if (this->owner != nullptr) {
+        this->tf = this->owner->GetComponent<Transform>();
+    }
     this->linearVelocity = glm::vec3(0,0,0);
-
 }
 
 PhysicsBody::~PhysicsBody(){}
@@ -36,28 +37,91 @@ void PhysicsBody::OnInspectorGUI() {
 
 }
 
+void PhysicsBody::HandlePhysics(){
+
+    Collider* ownedCol = this->owner->GetComponent<Collider>();
+    if (ownedCol) {
+        Debug::Log(DEV, "PhysicsBody owns Collider '%s'", ownedCol);
+        // Check for & handle collisions
+        if (ownedCol->IsOverlapping()) {
+            
+            // Check what we're colliding with:
+            Collider* other = ownedCol->GetOtherCollider();
+            if (other != nullptr) {
+                
+                Debug::Log(DEV, "PhysicsBody Collider is overlapping other Collider '%s'", other);
+                
+                // Determine if other collider also has a physics body
+                PhysicsBody* otherPB = other->owner->GetComponent<PhysicsBody>();
+                if (otherPB != nullptr) {
+                    
+                    Debug::Log(DEV, "Other Collider also has a PhysicsBody component");
+
+                    // 2 physicsbodies colliding (Dynamic - Dynamic)
+                    // Compute combined restitution (bounciness)
+                    float e = std::min(this->GetRestitution(), otherPB->GetRestitution());
+
+                    // Calculate relative velocity along direction of motion
+                    glm::vec3 relVel = this->GetLinearVelocity() - otherPB->GetLinearVelocity();
+
+                    // Apply impulse response adjusted for masses
+                    float m1 = this->GetMass();
+                    float m2 = otherPB->GetMass();
+                    float totalMass = m1 + m2;
+
+                    if (totalMass > 0.0f) {
+                        glm::vec3 v1 = this->GetLinearVelocity();
+                        glm::vec3 v2 = otherPB->GetLinearVelocity();
+
+                        // Conservation of momentum velocity exchange with restitution
+                        this->SetLinearVelocity(-e * v1 * (m2 / totalMass));
+                        otherPB->SetLinearVelocity(e * v2 * (m1 / totalMass));
+                    }
+                } else {
+                    // 1 physicsbody colliding with a static collider (Dynamic - Static)
+                    // Reverse linear velocity along movement axis scaled by restitution coefficient
+                    Debug::Log(DEV, "Other Collider is static");
+
+                    float e = this->GetRestitution();
+                    this->SetLinearVelocity(-this->GetLinearVelocity() * e);
+                }
+            }
+        }
+    }
+
+}
+
 // Update physics body
-void PhysicsBody::Update(float dt){
+void PhysicsBody::Update(float dt) {
 
     // Reference gameObject transform (required for all physics bodies)
-    Transform* tf = owner->GetComponent<Transform>();
-    if (!tf) return;
+    // Cache transform if member pointer is nil
+    if (!this->tf) {
+        if (this->owner != nullptr){ 
+            this->tf = this->owner->GetComponent<Transform>();
+            if (!this->tf) return;
+        }
+    }
 
+    // Update linearAcceleration using gravity force
+    this->SetLinearAcceleration(this->gravityForce);
 
-    // Update velocity using linearAcceleration
-    this->SetLinearVelocity(this->linearVelocity+(this->linearAcceleration*dt));
+    // Update velocity using acceleration: v = v0 + a * dt
+    this->SetLinearVelocity(this->linearVelocity + (this->linearAcceleration * dt));
 
+    // Check if this physics body has a collider
+    HandlePhysics();
 
-    // Update position using linearVelocity
-    glm::vec3 pos = tf->GetPosition();
-    tf->SetPosition(pos + (linearVelocity * dt));
+    // Update position using velocity: pos = pos0 + v * dt
+    glm::vec3 pos = this->tf->GetPosition();
+    this->tf->SetPosition(pos + (this->linearVelocity * dt));
 
-    // Update angularVelocity using angularAcceleration
-    this->SetAngularAcceleration(this->angularVelocity+(this->angularAcceleration*dt));
+    // Update angular velocity using angular acceleration: w = w0 + alpha * dt
+    this->SetAngularVelocity(this->angularVelocity + (this->angularAcceleration * dt));
 
-    // Update rotation using angularVelocity
-    glm::vec3 rot = tf->GetRotation();
-    tf->SetRotation(rot+(angularVelocity*dt));
+    // Update rotation using angular velocity: rot = rot0 + w * dt
+    glm::vec3 rot = this->tf->GetRotation();
+    this->tf->SetRotation(rot + (this->angularVelocity * dt));
 }
 
 

@@ -24,7 +24,12 @@ namespace ng::Core {
             return result;
         }
 
+        void HandleCollision(Collider& a, Collider& b);
+
     public:
+
+        // void Init();
+
         // Call one time each frame, after all objects moved.
         void Step(const std::vector<GameObject*>& objects);
 

@@ -54,6 +54,10 @@ void PhysicsRegistrar::RegisterPhysicsBody(sol::state& lua) {
         "SetLinearVelocity", [](PhysicsBody& self, float x, float y, float z) { self.SetLinearVelocity(glm::vec3(x, y, z)); },
         "SetAngularAcceleration", [](PhysicsBody& self, float x, float y, float z) { self.SetAngularAcceleration(glm::vec3(x, y, z)); },
         "SetAngularVelocity", [](PhysicsBody& self, float x, float y, float z) { self.SetAngularVelocity(glm::vec3(x, y, z)); },
+        "SetGravity", [](PhysicsBody& self, float x, float y, float z) { self.SetGravity(glm::vec3(x, y, z)); },
+        "SetRestitution", [](PhysicsBody& self, float r) { self.SetRestitution(r); },
+        "SetFriction", [](PhysicsBody& self, float r) { self.SetRestitution(r); },
+        "SetMass", [](PhysicsBody& self, float r) { self.SetRestitution(r); },
 
         "GetLinearAcceleration", [](PhysicsBody& self) {
             glm::vec3 v = self.GetLinearAcceleration();
@@ -70,7 +74,15 @@ void PhysicsRegistrar::RegisterPhysicsBody(sol::state& lua) {
         "GetAngularAcceleration", [](PhysicsBody& self) {
             glm::vec3 v = self.GetAngularAcceleration();
             return std::make_tuple(v.x, v.y, v.z);
-        }
+        },
+        "GetGravity", [](PhysicsBody& self) {
+            glm::vec3 v = self.GetGravity();
+            return std::make_tuple(v.x, v.y, v.z);
+        },
+        "GetRestitution", [](PhysicsBody& self) { return self.GetRestitution(); },
+        "GetFriction", [](PhysicsBody& self) { return self.GetFriction(); },
+        "GetMass", [](PhysicsBody& self) { return self.GetMass(); }
+        
     );
 }
 

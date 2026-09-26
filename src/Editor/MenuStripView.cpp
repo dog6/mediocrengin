@@ -37,6 +37,11 @@ void MenuStripView::CreateUI()
 					SceneManager::SetActiveScene(loadedScene);
 				}
 			}
+			if (ImGui::MenuItem("Reload scripts")) {
+				Scene* activeScene = Game::GetActiveScene();
+				
+				
+			}
 			if (ImGui::MenuItem("Save Scene")) {
 				// Get active scene
 				Scene* activeScene = Game::GetActiveScene();

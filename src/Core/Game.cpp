@@ -11,6 +11,7 @@ using namespace ng::Editor;
 #endif
 
 #include "AVGNG/Scripting/LuaManager.hpp"
+#include "AVGNG/Graphics/DebugDraw.hpp"
 
 namespace ng {
 
@@ -45,9 +46,9 @@ namespace ng {
         }
 
         // Set OpenGL version
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create a windowed mode window and its OpenGL context
         Game::gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
@@ -97,6 +98,7 @@ namespace ng {
     void Game::Init()
     {
         Debug::Log(LogLevel::LOG, "Loading game..");
+
         InitializeGameWindow(this->defaultWindowSize.x, this->defaultWindowSize.y, this->windowTitle);
         this->viewportSize = this->defaultWindowSize;
 
@@ -111,16 +113,17 @@ namespace ng {
         KeyboardInput::Init(gameWindow);
         Cursor::Init(gameWindow);
 
-        // GL ES 3.0 + GLSL 300 es (WebGL 2.0)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+        // ---------------------------------------------------------
+        // Pre-initialize systems to prevent mid-loop startup stalls
+        // ---------------------------------------------------------
+        ng::Graphics::DebugDraw::Initialize();
+
+        // Initialize ImGui render backends cleanly for core desktop profile
         ImGui_ImplOpenGL3_Init("#version 330");
         ImGui_ImplGlfw_InitForOpenGL(gameWindow, true);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     }
 
     // Game Methods
@@ -128,8 +131,9 @@ namespace ng {
     {
 
         // Load lua scene script
-        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/phys_dev_scene.lua");
-        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/scene.lua");
+        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/phys_dev_scene.lua");
+        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/basic_cube.lua"); // sanity checker
+        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/test.lua");
         ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/noclip.lua");
 
 
@@ -139,19 +143,23 @@ namespace ng {
         // (see SceneJsonSerializer::DeserializeSceneFromJson). The scene is
         // currently populated by res/scripts/scene.lua.
 
+        Debug::Log(LogLevel::LOG, "Loading active scene");
+        this->sceneManager->LoadActiveScene();
+        
+
         Debug::Log(LogLevel::LOG, "Loading completed.");
 
     }
 
     void Game::Start() {
-
-        Debug::Log(LogLevel::LOG, "Game started.");
-        this->sceneManager->LoadActiveScene();
-
         Scene* activeScene = sceneManager->GetActiveScene();
-        if (activeScene != nullptr) activeScene->Start();
+        if (activeScene != nullptr) {
+            activeScene->Start();
+            Debug::Log(LogLevel::LOG, "Starting active scene '%s'", activeScene->sceneName.c_str());
+        }else Debug::Log(LogLevel::ERROR, "Failed to start scene, activeScene is nil");
 
 #ifdef NG_DEVELOPER_MODE
+        Debug::Log(LogLevel::DEV, "Showing all EditorUI elements");
         EditorUI::ShowAllElements();
 #endif
 
@@ -162,50 +170,59 @@ namespace ng {
     {
         Debug::Log(LogLevel::LOG, "Starting game loop.");
 
-        float cubeRotation = 0.0f;
-        int frameCount = 0;  // Add counter
-
-        while (!glfwWindowShouldClose(gameWindow))
+       while (!glfwWindowShouldClose(gameWindow))
         {
             Time::Update();
             glfwPollEvents();
 
-            // Update everything in scene
-            Scene* activeScene = sceneManager->GetActiveScene();
-            activeScene->Update();
-            viewportSize = glm::uvec2(currentWindowSize.x, currentWindowSize.y);
+            // 1. Get size first, then set viewport
             glfwGetFramebufferSize(gameWindow, &currentWindowSize.x, &currentWindowSize.y);
+            viewportSize = glm::uvec2(currentWindowSize.x, currentWindowSize.y);
+
             glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
             glClearColor(0.3f, 0.5f, 0.5f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            
-            // Render to game window
-            activeScene->Render();
+
+            // Update & Render Game Scene
+            Scene* activeScene = sceneManager->GetActiveScene();
+            if (activeScene) 
+            {
+                // Debug::Log(DEV, "Update()");
+                activeScene->Update();
+
+                // Debug::Log(DEV, "Render()");
+                activeScene->Render();
+            }
 
             // Start ImGui frame
+            // Debug::Log(DEV, "Starting ImGUI frame");
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-#ifdef NG_DEVELOPER_MODE            
+        #ifdef NG_DEVELOPER_MODE            
+            // Debug::Log(DEV, "Updating EditorUI");
             ng::Editor::EditorUI::Update();
-#endif
+        #endif
 
-            // End ImGui frame and render
+            // Render ImGui
+            // Debug::Log(DEV, "Rendering ImGUI frame");
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-            if (frameCount++ == 60) {
-                GLenum err = glGetError();
-                if (err != GL_NO_ERROR) {
-                    Debug::Log(LogLevel::ERROR, "OpenGL Error: %d", err);
-                }
-                frameCount = 0;
+
+            // Frame-by-frame error check (clears all queued errors)
+            // Debug::Log(DEV, "Checking OpenGL error que");
+            GLenum err;
+            while ((err = glGetError()) != GL_NO_ERROR) {
+                Debug::Log(LogLevel::ERROR, "OpenGL Error: %d", err);
             }
 
+            // Debug::Log(DEV, "Swapping GLFW buffer");
             glfwSwapBuffers(gameWindow);
         }
 
+        Debug::Log(LOG, "Game loop ended, exiting game..");
         this->Exit();
     }
 
