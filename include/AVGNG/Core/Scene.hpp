@@ -18,20 +18,25 @@ namespace ng::Core {
 	class Scene {
 
 	private:
+
+        std::vector<std::string> scriptPaths; // scripts associated with current scene
+
 		ng::Graphics::Camera* mainCamera;
 		std::vector<std::unique_ptr<IComponent>> components;
 		std::vector<GameObject*> gameObjectsInScene;
 		glm::uvec2& viewportSize;
 		ng::Graphics::Skybox* skybox;
 		CollisionSystem collisionSystem;
+		std::string sceneName;
 
 	public:
 		Scene(ng::Graphics::Camera* _mainCamera, glm::uvec2& viewportSize, const char* _sceneName = "New Scene");
 		Scene();
 		~Scene();
 
-		std::string sceneName;
 		bool isActive;
+
+        void AddScript(const std::string& scriptPath) { scriptPaths.push_back(scriptPath); }
 
 		GameObject* CreateGameObject(const std::string& name = "GameObject");
 		void AddGameObject(GameObject* obj);
@@ -47,6 +52,7 @@ namespace ng::Core {
 		void SetActiveCamera(ng::Graphics::Camera* cam);
 		ng::Graphics::Camera* GetActiveCamera() const;
 
+		void SetName(const std::string& name) { sceneName = name; }
 		const std::string GetName() const { return sceneName; }
 		const std::vector<GameObject*>& GetGameObjects() const { return gameObjectsInScene; }
 

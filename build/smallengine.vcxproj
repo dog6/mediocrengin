@@ -124,7 +124,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -177,7 +177,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -230,7 +230,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -282,7 +282,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Projects\CPP\smallengine\external\GLFW\lib\glfw3.lib;D:\Projects\CPP\smallengine\external\assimp\assimp-vc143-mt.lib;D:\Projects\CPP\smallengine\external\lua\lua54.lib;opengl32.lib;comdlg32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -368,6 +368,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\AssimpObjLoader.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\FileReader.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\SceneJsonSerializer.cpp" />
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Assets\TextureLoader.cpp" />
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\CameraComponent.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Cursor.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Debug.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\Game.cpp" />
@@ -386,6 +388,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Core\physics\PhysicsBody.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\ConsoleView.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\EditorUI.cpp" />
+    <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\FileDialog.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\HierarchyView.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\InspectorView.cpp" />
     <ClCompile Include="D:\Projects\CPP\smallengine\src\Editor\MenuStripView.cpp" />

@@ -1,29 +1,40 @@
 #include "AVGNG/Core/Debug.hpp"
 
+#include <cstdarg>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <fstream>
+
 #ifdef NG_DEVELOPER_MODE
 #include "AVGNG/Editor/ConsoleView.hpp"
 #endif
+
+// This define affects only this file.
+// To enable debug logs in all files, put it in the project settings.
 #define NG_DEBUG_MODE
 
 namespace ng::Core {
 
+	// Define the static member
+	std::ofstream ng::Core::Debug::s_file;
 
 	std::string FormatString(const char* msg, va_list args)
 	{
-		// Make a copy of args because vsnprintf will consume it
+		// Make a copy of args because vsnprintf consumes it
 		va_list argsCopy;
 		va_copy(argsCopy, args);
 
-		// Compute required size
+		// Compute the required size
 		int size = std::vsnprintf(nullptr, 0, msg, argsCopy);
 		va_end(argsCopy);
 
 		if (size < 0) return ""; // formatting error
 
-		std::vector<char> buffer(size + 1); // +1 for null terminator
+		std::vector<char> buffer(size + 1); // +1 for the null terminator
 		std::vsnprintf(buffer.data(), buffer.size(), msg, args);
 
-		return std::string(buffer.data(), buffer.size() - 1); // remove null terminator
+		return std::string(buffer.data(), size);
 	}
 
 	const char* GetColorCode(LogLevel level)
@@ -41,19 +52,31 @@ namespace ng::Core {
 			return CONSOLE_MAGENTA;
 		case LogLevel::DEV:
 			return CONSOLE_GREEN;
+		case LogLevel::VERBOSE:
+			return CONSOLE_YELLOW;
 		default:
 			return CONSOLE_WHITE;
 		}
 	}
 
-	// Define the static member
-	std::ofstream ng::Core::Debug::s_file;
+	// The only place that decides if a log level is active.
+	static bool ShouldLog(LogLevel level)
+	{
+#ifndef NG_VERBOSE_MODE
+		if (level == LogLevel::VERBOSE) return false;
+#endif
+#ifndef NG_DEBUG_MODE
+		if (level == LogLevel::DEBUG) return false;
+#endif
+#ifndef NG_DEVELOPER_MODE
+		if (level == LogLevel::DEV) return false;
+#endif
+		return true;
+	}
 
 	const char* Debug::GetLogLevelAsString(LogLevel level)
 	{
-
 		switch (level) {
-
 		case LogLevel::LOG:
 			return "[INFO] ";
 		case LogLevel::DEBUG:
@@ -66,23 +89,23 @@ namespace ng::Core {
 			return "[FATAL] ";
 		case LogLevel::DEV:
 			return "[DEV] ";
+		case LogLevel::VERBOSE:
+			return "[VERBOSE] ";
 		default:
 			return "-> ";
 		}
-
 	}
 
 	void Debug::Init(const std::string& filePath)
 	{
 		s_file.open(filePath, std::ios::out | std::ios::trunc);
-		bool result = s_file.is_open();
-		if (!result) {
+
+		if (!s_file.is_open()) {
 			Debug::Log(WARN, "Failed to open log file '%s'. ONLY logs to console will work.", filePath.c_str());
 			return;
 		}
-		else {
-			Debug::Log(LOG, "Opened log file '%s'", filePath.c_str());
-		}
+
+		Debug::Log(LOG, "Opened log file '%s'", filePath.c_str());
 	}
 
 	void Debug::Shutdown()
@@ -91,71 +114,46 @@ namespace ng::Core {
 			s_file.close();
 	}
 
-	// Logs to both file & console
+	// Logs to the console, the file, and the editor console.
 	void Debug::Log(LogLevel level, const char* msg, ...)
 	{
+		if (!ShouldLog(level)) return;
 
-		// Format the message once
-		char buffer[1024];
 		va_list args;
 		va_start(args, msg);
-		vsnprintf(buffer, sizeof(buffer), msg, args);
+		const std::string text = FormatString(msg, args);
 		va_end(args);
 
-
-
-		const char* cc = GetColorCode(level);
 #ifdef NG_DEVELOPER_MODE
-		ng::Editor::ConsoleView::Log(buffer);
+		ng::Editor::ConsoleView::Log(text.c_str());
 #endif
-		WriteConsole(level, buffer, cc);
-		WriteFile(level, buffer);
+		WriteConsole(level, text.c_str(), GetColorCode(level));
+		WriteFile(level, text.c_str());
 	}
 
 	void Debug::Log(LogMessage logMessage)
 	{
-		Log(logMessage.level, CONSOLE_WHITE, logMessage.message.c_str());
+		// The variadic Log() does the filter check.
+		// Use "%s" so that the message is never read as a format string.
+		Log(logMessage.level, "%s", logMessage.message.c_str());
 	}
-
 
 	void Debug::WriteConsole(LogLevel level, const char* msg, const char* asciiColorCode)
 	{
+		if (!ShouldLog(level)) return;
 
-#ifndef NG_DEBUG_MODE
-		// skip debug-level logs if NG_DEBUG_MODE is not defined
-		if (level == DEBUG) return;
-#endif
-
-#ifndef NG_DEVELOPER_MODE
-		// skip dev-level logs if NG_DEVELOPER_MODE is not defined
-		if (level == DEV) return;
-#endif
-		// Print prefix
 		printf("%s %s\n", GetLogLevelAsString(level), msg);
 	}
 
 	void Debug::WriteFile(LogLevel level, const char* msg)
 	{
+		if (!ShouldLog(level)) return;
 
-#ifndef NG_DEBUG_MODE
-		// skip debug-level logs if NG_DEBUG_MODE is not defined
-		if (level == DEBUG) return;
-#endif
+		// If the file is not open, do nothing.
+		// Init() already tells the user about this problem.
+		if (!s_file.is_open()) return;
 
-#ifndef NG_DEVELOPER_MODE
-		if (level == DEV) return;
-#endif
-		if (!s_file.is_open()) {
-			printf("[ERROR] Failed to open log file\n");
-			return;
-		}
-
-		// Print prefix
-		s_file << GetLogLevelAsString(level);
-
-		// Write formatted message to the file
-		s_file << msg << std::endl;
-
+		s_file << GetLogLevelAsString(level) << msg << std::endl;
 	}
 
 }

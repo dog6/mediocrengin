@@ -15,14 +15,17 @@ namespace ng::Core {
         std::vector<Collider*> colliders; // rebuilt each frame
         bool showGizmos = true;
 
+        // Ideas:
+        // Create a PhysicsSystem class that handles physics "events"
+        // A PhysicsEvent should be a data structure that stores information regarding two colliders impacting.
+        // This information should include:
+        // GameObject, Collider, Transform, and PhysicsBody references
 
-        bool CheckBoxBox(Collider& box_a, Collider& box_b) { 
 
-            bool result = box_a.GetWorldBounds().Overlaps(box_b.GetWorldBounds());
-            box_a.SetOverlapping(result);
-            box_b.SetOverlapping(result);
-            return result;
-        }
+        bool CheckBoxBox(Collider& box_a, Collider& box_b);
+        bool CheckBoxSphere(Collider& box, Collider& sphere);
+        bool CheckSphereSphere(Collider& sphere_a, Collider& sphere_b);
+
 
         void HandleCollision(Collider& a, Collider& b);
 

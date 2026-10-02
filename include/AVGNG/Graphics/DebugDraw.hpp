@@ -20,7 +20,7 @@ namespace ng::Graphics {
         // Draws the AABB as 12 lines.
         static void Box(
             ng::Graphics::Camera& cam,
-            const ng::Core::AABB& box,
+            const glm::mat4& model,
             const glm::vec3& color
         );
     };

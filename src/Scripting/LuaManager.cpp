@@ -70,7 +70,7 @@ namespace ng::Scripting {
 			Game* instance = Game::GetInstance();
 
 			script.lua["game"] = instance;
-			script.lua["camera"] = instance->GetSceneManager()->GetActiveScene()->GetActiveCamera();
+			script.lua["camera"] = SceneManager::GetActiveScene()->GetActiveCamera();
 
 			try {
 				auto result = script.lua.script_file(filepath);
@@ -89,7 +89,6 @@ namespace ng::Scripting {
 			s_scripts.push_back(std::move(script));
 
 			Debug::Log(LOG, " -> Finished loading Lua script: '%s'\n\n", filepath);
-
 		}
 
 		/// <summary>

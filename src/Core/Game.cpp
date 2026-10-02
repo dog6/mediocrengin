@@ -1,6 +1,8 @@
 #include "AVGNG/Core/Game.hpp"
 #define NG_DEBUG_MODE
 #define NG_DEVELOPER_MODE
+// #define NG_VERBOSE_MODE
+
 using namespace ng::Core;
 using namespace ng::Graphics;
 using namespace ng::Assets;
@@ -12,12 +14,12 @@ using namespace ng::Editor;
 
 #include "AVGNG/Scripting/LuaManager.hpp"
 #include "AVGNG/Graphics/DebugDraw.hpp"
+#include "AVGNG/Assets/ScopedTimer.hpp"
 
 namespace ng {
 
     GLFWwindow* Game::gameWindow = nullptr;
     Camera* Game::camera = new ng::Graphics::Camera();
-    SceneManager* Game::sceneManager = new SceneManager();
     Game* Game::Instance;
 
     // Helper methods
@@ -26,7 +28,7 @@ namespace ng {
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
         ImGui::StyleColorsDark(); // theme
 
         float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
@@ -91,18 +93,20 @@ namespace ng {
 
     // Destructor
     Game::~Game() {
-        this->sceneManager->Unload();
+        SceneManager::Unload();
     }
 
     // Before Load
     void Game::Init()
     {
+        NG_TIME_FUNCTION();
+        NG_TIME_SCOPE("Game::Init()");
         Debug::Log(LogLevel::LOG, "Loading game..");
 
         InitializeGameWindow(this->defaultWindowSize.x, this->defaultWindowSize.y, this->windowTitle);
         this->viewportSize = this->defaultWindowSize;
 
-        sceneManager->CreateNewScene(camera, this->viewportSize, "Development Scene");
+        SceneManager::CreateNewScene(camera, this->viewportSize, "Development Scene");
         Time::Init();
 
         // Setup IMGUI
@@ -113,9 +117,7 @@ namespace ng {
         KeyboardInput::Init(gameWindow);
         Cursor::Init(gameWindow);
 
-        // ---------------------------------------------------------
         // Pre-initialize systems to prevent mid-loop startup stalls
-        // ---------------------------------------------------------
         ng::Graphics::DebugDraw::Initialize();
 
         // Initialize ImGui render backends cleanly for core desktop profile
@@ -129,106 +131,99 @@ namespace ng {
     // Game Methods
     void Game::Load()
     {
+        NG_TIME_SCOPE("Game::Load()");
 
         // Load lua scene script
-        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/phys_dev_scene.lua");
-        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/basic_cube.lua"); // sanity checker
-        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/test.lua");
-        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/noclip.lua");
-
+        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/noclip.lua");
+        // ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/test.lua");
+        ng::Scripting::LuaManager::Load("D:/Projects/CPP/smallengine/res/scripts/basic_cube.lua");
 
         // We should have a way of specifying scene load order, perhaps by storing in a json file
-
         // TODO: Load a scene from disk here once a scene file is chosen
         // (see SceneJsonSerializer::DeserializeSceneFromJson). The scene is
         // currently populated by res/scripts/scene.lua.
 
-        Debug::Log(LogLevel::LOG, "Loading active scene");
-        this->sceneManager->LoadActiveScene();
-        
+        Debug::Log(LOG, "Loading active scene");
+        SceneManager::LoadActiveScene();
 
-        Debug::Log(LogLevel::LOG, "Loading completed.");
-
+        Debug::Log(LOG, "Loading completed.");
     }
 
     void Game::Start() {
-        Scene* activeScene = sceneManager->GetActiveScene();
-        if (activeScene != nullptr) {
-            activeScene->Start();
-            Debug::Log(LogLevel::LOG, "Starting active scene '%s'", activeScene->sceneName.c_str());
-        }else Debug::Log(LogLevel::ERROR, "Failed to start scene, activeScene is nil");
+        
 
-#ifdef NG_DEVELOPER_MODE
-        Debug::Log(LogLevel::DEV, "Showing all EditorUI elements");
+        NG_TIME_SCOPE("Game::Start()");
+
+        // Prepare the scene logic
+        SceneManager::StartActiveScene();
+
+    #ifdef NG_DEVELOPER_MODE
+        Debug::Log(DEV, "Showing all EditorUI elements");
         EditorUI::ShowAllElements();
-#endif
-
+    #endif
     }
-   
-    ImVec4 clearcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    void Game::Run()
+
+    void Game::Update()
     {
-        Debug::Log(LogLevel::LOG, "Starting game loop.");
 
-       while (!glfwWindowShouldClose(gameWindow))
-        {
-            Time::Update();
-            glfwPollEvents();
+        Time::Update();
+        glfwPollEvents();
 
-            // 1. Get size first, then set viewport
-            glfwGetFramebufferSize(gameWindow, &currentWindowSize.x, &currentWindowSize.y);
-            viewportSize = glm::uvec2(currentWindowSize.x, currentWindowSize.y);
+        // Get the size first. The scene can use viewportSize in Update().
+        glfwGetFramebufferSize(gameWindow, &currentWindowSize.x, &currentWindowSize.y);
+        viewportSize = glm::uvec2(currentWindowSize.x, currentWindowSize.y);
 
-            glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
-            glClearColor(0.3f, 0.5f, 0.5f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        SceneManager::ApplyPendingSceneChange();
+        SceneManager::Update();
+    }
 
-            // Update & Render Game Scene
-            Scene* activeScene = sceneManager->GetActiveScene();
-            if (activeScene) 
-            {
-                // Debug::Log(DEV, "Update()");
-                activeScene->Update();
+    void Game::Render()
+    {
+        glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
+        glClearColor(0.3f, 0.5f, 0.5f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                // Debug::Log(DEV, "Render()");
-                activeScene->Render();
-            }
+        SceneManager::Render(); // Already commented out
 
-            // Start ImGui frame
-            // Debug::Log(DEV, "Starting ImGUI frame");
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        #ifdef NG_DEVELOPER_MODE            
-            // Debug::Log(DEV, "Updating EditorUI");
+        #ifdef NG_DEVELOPER_MODE 
             ng::Editor::EditorUI::Update();
         #endif
 
-            // Render ImGui
-            // Debug::Log(DEV, "Rendering ImGUI frame");
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-
-            // Frame-by-frame error check (clears all queued errors)
-            // Debug::Log(DEV, "Checking OpenGL error que");
             GLenum err;
             while ((err = glGetError()) != GL_NO_ERROR) {
                 Debug::Log(LogLevel::ERROR, "OpenGL Error: %d", err);
             }
 
-            // Debug::Log(DEV, "Swapping GLFW buffer");
             glfwSwapBuffers(gameWindow);
+    }
+
+    ImVec4 clearcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    void Game::Run()
+    {
+        Debug::Log(LogLevel::LOG, "Starting game loop.");
+
+        // Flag to catch the very first frame
+        while (!glfwWindowShouldClose(gameWindow))
+        {
+            
+            Update();
+            Render();
+
         }
 
-        Debug::Log(LOG, "Game loop ended, exiting game..");
+        Debug::Log(LogLevel::LOG, "Game loop ended, exiting game..");
         this->Exit();
     }
 
     void Game::Exit()
     {
-
         Debug::Log(LogLevel::LOG, "Exiting application.");
         Debug::Shutdown();
         glfwTerminate();

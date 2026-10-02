@@ -6,8 +6,6 @@ namespace ng::Core {
 
 	float deltaTime;
 
-
-
 	Scene::Scene(Camera* _mainCamera, glm::uvec2& viewportSize, const char* _sceneName) : 
 		sceneName(_sceneName), 
 		mainCamera(_mainCamera), 
@@ -42,6 +40,7 @@ namespace ng::Core {
 
     void Scene::SetActiveCamera(ng::Graphics::Camera* cam)
 	{
+		Debug::Log(LOG, "Setting active camera");
 		if (cam != nullptr) mainCamera = cam;
 		else Debug::Log(LogLevel::ERROR, "mainCamera must not be null");
 	}
@@ -77,16 +76,6 @@ namespace ng::Core {
 		return nullptr;
 	}
 	
-	void Scene::Load(const std::string& filepath) {
-
-		std::string file_content = ng::Assets::FileReader::ReadFile(filepath);
-		if (file_content == "") {
-			Debug::Log(ERROR, "Failed loading scene %s", filepath.c_str());
-			return;
-		}
-		Debug::Log(LOG, "Loading scene: %s", sceneName.c_str());
-	}
-
 	void Scene::Start() {
 		Debug::Log(LOG, "Starting scene: %s", sceneName.c_str());
 		isActive = true;
@@ -99,6 +88,7 @@ namespace ng::Core {
 
 		deltaTime = Time::DeltaTime();
 
+		Debug::Log(VERBOSE, "Updating %d gameObjectsInScene", gameObjectsInScene.size());
 		// Update all game objects
 		for (auto* obj : gameObjectsInScene) {
 			if (obj->isActive) {
@@ -116,19 +106,31 @@ namespace ng::Core {
 	}
 
 	void Scene::Render() {
-		if (!isActive || mainCamera == nullptr) return;
+		if (mainCamera == nullptr) {
+			Debug::Log(ERROR, "mainCamera is nullptr");
+			return;
+		}
+		if (!isActive) { 
+			Debug::Log(ERROR, "Scene is not active");
+			return;
+		}
 
 		// Render all objects with MeshRenderer
+		Debug::Log(VERBOSE, "Rendering %d gameObjectsInScene", gameObjectsInScene.size());
 		for (auto* obj : gameObjectsInScene) {
 			if (!obj->isActive) continue;
 
 			auto* meshRenderer = obj->GetComponent<MeshRenderer>();
 			auto* transform = obj->GetComponent<Transform>();
 
+			// We're currently drawing all gameObjects, even if they're not visible
+			// to the camera. This will cause huge performance losses in the future if not corrected.
+
 			if (meshRenderer != nullptr && transform != nullptr) {
 				meshRenderer->Draw(*mainCamera, *transform);
 			}
 		}
+		Debug::Log(VERBOSE, "Finished rendering %d gameObjectsInScene", gameObjectsInScene.size());
 
 		collisionSystem.DrawDebug(*mainCamera);
 		

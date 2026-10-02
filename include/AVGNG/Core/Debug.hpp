@@ -18,7 +18,8 @@ namespace ng::Core {
 		DEBUG,
 		WARN,
 		ERROR,
-		FATAL
+		FATAL,
+		VERBOSE
 	};
 
 	struct LogMessage {

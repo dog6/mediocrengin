@@ -5,6 +5,10 @@
 class MenuStripView : public EditorUIElement {
 	static bool s_isVisible;
 	static void CreateUI();
+
+	static void FileOptions();
+	static void SaveDialog();
+
 public:
 	static void EditorUIElement::Show() { s_isVisible = true; }
 	static void EditorUIElement::Hide() { s_isVisible = false; }

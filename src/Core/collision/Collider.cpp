@@ -1,7 +1,10 @@
 #include "AVGNG/Core/collision/Collider.hpp"
 #include "AVGNG/Core/collision/SphereShape.hpp"
 #include "AVGNG/Core/collision/BoxShape.hpp"
+#include "AVGNG/Assets/JsonUtils.hpp"
 #include <imgui/imgui.h>
+
+#include <cfloat>
 
 using namespace ng::Core;
 
@@ -25,6 +28,7 @@ void Collider::SetSphereShape(float radius)
     shapeType = ShapeType::Sphere;
 }
 
+// The three values are half extents. A box with (0.5, 0.5, 0.5) is 1 unit wide.
 void Collider::SetBoxShape(float hx, float hy, float hz)
 {
     auto b = std::make_unique<BoxShape>();
@@ -33,72 +37,136 @@ void Collider::SetBoxShape(float hx, float hy, float hz)
     shapeType = ShapeType::Box;
 }
 
-void Collider::UpdateBounds(const glm::vec3& position, const glm::vec3& scale)
+// "worldMatrix" must be Transform::GetWorldMatrix(). The local matrix
+// gives a wrong box for a child object.
+void Collider::UpdateBounds(const glm::mat4& worldMatrix)
 {
-    if (!colliderShape) return;
+    if (!colliderShape)
+        return;
 
-    glm::vec3 center = position + positionOffset;
-    worldBounds = colliderShape->ComputeAABB(center, scale * colliderScale);
+    // Transform the collider's local offset into world space.
+    glm::vec3 worldCenter =
+        glm::vec3(worldMatrix * glm::vec4(positionOffset, 1.0f));
+
+    // Extract world scale from the transform matrix.
+    glm::vec3 worldScale{
+        glm::length(glm::vec3(worldMatrix[0])),
+        glm::length(glm::vec3(worldMatrix[1])),
+        glm::length(glm::vec3(worldMatrix[2]))
+    };
+
+    worldScale *= colliderScale;
+
+    worldBounds = colliderShape->ComputeAABB(
+        worldCenter,
+        worldScale
+    );
 }
 
 void Collider::OnInspectorGUI()
 {
+    // Give this component its own ID scope.
+    // This stops label conflicts with other components (for example "Scale").
+    ImGui::PushID(this);
+
     ImGui::Text("Collider Component [%p]", (void*)this);
-
     ImGui::Checkbox("Active", &isActive);
-    ImGui::Checkbox("Show Gizmo", &gizmoVisible);
-    ImGui::ColorEdit3("Gizmo Color", &gizmoColor.x);
-    ImGui::DragFloat3("Offset", &positionOffset.x, 0.01f);
-    ImGui::DragFloat3("Scale", &colliderScale.x, 0.01f);
 
+    // Shape selection
+    enum ShapeChoice { ChoiceNone = 0, ChoiceSphere, ChoiceBox };
     const char* names[] = { "None", "Sphere", "Box" };
-    int current = 0;
-    if (colliderShape)
-        current = (colliderShape->Type() == ShapeType::Sphere) ? 1 : 2;
 
-    if (ImGui::Combo("Shape", &current, names, 3)) {
-        if (current == 0)      colliderShape.reset();
-        else if (current == 1) SetSphereShape();
-        else                   SetBoxShape();
+    int current = ChoiceNone;
+    if (colliderShape)
+        current = (colliderShape->Type() == ShapeType::Sphere) ? ChoiceSphere : ChoiceBox;
+
+    if (ImGui::Combo("Shape", &current, names, IM_ARRAYSIZE(names))) {
+        switch (current) {
+            case ChoiceNone:   colliderShape.reset(); break;
+            case ChoiceSphere: SetSphereShape();      break;
+            case ChoiceBox:    SetBoxShape();         break;
+        }
     }
 
-    if (colliderShape) colliderShape->OnInspectorGUI();
+    // Transform values
+    ImGui::DragFloat3("Offset", &positionOffset.x, 0.01f, 0.0f, 0.0f, "%.3f");
+
+    // The minimum value of 0.001 prevents a scale of 0.
+    ImGui::DragFloat3("Scale", &colliderScale.x, 0.01f, 0.001f, FLT_MAX, "%.3f");
+
+    // Gizmo settings
+    ImGui::Checkbox("Show Gizmo", &gizmoVisible);
+    ImGui::BeginDisabled(!gizmoVisible);
+    ImGui::ColorEdit3("Gizmo Color", &gizmoColor.x);
+    ImGui::EndDisabled();
+
+    // Shape settings
+    ImGui::Separator();
+    if (colliderShape) {
+        colliderShape->OnInspectorGUI();
+    }
+    else {
+        ImGui::TextDisabled("No shape. This collider cannot collide.");
+    }
+
+    // Read-only collision data for debugging
+    if (ImGui::TreeNode("Debug")) {
+        ImGui::Text("Overlapping: %s", IsOverlapping() ? "yes" : "no");
+        ImGui::Text("Other collider: %p", (void*)GetOtherCollider());
+
+        const glm::vec3& n = GetContactNormal();
+        ImGui::Text("Contact normal: %.2f, %.2f, %.2f", n.x, n.y, n.z);
+        ImGui::Text("Penetration: %.4f", GetPenetration());
+
+        ImGui::Text("Bounds min: %.2f, %.2f, %.2f",
+                    worldBounds.min.x, worldBounds.min.y, worldBounds.min.z);
+        ImGui::Text("Bounds max: %.2f, %.2f, %.2f",
+                    worldBounds.max.x, worldBounds.max.y, worldBounds.max.z);
+
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
 }
 
 void Collider::Save(nlohmann::json& j)
 {
-    j["active"]       = isActive;
-    j["gizmoVisible"] = gizmoVisible;
-    j["gizmoColor"]   = { gizmoColor.x, gizmoColor.y, gizmoColor.z };
-    j["offset"]       = { positionOffset.x, positionOffset.y, positionOffset.z };
-    j["scale"]        = { colliderScale.x, colliderScale.y, colliderScale.z };
+    nlohmann::json& c = j["collider"];
+    c["active"]       = isActive;
+    c["gizmoVisible"] = gizmoVisible;
+    c["gizmoColor"]   = ng::Assets::Vec3ToJson(gizmoColor);
+    c["offset"]       = ng::Assets::Vec3ToJson(positionOffset);
+    c["scale"]        = ng::Assets::Vec3ToJson(colliderScale);
 
     if (colliderShape) {
         nlohmann::json s;
         s["type"] = colliderShape->TypeName();
         colliderShape->Save(s);
-        j["shape"] = s;
+        c["shape"] = s;
     }
 }
 
 void Collider::Load(const nlohmann::json& j)
 {
-    isActive     = j.value("active", true);
-    gizmoVisible = j.value("gizmoVisible", false);
+    if (!j.contains("collider")) return;
+    const nlohmann::json& c = j.at("collider");
 
-    auto readVec3 = [&](const char* key, glm::vec3& out) {
-        if (j.contains(key)) {
-            const auto& a = j[key];
-            out = glm::vec3(a[0].get<float>(), a[1].get<float>(), a[2].get<float>());
-        }
-    };
-    readVec3("gizmoColor", gizmoColor);
-    readVec3("offset", positionOffset);
-    readVec3("scale", colliderScale);
+    isActive     = c.value("active", isActive);
+    gizmoVisible = c.value("gizmoVisible", gizmoVisible);
 
-    if (j.contains("shape")) {
-        const auto& s = j["shape"];
+    gizmoColor     = ng::Assets::ReadVec3(c, "gizmoColor", gizmoColor);
+    positionOffset = ng::Assets::ReadVec3(c, "offset", positionOffset);
+    colliderScale  = ng::Assets::ReadVec3(c, "scale", colliderScale);
+
+    if (c.contains("shape")) {
+        const auto& s = c["shape"];
         colliderShape = CreateShape(s.value("type", ""));
-        if (colliderShape) colliderShape->Load(s);
+        if (colliderShape) {
+            colliderShape->Load(s);
+
+            // Keep "shapeType" the same as the real shape.
+            // The Set...Shape functions do this, but this path did not.
+            shapeType = colliderShape->Type();
+        }
     }
 }

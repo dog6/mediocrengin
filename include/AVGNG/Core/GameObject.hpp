@@ -5,9 +5,11 @@
 #include "AVGNG/Core/physics/PhysicsBody.hpp"
 #include "AVGNG/Core/IComponent.hpp"
 #include "AVGNG/Core/collision/Collider.hpp"
+#include "AVGNG/Core/CameraComponent.hpp"
 #include <iostream>
 
 #include <memory>
+#include <string>
 #include <vector>
 #include <type_traits>
 
@@ -17,7 +19,7 @@ namespace ng::Core {
 
     private:
         std::vector<std::unique_ptr<ng::Core::IComponent>> components;
-
+        GameObject* parent = nullptr;
 
 	public:
         GameObject(const char* name);
@@ -28,6 +30,9 @@ namespace ng::Core {
 
         GameObject(const GameObject&) = delete;
         GameObject& operator=(const GameObject&) = delete;
+
+        // Lua and the scene loader use these two functions.
+        // The list of component names is in GameObject.cpp.
         IComponent* AddComponentByName(const std::string& type);
         IComponent* GetComponentByName(const std::string& type);
 

@@ -16,7 +16,7 @@ namespace ng::Scripting {
     static void RegisterGame(sol::state& lua) {
         lua.new_usertype<Game>("Game",
             "GetActiveScene", [](Game& game) {
-                return game.GetSceneManager()->GetActiveScene();
+                return SceneManager::GetActiveScene();
             }
         );
     }
@@ -27,7 +27,7 @@ namespace ng::Scripting {
             sol::meta_function::equal_to, [](const Scene& a, const Scene& b) { return &a == &b; },
             sol::meta_function::less_than, [](const Scene& a, const Scene& b) { return &a < &b; },
 
-            "FindGameObject", &Scene::FindGameObjectByName//, [](Scene& self, const std::string& name) { return self.FindGameObjectByName(name); }
+            "FindGameObject", &Scene::FindGameObjectByName
         );
     }
 		
@@ -45,7 +45,13 @@ namespace ng::Scripting {
             },
             "GetPosition", [](Transform& self) { return self.GetPosition(); },
             "GetRotation", [](Transform& self) { return self.GetRotation(); },
-            "GetScale", [](Transform& self) { return self.GetScale(); }
+            "GetScale", [](Transform& self) { return self.GetScale(); },
+            "Parent", [](Transform& self) { return self.GetParent(); },
+            "SetParent", [](Transform& self, Transform* parent) { self.SetParent(parent); },
+            "AddChild", [](Transform& self, Transform* child) { self.AddChild(child); },
+            "RemoveChild", [](Transform& self, Transform* child) { self.RemoveChild(child); },
+            "GetChildCount", [](Transform& self) { self.GetChildCount(); },
+            "ClearParent", [](Transform& self) { self.ClearParent(); }
         );
     }
 		

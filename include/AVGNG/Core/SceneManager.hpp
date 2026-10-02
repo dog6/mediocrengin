@@ -1,25 +1,47 @@
 #pragma once
+#include <string>
 #include <vector>
-#include <glm/vec2.hpp>
+#include <glm/glm.hpp>
 
-#include "AVGNG/Graphics/Camera.hpp"
+namespace ng::Graphics { class Camera; }
 
 namespace ng::Core {
 
-    class Scene;
+class Scene;
 
-    class SceneManager {
+class SceneManager {
+public:
+    SceneManager() = delete; // All members are static
 
-        private:
-            static std::vector<ng::Core::Scene*> scenes;
-            static Scene* activeScene;
+    // Creates a scene and keeps it in the list.
+    // The first scene becomes the active scene.
+    static Scene* CreateNewScene(ng::Graphics::Camera* camera,
+                                 glm::uvec2& viewportSize,
+                                 const char* sceneName);
 
-        public:
-            static void CreateNewScene(ng::Graphics::Camera* camera, glm::uvec2& viewportSize, const char* sceneName);
-            static void SetActiveScene(Scene* scene); // deletes the current active scene and starts the new one
-            static Scene* GetActiveScene();
-            static int LoadActiveScene();
-            static void Unload(); // unloads currently active scene
-    };
+    static Scene* FindScene(const std::string& sceneName);
+    static Scene* GetActiveScene();
 
-}
+    // Saves a request. The change occurs in ApplyPendingSceneChange().
+    static bool RequestSceneChange(const std::string& sceneName);
+    static bool RequestSceneChange(Scene* sceneName);
+
+    // Call this function one time at the start of each frame.
+    static void ApplyPendingSceneChange();
+
+    // Life cycle functions
+    static int  LoadActiveScene();
+    static void StartActiveScene();
+    static void Update();
+    static void Render();
+
+    // Deletes all scenes WITHOUT saving
+    static void Unload();
+
+private:
+    static std::vector<Scene*> scenes;
+    static Scene* activeScene;
+    static Scene* pendingScene;
+};
+
+} // namespace ng::Core

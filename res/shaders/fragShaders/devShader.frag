@@ -7,17 +7,17 @@ in vec2 TexCoords;
 out vec4 FragColor;
 
 // Material colors
-uniform vec3 Albedo;          // Reflectivity
-uniform vec3 AmbientColor;    // Indirect light color
-uniform vec3 DiffuseColor;    // Base color
-uniform vec3 SpecularColor;   // Glare color
-uniform vec3 EmissiveColor;   // Glow color
+uniform vec3 Albedo;
+uniform vec3 AmbientColor;
+uniform vec3 DiffuseColor;
+uniform vec3 SpecularColor;
+uniform vec3 EmissiveColor;
 
 // Material properties
-uniform float Shininess;      // 0 = matte, 1 = reflective
-uniform float IOR;            // amount light refracts (bends)
-uniform float Opacity;        // Alpha control (0.0-1.0)
-uniform float Metallic;       // How metallic the surface is
+uniform float Shininess;
+uniform float IOR;
+uniform float Opacity;
+uniform float Metallic;
 
 // Material texture maps
 uniform sampler2D diffuseMap;
@@ -30,93 +30,129 @@ uniform sampler2D emissiveMap;
 uniform bool hasEmissiveMap;
 uniform sampler2D alphaMap;
 uniform bool hasAlphaMap;
-
 uniform sampler2D metallicMap;
 uniform bool hasMetallicMap;
+
+// Texture tiling and offset for each map
+uniform vec2 diffuseMapTiling;
+uniform vec2 diffuseMapOffset;
+uniform vec2 specularMapTiling;
+uniform vec2 specularMapOffset;
+uniform vec2 normalMapTiling;
+uniform vec2 normalMapOffset;
+uniform vec2 emissiveMapTiling;
+uniform vec2 emissiveMapOffset;
+uniform vec2 alphaMapTiling;
+uniform vec2 alphaMapOffset;
+uniform vec2 metallicMapTiling;
+uniform vec2 metallicMapOffset;
 
 // Lighting
 uniform vec3 sunDirection;
 uniform vec3 sunColor;
 uniform vec3 viewPos;
 
+vec2 TransformUV(vec2 uv, vec2 tiling, vec2 offset)
+{
+    return uv * tiling + offset;
+}
+
+// Builds a normal from the normal map.
+// This method needs no tangent vertex data. It uses screen-space derivatives.
+vec3 GetMappedNormal(vec3 baseNormal)
+{
+    vec2 uv = TransformUV(TexCoords, normalMapTiling, normalMapOffset);
+
+    vec3 tangentNormal = texture(normalMap, uv).rgb * 2.0 - 1.0;
+
+    vec3 posDX = dFdx(FragPos);
+    vec3 posDY = dFdy(FragPos);
+    vec2 uvDX = dFdx(uv);
+    vec2 uvDY = dFdy(uv);
+
+    vec3 N = normalize(baseNormal);
+    vec3 T = normalize(posDX * uvDY.t - posDY * uvDX.t);
+    vec3 B = -normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+
+    return normalize(TBN * tangentNormal);
+}
+
 void main()
 {
-    // Compute normal
     vec3 norm = normalize(Normal);
 
     if (hasNormalMap) {
-        vec3 normalTex = texture(normalMap, TexCoords).rgb;
-        normalTex = normalTex * 2.0 - 1.0; // [0,1] -> [-1,1]
-        norm = normalize(normalTex);       // tangent-space not implemented
+        norm = GetMappedNormal(norm);
     }
 
-    // Compute lighting
     vec3 lightDir = normalize(-sunDirection);
     vec3 viewDir = normalize(viewPos - FragPos);
 
-    // Get base color
+    // Base color
     vec3 baseColor = Albedo;
     if (hasDiffuseMap) {
-        baseColor *= texture(diffuseMap, TexCoords).rgb;
+        baseColor *= texture(diffuseMap,
+            TransformUV(TexCoords, diffuseMapTiling, diffuseMapOffset)).rgb;
     }
 
-    // Get metallic value
+    // Metallic value
     float metallic = Metallic;
     if (hasMetallicMap) {
-        metallic *= texture(metallicMap, TexCoords).r;
+        metallic *= texture(metallicMap,
+            TransformUV(TexCoords, metallicMapTiling, metallicMapOffset)).r;
     }
     metallic = clamp(metallic, 0.0, 1.0);
 
-    // Clamp IOR
     float IOR_safe = max(IOR, 1.0);
 
-    // Calculate F0 from IOR for dielectrics
     float F0_dielectric = pow((IOR_safe - 1.0) / (IOR_safe + 1.0), 2.0);
-    
-    // Metallic workflow: metals have colored specular, dielectrics use IOR-based F0
+
     vec3 F0 = mix(vec3(F0_dielectric), baseColor, metallic);
-    
-    // For metals, diffuse is absorbed (black), for dielectrics it's the base color
+
     vec3 diffuseContribution = mix(baseColor, vec3(0.0), metallic);
 
-    // Ambient
-    vec3 ambient = AmbientColor * 0.4 * diffuseContribution;
+    // Metal surfaces use F0 for ambient tint.
+    vec3 ambientTint = mix(diffuseContribution, F0, metallic);
+    vec3 ambient = AmbientColor * 0.4 * ambientTint;
 
     // Diffuse
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = DiffuseColor * diff * sunColor * diffuseContribution;
 
+    // Map Shininess (0 to 1) to a real exponent for pow().
+    float specExponent = mix(2.0, 256.0, Shininess);
+
     // Specular with Fresnel
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Shininess);
-    
-    // Fresnel-Schlick approximation
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), specExponent);
+
     float cosTheta = clamp(dot(viewDir, norm), 0.0, 1.0);
     vec3 fresnel = F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
-    
+
     vec3 specular = SpecularColor * spec * sunColor * fresnel;
 
-    // Apply specular map
     if (hasSpecularMap) {
-        float specIntensity = texture(specularMap, TexCoords).r;
+        float specIntensity = texture(specularMap,
+            TransformUV(TexCoords, specularMapTiling, specularMapOffset)).r;
         specular *= specIntensity;
     }
 
-    // Emissive map
+    // Emissive
     vec3 emissive = EmissiveColor;
     if (hasEmissiveMap) {
-        emissive += texture(emissiveMap, TexCoords).rgb;
+        emissive *= texture(emissiveMap,
+            TransformUV(TexCoords, emissiveMapTiling, emissiveMapOffset)).rgb;
     }
 
     // Alpha
-    float Opacity_safe = clamp(Opacity, 0.0, 1.0);
-    float alpha = Opacity_safe;
+    float alpha = clamp(Opacity, 0.0, 1.0);
     if (hasAlphaMap) {
-        alpha *= texture(alphaMap, TexCoords).r;
+        alpha *= texture(alphaMap,
+            TransformUV(TexCoords, alphaMapTiling, alphaMapOffset)).r;
     }
     alpha = clamp(alpha, 0.0, 1.0);
 
-    // Final color
     vec3 finalColor = ambient + diffuse + specular + emissive;
     FragColor = vec4(finalColor, alpha);
 }

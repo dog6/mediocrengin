@@ -1,6 +1,7 @@
 #include "AVGNG/Core/collision/BoundingBox.hpp"
 #include "AVGNG/Graphics/Camera.hpp"
 #include "AVGNG/Graphics/Vertex.hpp"
+#include "AVGNG/Graphics/DebugDraw.hpp"
 
 using namespace ng::Core;
 
@@ -67,11 +68,19 @@ void BoundingBox::ComputeFromVertices(const std::vector<ng::Graphics::Vertex>& v
 
 void BoundingBox::Draw(ng::Graphics::Camera& cam, Transform& tf)
 {
-     glm::vec3 center = (bbMin + bbMax) * 0.5f;
+    glm::vec3 center = (bbMin + bbMax) * 0.5f;
     glm::vec3 size   = bbMax - bbMin;
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), center)
-                    * glm::scale(glm::mat4(1.0f), size);
+    glm::mat4 model =
+        tf.GetWorldMatrix()
+        * glm::translate(glm::mat4(1.0f), center)
+        * glm::scale(glm::mat4(1.0f), size);
+
+    ng::Graphics::DebugDraw::Box(
+        cam,
+        model,
+        glm::vec3(1.0f, 1.0f, 0.0f)
+    );
 }
 
 bool BoundingBox::Overlaps(const glm::vec3& minA, const glm::vec3& maxA, const glm::vec3& minB, const glm::vec3& maxB)

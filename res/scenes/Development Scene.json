@@ -8,7 +8,7 @@
                         "transform": {
                             "position": [
                                 0.0,
-                                1.350000023841858,
+                                -2.0,
                                 0.0
                             ],
                             "rotation": [
@@ -27,9 +27,9 @@
                         "meshRenderer": {
                             "material": {
                                 "mat_albedo_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "mat_alpha_texture_path": "",
                                 "mat_ambient_color": [
@@ -38,9 +38,9 @@
                                     1.0
                                 ],
                                 "mat_diffuse_color": [
-                                    0.6000000238418579,
-                                    0.6000000238418579,
-                                    0.6000000238418579
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "mat_diffuse_texture_path": "",
                                 "mat_emissive_color": [
@@ -52,23 +52,52 @@
                                 "mat_ior": 1.5,
                                 "mat_normal_texture_path": "",
                                 "mat_opacity": 1.0,
-                                "mat_shininess": 12.221919059753418,
+                                "mat_shininess": 1.0,
                                 "mat_specular_color": [
-                                    0.5,
-                                    0.5,
-                                    0.5
+                                    0.0,
+                                    0.0,
+                                    0.0
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_plane.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/dev/plane/mdl_plane.obj",
                             "shader": {
                                 "fragment_shader_path": "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag",
                                 "vertex_shader_path": "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
                             }
                         }
+                    },
+                    {
+                        "collider": {
+                            "active": true,
+                            "gizmoColor": [
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            "gizmoVisible": true,
+                            "offset": [
+                                0.0,
+                                -0.20000000298023224,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "shape": {
+                                "halfExtents": [
+                                    1.0,
+                                    0.20000000298023224,
+                                    1.0
+                                ],
+                                "type": "box"
+                            }
+                        }
                     }
                 ],
-                "name": "Terrain"
+                "name": "plane_lower"
             },
             {
                 "active": true,
@@ -76,8 +105,8 @@
                     {
                         "transform": {
                             "position": [
-                                0.0,
-                                2.0,
+                                -0.20000000298023224,
+                                -1.9001586437225342,
                                 0.0
                             ],
                             "rotation": [
@@ -86,9 +115,9 @@
                                 0.0
                             ],
                             "scale": [
-                                0.30000001192092896,
-                                0.6000000238418579,
-                                0.30000001192092896
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.10000000149011612
                             ]
                         }
                     },
@@ -102,38 +131,183 @@
                                 ],
                                 "mat_alpha_texture_path": "",
                                 "mat_ambient_color": [
-                                    0.5749260187149048,
-                                    0.5854092836380005,
-                                    0.16458125412464142
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "mat_diffuse_color": [
-                                    0.05693948268890381,
-                                    0.6778157353401184,
+                                    1.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "mat_diffuse_texture_path": "",
                                 "mat_emissive_color": [
-                                    0.12811386585235596,
-                                    0.12811386585235596,
-                                    0.12811386585235596
+                                    0.0,
+                                    0.0,
+                                    0.0
                                 ],
                                 "mat_emissive_texture_path": "",
-                                "mat_ior": 1.0,
+                                "mat_ior": 1.5,
                                 "mat_normal_texture_path": "",
                                 "mat_opacity": 1.0,
-                                "mat_shininess": 0.009999999776482582,
+                                "mat_shininess": 1.0,
                                 "mat_specular_color": [
-                                    0.13167262077331543,
-                                    1.0,
+                                    0.0,
+                                    0.0,
                                     0.0
                                 ],
                                 "mat_specular_texture_path": ""
                             },
-                            "path": "D:/Projects/CPP/smallengine/res/models/mdl_ball.obj",
+                            "path": "D:/Projects/CPP/smallengine/res/models/dev/sphere/mdl_sphere.obj",
                             "shader": {
                                 "fragment_shader_path": "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag",
                                 "vertex_shader_path": "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
                             }
+                        }
+                    },
+                    {
+                        "collider": {
+                            "active": true,
+                            "gizmoColor": [
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            "gizmoVisible": true,
+                            "offset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "shape": {
+                                "halfExtents": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "type": "box"
+                            }
+                        }
+                    },
+                    {
+                        "physicsBody": {
+                            "linearVelocity": [
+                                0.0,
+                                -0.012568599544465542,
+                                0.0
+                            ]
+                        }
+                    }
+                ],
+                "name": "Ball"
+            },
+            {
+                "active": true,
+                "components": [
+                    {
+                        "transform": {
+                            "position": [
+                                0.20000000298023224,
+                                -0.6253196597099304,
+                                0.0
+                            ],
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ]
+                        }
+                    },
+                    {
+                        "meshRenderer": {
+                            "material": {
+                                "mat_albedo_color": [
+                                    0.7352941036224365,
+                                    0.5835919976234436,
+                                    0.16219724714756012
+                                ],
+                                "mat_alpha_texture_path": "",
+                                "mat_ambient_color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "mat_diffuse_color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "mat_diffuse_texture_path": "",
+                                "mat_emissive_color": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "mat_emissive_texture_path": "",
+                                "mat_ior": 111.01100158691406,
+                                "mat_normal_texture_path": "",
+                                "mat_opacity": 1.0,
+                                "mat_shininess": 0.3720000088214874,
+                                "mat_specular_color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "mat_specular_texture_path": ""
+                            },
+                            "path": "D:/Projects/CPP/smallengine/res/models/dev/sphere/mdl_sphere.obj",
+                            "shader": {
+                                "fragment_shader_path": "D:/Projects/CPP/smallengine/res/shaders/fragShaders/devShader.frag",
+                                "vertex_shader_path": "D:/Projects/CPP/smallengine/res/shaders/vertexShaders/devShader.vert"
+                            }
+                        }
+                    },
+                    {
+                        "collider": {
+                            "active": true,
+                            "gizmoColor": [
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            "gizmoVisible": false,
+                            "offset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "shape": {
+                                "halfExtents": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "type": "box"
+                            }
+                        }
+                    },
+                    {
+                        "physicsBody": {
+                            "linearVelocity": [
+                                0.0,
+                                1.196964979171753,
+                                0.0
+                            ]
                         }
                     }
                 ],
@@ -142,14 +316,14 @@
         ],
         "sceneCamera": {
             "position": [
-                -0.48857367038726807,
-                2.064192771911621,
-                -1.8994691371917725
+                0.014616499654948711,
+                -1.1385984420776367,
+                1.8204132318496704
             ],
             "target": [
-                -0.42326807975769043,
-                2.0132663249969482,
-                -0.902904212474823
+                0.04790767282247543,
+                -1.316024899482727,
+                0.83684241771698
             ]
         },
         "sceneName": "Development Scene"

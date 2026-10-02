@@ -141,6 +141,8 @@ namespace ng::Graphics {
 
 	void Skybox::Render(Camera& camera)
 	{
+		Debug::Log(VERBOSE, "Rendering skybox..");
+
 		glDepthFunc(GL_LEQUAL);
 		skyboxShader.Use();
 

@@ -18,6 +18,16 @@ namespace ng::Assets {
 		return glm::vec3(arr[0].get<float>(), arr[1].get<float>(), arr[2].get<float>());
 	}
 
+	// Reads a numeric JSON value at parent[key], falling back if the value
+	// is missing or not a number. Never inserts into parent (unlike operator[]).
+	inline float ReadFloat(const nlohmann::json& parent, const char* key, float fallback = 0.0f)
+	{
+		auto it = parent.find(key);
+		if (it == parent.end() || !it->is_number()) return fallback;
+
+		return it->get<float>();
+	}
+
 	inline nlohmann::json Vec3ToJson(const glm::vec3& v)
 	{
 		return { v.x, v.y, v.z };

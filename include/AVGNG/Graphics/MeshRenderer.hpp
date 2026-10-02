@@ -24,6 +24,8 @@ namespace ng::Graphics {
 		Texture* emissiveTexture = nullptr;
 		Texture* alphaTexture = nullptr;
 
+		bool ValidateMesh();
+		
 	public:
 
 		void Draw(ng::Graphics::Camera& camera, ng::Core::Transform& transform);
@@ -34,6 +36,9 @@ namespace ng::Graphics {
 
 		void LoadMesh(const char* objPath);
 
+		// typeName: "diffuse", "specular", "normal", "emissive", "alpha", or "metallic"
+		bool SetTexture(const std::string& typeName, const std::string& path);
+		bool SetTextureTiling(const std::string& typeName, float x, float y);
 		void OnInspectorGUI() override;
 
 		void Save(nlohmann::json& j) override;

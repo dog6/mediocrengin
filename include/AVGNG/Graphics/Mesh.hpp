@@ -18,6 +18,20 @@ namespace ng::Graphics {
 
         class Mesh {
 
+        private:    
+
+            // SetupMesh helpers
+            bool ValidateMeshData();
+            void EnsureMaterialExists();
+            void CreateGPUBuffers();
+            void SetupVertexAttributes();
+
+            // UseShader helpers
+            void SetTransformUniforms(Shader* shader, ng::Graphics::Camera& camera, ng::Core::Transform& transform);
+            void SetMaterialUniforms(Shader* shader, MaterialData *m);
+            void SetLightinguniforms(Shader *shader, MaterialData *m, ng::Graphics::Camera &camera);
+            void BindMaterialTextures(Shader* shader, MaterialData *m);
+
         public:
             Mesh();
             Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);

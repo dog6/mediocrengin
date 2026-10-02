@@ -132,6 +132,16 @@ namespace ng::Graphics {
         glUniform3f(location, vec.x, vec.y, vec.z);
     }
 
+    void Shader::SetVec2(const char *name, glm::vec2 vec)
+    {
+        GLint location = glGetUniformLocation(ID, name);
+        if (location == -1) {
+            Debug::Log(WARN, "Uniform '%s' not found in shader %d", name, ID);
+            return;
+        }
+        glUniform2f(location, vec.x, vec.y);
+    }
+
     void Shader::SetVec4(const char* name, glm::vec4 vec)
     {
         glUniform4f(glGetUniformLocation(ID, name), vec.x, vec.y, vec.z, vec.w);

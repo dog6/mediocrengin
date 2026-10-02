@@ -22,7 +22,8 @@ namespace ng::Graphics {
                 ~Material();
 
                 // Getters & Setters
-                void SetMaterialData(MaterialData materialData);
+                // void SetMaterialData(MaterialData materialData);
+                void SetMaterialData(MaterialData&& materialData);
                 ng::Graphics::MaterialData* GetMaterialData() { return &data; }
 
                 void SetShader(Shader& shader) { this->shader = shader; }

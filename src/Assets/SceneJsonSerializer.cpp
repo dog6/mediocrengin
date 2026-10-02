@@ -1,144 +1,155 @@
 #include "AVGNG/Assets/SceneJsonSerializer.hpp"
 #include "AVGNG/Assets/JsonUtils.hpp"
+#include "AVGNG/Core/Debug.hpp"
 #include <nlohmann/json.hpp>
 #include <filesystem>
 #include <fstream>
 
 using json = nlohmann::json;
-
 using namespace ng::Core;
 
 namespace ng::Assets {
 
-	// Maps a saved component key to the component instance that should load it.
-	// New component types need an entry here (and in GameObject::AddComponentByName).
-	static IComponent* GetOrAddComponentForKey(GameObject* go, const std::string& key)
-	{
-		if (key == "transform") return go->GetComponent<Transform>(); // CreateGameObject already attached one
-		if (key == "meshRenderer") return go->AddComponent<ng::Graphics::MeshRenderer>();
-		return nullptr;
-	}
+    static IComponent* GetOrAddComponentForKey(GameObject* go, const std::string& key)
+    {
+        if (key == "transform") return go->GetComponent<Transform>(); 
+        if (key == "meshRenderer") return go->AddComponent<ng::Graphics::MeshRenderer>();
+        if (key == "physicsBody") return go->AddComponent<PhysicsBody>();
+        if (key == "collider") return go->AddComponent<Collider>();
+        // Add additional engine components here
+        return nullptr;
+    }
 
-	void SceneJsonSerializer::SerializeSceneToJson(Scene& scene, const char* filepath)
-	{
+    bool SceneJsonSerializer::SerializeSceneToJson(Scene& scene, std::string_view filepath)
+    {
 
-		std::string scene_name = scene.GetName();
+        // get active scene name
+        std::string sceneName = scene.GetName();
 
-		json jsonData;
-		json& sceneJSON = jsonData["scene"];
+        // create json object to store data
+        json jsonData;
+        json& sceneJSON = jsonData["scene"];
+        sceneJSON["sceneName"] = sceneName;
 
-		sceneJSON["sceneName"] = scene_name;
+        // serialize active scene camera data
+        ng::Graphics::Camera* cam = scene.GetActiveCamera();
+        if (cam != nullptr) {
+            sceneJSON["sceneCamera"]["position"] = Vec3ToJson(cam->GetPosition());
+            sceneJSON["sceneCamera"]["target"]   = Vec3ToJson(cam->GetTarget());
+        } else {
+            Debug::Log(WARN, "Scene '%s' has no active camera during export", sceneName.c_str());
+        }
 
-		// Save scene camera data
-		ng::Graphics::Camera* cam = scene.GetActiveCamera();
-		if (cam != nullptr) {
-			sceneJSON["sceneCamera"]["position"] = Vec3ToJson(cam->GetPosition());
-			sceneJSON["sceneCamera"]["target"] = Vec3ToJson(cam->GetTarget());
-		}
-		else {
-			Debug::Log(WARN, "Scene '%s' has no active camera, skipping camera save", scene_name.c_str());
-		}
+        // serialize gameObjects in scene
+        json gameObjectsJSON = json::array();
+        for (auto* go : scene.GetGameObjects()) {
+            if (!go) continue;
 
-		// Save sceneGameObject data
-		json& gameObjectsJSON = sceneJSON["gameObjects"];
-		gameObjectsJSON = json::array();
+            json goJSON = json::object();
+            goJSON["name"]   = go->name;
+            goJSON["active"] = go->isActive;
 
-		for (auto* go : scene.GetGameObjects()) {
+            json componentsJSON = json::array();
+            for (auto* comp : go->GetAttachedComponents()) {
+                if (!comp) continue;
 
-			json goJSON = json::object();
-			goJSON["name"] = go->name;
-			goJSON["active"] = go->isActive;
+                json compJSON = json::object();
+                comp->Save(compJSON);
+                componentsJSON.push_back(std::move(compJSON));
+            }
 
-			// each component gets its own entry in the components array
-			json& componentsJSON = goJSON["components"];
-			componentsJSON = json::array();
+            goJSON["components"] = std::move(componentsJSON);
+            gameObjectsJSON.push_back(std::move(goJSON));
+        }
 
-			for (auto* comp : go->GetAttachedComponents()) {
-				json compJSON = json::object();
-				comp->Save(compJSON);
-				componentsJSON.push_back(std::move(compJSON));
-			}
+        // add gameObjectsJSON object to sceneJSON object
+        sceneJSON["gameObjects"] = std::move(gameObjectsJSON);
 
-			gameObjectsJSON.push_back(std::move(goJSON));
-		}
+        // resolve path
+        std::filesystem::path scenePath(filepath);
+        if (scenePath.extension() != ".json") {
+            scenePath += ".json";
+        }
 
-		// Write JSON to file
-		// TODO: Create ImGui Save Dialog
-		std::filesystem::path scene_fullpath(filepath);
-		if (scene_fullpath.extension() != ".json") scene_fullpath += ".json";
+        // write scene file
+        std::string jsonContent = jsonData.dump(4, ' ', false, json::error_handler_t::ignore);
+        if (!FileReader::WriteFile(scenePath.string(), jsonContent)) {
+            Debug::Log(ERROR, "Failed to write scene file: %s", scenePath.string().c_str());
+            return false;
+        }
 
-		std::string jsonContent = jsonData.dump(4, ' ', false, json::error_handler_t::ignore);
+        // log about it
+        Debug::Log(LOG, "Successfully saved scene '%s' to '%s'", sceneName.c_str(), scenePath.string().c_str());
+        return true;
+    }
 
-		if (!FileReader::WriteFile(scene_fullpath.string(), jsonContent)) {
-			Debug::Log(ERROR, "Failed to write scene file '%s'", scene_fullpath.string().c_str());
-			return;
-		}
+    ng::Core::Scene* SceneJsonSerializer::DeserializeSceneFromJson(std::string_view filePath, ng::Graphics::Camera* camera, glm::uvec2& viewportSize)
+    {
 
-		Debug::Log(LOG, "Saved scene %s in path '%s'", scene_name.c_str(), scene_fullpath.string().c_str());
+        // read file content into ifs
+        std::ifstream ifs(filePath.data());
+        if (!ifs.is_open()) {
+            Debug::Log(ERROR, "Failed to open scene file: %s", filePath.data());
+            return nullptr;
+        }
 
-	}
+        // parse file content into json object
+        json jf = json::parse(ifs, nullptr, false);
+        if (jf.is_discarded() || !jf.contains("scene")) {
+            Debug::Log(ERROR, "Invalid or corrupted scene file format: %s", filePath.data());
+            return nullptr;
+        }
 
-	ng::Core::Scene* SceneJsonSerializer::DeserializeSceneFromJson(const char* filePath, ng::Graphics::Camera* camera, glm::uvec2& viewportSize)
-	{
+        // deserialize json object into new scene object
+        const json& sceneJSON = jf.at("scene");
+        std::string sceneName = sceneJSON.value("sceneName", "Untitled Scene");
 
-		std::ifstream ifs(filePath);
-		if (!ifs.is_open()) {
-			Debug::Log(ERROR, "Failed to open scene file '%s'", filePath);
-			return nullptr;
-		}
+        // Restore Scene Camera state safely
+        if (camera != nullptr && sceneJSON.contains("sceneCamera")) {
+            const json& camJSON = sceneJSON.at("sceneCamera");
+            camera->SetPosition(ReadVec3(camJSON, "position", camera->GetPosition()));
+            camera->SetTarget(ReadVec3(camJSON, "target", camera->GetTarget()));
+        }
 
-		json jf = json::parse(ifs, nullptr, false);
-		if (jf.is_discarded() || !jf.contains("scene")) {
-			Debug::Log(ERROR, "Failed to parse scene file '%s'", filePath);
-			return nullptr;
-		}
+        // Allocate new target scene
+        Scene* scene = new Scene(camera, viewportSize, sceneName.c_str());
 
-		const json& sceneJSON = jf.at("scene");
-		std::string scene_name = sceneJSON.value("sceneName", "New Scene");
+        if (!sceneJSON.contains("gameObjects") || !sceneJSON.at("gameObjects").is_array()) {
+            return scene;
+        }
 
-		// Restore scene camera data
-		if (camera != nullptr && sceneJSON.contains("sceneCamera")) {
-			const json& camJSON = sceneJSON.at("sceneCamera");
-			camera->SetPosition(ReadVec3(camJSON, "position", camera->GetPosition()));
-			camera->SetTarget(ReadVec3(camJSON, "target", camera->GetTarget()));
-		}
+        // Deserialize GameObjects
+        for (const auto& goJSON : sceneJSON.at("gameObjects")) {
+            if (!goJSON.is_object()) continue;
 
-		Scene* scene = new Scene(camera, viewportSize, scene_name.c_str());
+            GameObject* go = scene->CreateGameObject(goJSON.value("name", "GameObject"));
+            go->isActive = goJSON.value("active", true);
 
-		if (!sceneJSON.contains("gameObjects")) return scene;
+            if (!goJSON.contains("components") || !goJSON.at("components").is_array()) {
+                continue;
+            }
 
-		for (const auto& goJSON : sceneJSON.at("gameObjects")) {
+            for (const auto& compWrapperJSON : goJSON.at("components")) {
+                if (!compWrapperJSON.is_object()) continue;
 
-			// older scene files padded the arrays with null entries
-			if (!goJSON.is_object()) continue;
+                for (auto it = compWrapperJSON.begin(); it != compWrapperJSON.end(); ++it) {
+                    const std::string& compKey = it.key();
 
-			GameObject* go = scene->CreateGameObject(goJSON.value("name", "GameObject"));
-			go->isActive = goJSON.value("active", true);
+                    IComponent* comp = GetOrAddComponentForKey(go, compKey);
+                    if (comp == nullptr) {
+                        Debug::Log(WARN, "Unrecognized component '%s' on GameObject '%s'", compKey.c_str(), go->name.c_str());
+                        continue;
+                    }
 
-			if (!goJSON.contains("components")) continue;
+                    // Pass the full wrapper JSON object to the component deserializer.
+                    // Each Load() method checks for its own key inside this object.
+                    comp->Load(compWrapperJSON);
+                }
+            }
+        }
 
-			for (const auto& compJSON : goJSON.at("components")) {
-
-				if (!compJSON.is_object()) continue;
-
-				// each entry looks like { "<componentKey>": { ...component data... } }
-				for (auto it = compJSON.begin(); it != compJSON.end(); ++it) {
-
-					IComponent* comp = GetOrAddComponentForKey(go, it.key());
-					if (comp == nullptr) {
-						Debug::Log(WARN, "Unknown component '%s' on GameObject '%s', skipping", it.key().c_str(), go->name.c_str());
-						continue;
-					}
-
-					comp->Load(compJSON);
-				}
-			}
-		}
-
-		Debug::Log(LOG, "Loaded scene '%s' from path '%s'", scene_name.c_str(), filePath);
-
-		return scene;
-
-	}
+        Debug::Log(LOG, "Successfully loaded scene '%s' from '%s'", sceneName.c_str(), filePath.data());
+        return scene;
+    }
 
 }

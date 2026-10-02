@@ -1,14 +1,12 @@
 #pragma once
 
-#include <algorithm>
 #include "AVGNG/Core/collision/ColliderShape.hpp"
-#include <imgui/imgui.h>
 
 namespace ng::Core {
 
     class SphereShape : public ColliderShape {
 
-        float radius = 0.5f;
+        float radius{0.5f};
 
     public:
         void SetRadius(float r) { radius = r; }
@@ -18,19 +16,23 @@ namespace ng::Core {
         const char* TypeName() const override { return "sphere"; }
 
         AABB ComputeAABB(const glm::vec3& center, const glm::vec3& scale) const override {
-            // A sphere uses the largest scale axis.
-            glm::vec3 s = glm::abs(scale);
-            float m = std::max({s.x, s.y, s.z});
-            glm::vec3 r(radius * m);
-            return { center - r, center + r };
+            glm::vec3 absScale = glm::abs(scale);
+            float maxScale = std::max({ absScale.x, absScale.y, absScale.z });
+            float r = radius * maxScale;
+            return { center - glm::vec3(r), center + glm::vec3(r) };
         }
 
-        void Save(nlohmann::json& j) const override { j["radius"] = radius; }
-        void Load(const nlohmann::json& j) override { radius = j.value("radius", 0.5f); }
-
-        void OnInspectorGUI() override {
-            ImGui::DragFloat("Radius", &radius, 0.01f, 0.001f, 1000.0f);
+        void Save(nlohmann::json& j) const override {
+            j["radius"] = radius;
         }
+
+        void Load(const nlohmann::json& j) override {
+            if (j.contains("radius")) {
+                radius = j["radius"].get<float>();
+            }
+        }
+
+        void OnInspectorGUI() override;
     };
 
 }

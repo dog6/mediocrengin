@@ -5,18 +5,12 @@ print("--- development.lua started ---")
 local scene = game:GetActiveScene() -- get active scene
 
 -- Helper function
-function CreateMeshObject(name, modelPath, diffusePath)
-    local go = scene:CreateGameObject(name)
-    go:AddComponent("MeshRenderer")
-    local renderer = go:GetComponent("MeshRenderer")
-    renderer:LoadMesh(modelPath)
-
-    -- Load the diffuse texture only if a path is given
-    if diffusePath ~= nil then
-        renderer:SetTexture("diffuse", diffusePath)
-    end
-
-    return go
+function CreateMeshObject(name, modelPath)
+    local go = scene:CreateGameObject(name) -- create new gameObject
+    go:AddComponent("MeshRenderer") -- add a MeshRenderer component
+    local renderer = go:GetComponent("MeshRenderer") -- reference MeshRenderer
+    renderer:LoadMesh(modelPath) -- load mesh into MeshRenderer component
+    return go -- return new gameObject
 end
 
 function AddAndGetComponent(go, name)

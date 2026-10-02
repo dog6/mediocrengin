@@ -10,13 +10,16 @@
 
 namespace ng::Core {
 
+	// Forward declaration. The header only stores a pointer to a Collider.
+	// PhysicsBody.cpp includes the full definition.
+	class Collider;
+
 	// Describes basic rigidbody physic gameobjects
 	class PhysicsBody : public IComponent {
 
         Transform* tf = nullptr;
 
-		glm::vec3 internalVelocity = glm::vec3(); // for internal physics calculations
-
+		bool isKinematic = false; // ignores external forces
         glm::vec3 linearVelocity = glm::vec3(); // external velocities
 		glm::vec3 linearAcceleration = glm::vec3(0,0,0);
 
@@ -28,41 +31,71 @@ namespace ng::Core {
 		float friction = 0; // force needed to start moving
 		float mass = 1; // weight of physics body
 
+		// Moves the owner by "delta". Used to push bodies out of an overlap.
+		void ApplyPositionCorrection(const glm::vec3& delta);
+		bool sleeping = false;           // true = the body skips Update
+		bool touchedThisFrame = false;   // true = HandlePhysics found a contact in this frame
+		float sleepTimer = 0.0f;         // time that the body was slow and in contact
+
+		// Data that the body records when it falls asleep.
+		// ShouldWake() compares the current state with this data.
+		glm::vec3  sleepPosition{ 0.0f };          // world position of the body
+		Collider*  supportCollider  = nullptr;     // collider that the body rests on
+		Transform* supportTransform = nullptr;     // transform of the support
+		glm::vec3  supportPosition{ 0.0f };        // world position of the support
+
+		void UpdateSleepState(float dt);
+		void RecordSleepState();   // saves the sleep data. Runs when the body falls asleep.
+		bool ShouldWake();         // runs each frame while the body sleeps
 	public:
 
         PhysicsBody();
         ~PhysicsBody();
+		
+		void Wake() { sleeping = false; sleepTimer = 0.0f; }
+		bool IsSleeping() const { return sleeping; }
 
+		// Player helpers
+		void SetHorizontalVelocity(float x, float z); // keeps the vertical velocity
+		bool IsGrounded();                            // true when the contact normal points down to a floor
+		bool Jump(float speed);                       // sets the vertical velocity only when grounded
 		void HandlePhysics();
+		void HandleTwoPhysicsBodyCollision(PhysicsBody* otherPB, const glm::vec3& normal, float penetration); // physicsBody vs physicsBody
+		void HandleOnePhysicsBodyCollision(const glm::vec3& normal, float penetration); // physicsBody vs static collider
+
+		// Gives 0 for kinematic bodies and for bodies with a mass of 0 or less.
+		// A body with an inverse mass of 0 does not move in a collision.
+		float GetInverseMass() const {
+			return (isKinematic || mass <= 0.0f) ? 0.0f : 1.0f / mass;
+		}
 
 		// Getters & Setters
 
 		void SetLinearVelocity(glm::vec3 velocity);
 		void SetLinearAcceleration(glm::vec3 accel);
-		glm::vec3 GetLinearVelocity() { return this->linearVelocity; }
-		glm::vec3 GetLinearAcceleration() { return this->linearAcceleration; }
+		glm::vec3 GetLinearVelocity() const { return this->linearVelocity; }
+		glm::vec3 GetLinearAcceleration() const { return this->linearAcceleration; }
 
 		void SetAngularVelocity(glm::vec3 velocity);
 		void SetAngularAcceleration(glm::vec3 accel);
-		glm::vec3 GetAngularVelocity() { return this->angularVelocity; }
-		glm::vec3 GetAngularAcceleration() { return this->angularAcceleration; }
+		glm::vec3 GetAngularVelocity() const { return this->angularVelocity; }
+		glm::vec3 GetAngularAcceleration() const { return this->angularAcceleration; }
 
 		void SetRestitution(float r) { this->restitution = r; }
-		float GetRestitution() { return this->restitution; }
+		float GetRestitution() const { return this->restitution; }
 
 		void SetFriction(float f) { this->friction = f; }
-		float GetFriction() { return this->friction; }
+		float GetFriction() const { return this->friction; }
 
 		void SetMass(float m) { this->mass = m; }
-		float GetMass() { return this->mass; }
+		float GetMass() const { return this->mass; }
 
-		void SetGravity(glm::vec3 g) { this->gravityForce = g;}
-		glm::vec3 GetGravity() { return this->gravityForce; }
+		// A change of gravity wakes the body. Without this, a sleeping body
+		// ignores a new gravity value until a wake test succeeds.
+		void SetGravity(glm::vec3 g) { this->gravityForce = g; Wake(); }
+		glm::vec3 GetGravity() const { return this->gravityForce; }
 
-
-		
 		// Inherited methods
-
   		void Update(float deltaTime);
 		void OnInspectorGUI() override;
 

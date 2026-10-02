@@ -1,17 +1,26 @@
 -- Development scene
+-- used as sanity check
+-- when all else fails, this will put a plane on the screen
 
 print("--- development.lua started ---")
 
 local scene = game:GetActiveScene() -- get active scene
 
 -- Helper function
-function CreateMeshObject(name, modelPath)
-    local go = scene:CreateGameObject(name) -- create new gameObject
-    go:AddComponent("MeshRenderer") -- add a MeshRenderer component
-    local renderer = go:GetComponent("MeshRenderer") -- reference MeshRenderer
-    renderer:LoadMesh(modelPath) -- load mesh into MeshRenderer component
-    return go -- return new gameObject
+function CreateMeshObject(name, modelPath, diffusePath)
+    local go = scene:CreateGameObject(name)
+    go:AddComponent("MeshRenderer")
+    local renderer = go:GetComponent("MeshRenderer")
+    renderer:LoadMesh(modelPath)
+
+    -- Load the diffuse texture only if a path is given
+    if diffusePath ~= nil then
+        renderer:SetTexture("diffuse", diffusePath)
+    end
+
+    return go
 end
+
 
 function AddAndGetComponent(go, name)
     go:AddComponent(name)
@@ -19,15 +28,11 @@ function AddAndGetComponent(go, name)
 end
 
 -- Create gameObject 'plane_lower'
-local plGO = CreateMeshObject("plane_lower", "D:/Projects/CPP/smallengine/res/models/dev/plane/mdl_plane.obj")
+local plGO = CreateMeshObject("plane_lower", "D:/Projects/CPP/smallengine/res/models/dev/plane/mdl_plane.obj", "D:/Projects/CPP/smallengine/res/images/dev_texture.png")
 
 local plTF = plGO:GetComponent("Transform") -- reference Transform component
 plTF:SetPosition(0, -1, 0) -- set transform position
 
--- local plCOL = AddAndGetComponent(plGO, "Collider") -- add and reference Collider component
--- plCOL:SetBox(1,1,1) -- set collider shape to Box
--- plCOL:SetGizmoVisible(true) -- set collider gizmo visible
-
-
+-- Unused, just here
 function OnUpdate(deltaTime)
 end

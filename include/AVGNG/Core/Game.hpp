@@ -92,21 +92,24 @@ namespace ng::Core {
 			const char* windowTitle;
 			glm::uvec2 defaultWindowSize;
 			glm::uvec2 viewportSize; // same as current window size, just unsigned int* instead
-			glm::vec<2, int> currentWindowSize;
+			glm::vec<2,  int> currentWindowSize;
+
+			void Update(); // update game
+			void Render(); // render game
 
 		public:
 
 			static Game* Instance;
 			static GLFWwindow* gameWindow;
-			static ng::Core::SceneManager* sceneManager;
+			// static ng::Core::SceneManager* sceneManager;
 			static ng::Graphics::Camera* camera;
 
 			Game();
 			Game(const char* title, glm::uvec2 size);
 			~Game();
 
-			static ng::Core::SceneManager* GetSceneManager() { return sceneManager; }
-			static ng::Core::Scene* GetActiveScene() { return sceneManager->GetActiveScene(); } // pass through function for lua scripting
+			// static ng::Core::SceneManager* GetSceneManager() { return sceneManager; }
+			// static ng::Core::Scene* GetActiveScene() { return sceneManager->GetActiveScene(); } // pass through function for lua scripting
 			
 			// Getters required for lua bindings
 			static ng::Core::Game* GetInstance() { return Game::Instance; }

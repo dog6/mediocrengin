@@ -26,4 +26,5 @@ target_link_libraries(smallengine PRIVATE
     ${CMAKE_SOURCE_DIR}/external/assimp/assimp-vc143-mt.lib
     ${CMAKE_SOURCE_DIR}/external/lua/lua54.lib
     OpenGL::GL
+    comdlg32
 )

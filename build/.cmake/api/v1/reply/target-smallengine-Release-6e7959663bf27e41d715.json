@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "MinSizeRel/smallengine.exe"
+			"path" : "Release/smallengine.exe"
 		},
 		{
-			"path" : "MinSizeRel/smallengine.pdb"
+			"path" : "Release/smallengine.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -66,7 +66,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -std:c++17 -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD"
 				},
 				{
 					"backtrace" : 3,
@@ -143,14 +143,17 @@
 				45,
 				46,
 				47,
-				48
+				48,
+				49,
+				50,
+				51
 			]
 		},
 		{
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /O1 /Ob1 /DNDEBUG -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -MD"
 				},
 				{
 					"backtrace" : 3,
@@ -171,7 +174,7 @@
 			"language" : "C",
 			"sourceIndexes" : 
 			[
-				49
+				52
 			]
 		}
 	],
@@ -187,7 +190,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
@@ -216,6 +219,11 @@
 			{
 				"backtrace" : 2,
 				"fragment" : "opengl32.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "comdlg32.lib",
 				"role" : "libraries"
 			},
 			{
@@ -287,7 +295,10 @@
 				46,
 				47,
 				48,
-				49
+				49,
+				50,
+				51,
+				52
 			]
 		}
 	],
@@ -363,6 +374,18 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/Assets/SceneJsonSerializer.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/Assets/TextureLoader.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/Core/CameraComponent.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -471,6 +494,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/Editor/EditorUI.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/Editor/FileDialog.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

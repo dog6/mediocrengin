@@ -25,7 +25,7 @@ namespace ng::Graphics {
             void SetVec4(const char* name, glm::vec4 vec);
 
             void SetVec3(const char* name, glm::vec3 vec);
-
+            void SetVec2(const char* name, glm::vec2 vec);
             void SetInt(const char* name, int v);
 
             void SetFloat(const char* name, float v);

@@ -19,27 +19,22 @@ namespace ng::Graphics {
             return;
 
         // ---------------------------------------------------------
-        // Vertex shader
+        // Build shader manually
         // ---------------------------------------------------------
-
         const char* vertexShaderSource = R"(
             #version 330 core
 
             layout (location = 0) in vec3 aPos;
 
+            uniform mat4 model;
             uniform mat4 view;
             uniform mat4 projection;
 
             void main()
             {
-                gl_Position = projection * view * vec4(aPos, 1.0);
+                gl_Position = projection * view * model * vec4(aPos, 1.0);
             }
         )";
-
-
-        // ---------------------------------------------------------
-        // Fragment shader
-        // ---------------------------------------------------------
 
         const char* fragmentShaderSource = R"(
             #version 330 core
@@ -53,11 +48,6 @@ namespace ng::Graphics {
                 FragColor = vec4(color, 1.0);
             }
         )";
-
-
-        // ---------------------------------------------------------
-        // Build shader manually
-        // ---------------------------------------------------------
 
         Shader shader;
         shader.Build(vertexShaderSource, fragmentShaderSource);
@@ -101,159 +91,123 @@ namespace ng::Graphics {
 
 
     void DebugDraw::Box(
-        ng::Graphics::Camera& cam,
-        const ng::Core::AABB& box,
-        const glm::vec3& color)
-    {
-        Initialize();
+    ng::Graphics::Camera& cam,
+    const glm::mat4& model,
+    const glm::vec3& color)
+{
+    Initialize();
 
-        const glm::vec3& min = box.min;
-        const glm::vec3& max = box.max;
+    // Unit cube: -0.5 to +0.5
+    glm::vec3 lines[24] = {
 
+        // Bottom
+        { -0.5f, -0.5f, -0.5f },
+        {  0.5f, -0.5f, -0.5f },
 
-        // ---------------------------------------------------------
-        // AABB corners
-        // ---------------------------------------------------------
+        {  0.5f, -0.5f, -0.5f },
+        {  0.5f, -0.5f,  0.5f },
 
-        glm::vec3 corners[8] = {
-            // Bottom
-            { min.x, min.y, min.z }, // 0
-            { max.x, min.y, min.z }, // 1
-            { max.x, min.y, max.z }, // 2
-            { min.x, min.y, max.z }, // 3
+        {  0.5f, -0.5f,  0.5f },
+        { -0.5f, -0.5f,  0.5f },
 
-            // Top
-            { min.x, max.y, min.z }, // 4
-            { max.x, max.y, min.z }, // 5
-            { max.x, max.y, max.z }, // 6
-            { min.x, max.y, max.z }  // 7
-        };
+        { -0.5f, -0.5f,  0.5f },
+        { -0.5f, -0.5f, -0.5f },
 
+        // Top
+        { -0.5f,  0.5f, -0.5f },
+        {  0.5f,  0.5f, -0.5f },
 
-        // ---------------------------------------------------------
-        // 12 edges
-        //
-        // Each pair of vertices represents one GL_LINES segment.
-        // ---------------------------------------------------------
+        {  0.5f,  0.5f, -0.5f },
+        {  0.5f,  0.5f,  0.5f },
 
-        glm::vec3 lines[24] = {
+        {  0.5f,  0.5f,  0.5f },
+        { -0.5f,  0.5f,  0.5f },
 
-            // Bottom
-            corners[0], corners[1],
-            corners[1], corners[2],
-            corners[2], corners[3],
-            corners[3], corners[0],
+        { -0.5f,  0.5f,  0.5f },
+        { -0.5f,  0.5f, -0.5f },
 
-            // Top
-            corners[4], corners[5],
-            corners[5], corners[6],
-            corners[6], corners[7],
-            corners[7], corners[4],
+        // Vertical
+        { -0.5f, -0.5f, -0.5f },
+        { -0.5f,  0.5f, -0.5f },
 
-            // Vertical
-            corners[0], corners[4],
-            corners[1], corners[5],
-            corners[2], corners[6],
-            corners[3], corners[7]
-        };
+        {  0.5f, -0.5f, -0.5f },
+        {  0.5f,  0.5f, -0.5f },
 
+        {  0.5f, -0.5f,  0.5f },
+        {  0.5f,  0.5f,  0.5f },
 
-        // ---------------------------------------------------------
-        // Get current viewport dimensions
-        // ---------------------------------------------------------
+        { -0.5f, -0.5f,  0.5f },
+        { -0.5f,  0.5f,  0.5f }
+    };
 
-        GLint viewport[4];
-        glGetIntegerv(GL_VIEWPORT, viewport);
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
 
-        float width = static_cast<float>(viewport[2]);
-        float height = static_cast<float>(viewport[3]);
+    float width = static_cast<float>(viewport[2]);
+    float height = static_cast<float>(viewport[3]);
 
-        if (height <= 0.0f)
-            return;
+    if (height <= 0.0f)
+        return;
 
+    glm::mat4 view = cam.GetViewMatrix();
+    glm::mat4 projection = cam.GetProjectionMatrix(width, height);
 
-        // ---------------------------------------------------------
-        // Create matrices
-        // ---------------------------------------------------------
+    glUseProgram(shaderID);
 
-        glm::mat4 view = cam.GetViewMatrix();
+    GLint modelLocation =
+        glGetUniformLocation(shaderID, "model");
 
-        glm::mat4 projection =
-            cam.GetProjectionMatrix(width, height);
+    GLint viewLocation =
+        glGetUniformLocation(shaderID, "view");
 
+    GLint projectionLocation =
+        glGetUniformLocation(shaderID, "projection");
 
-        // ---------------------------------------------------------
-        // Use shader
-        // ---------------------------------------------------------
+    GLint colorLocation =
+        glGetUniformLocation(shaderID, "color");
 
-        glUseProgram(shaderID);
+    glUniformMatrix4fv(
+        modelLocation,
+        1,
+        GL_FALSE,
+        glm::value_ptr(model)
+    );
 
+    glUniformMatrix4fv(
+        viewLocation,
+        1,
+        GL_FALSE,
+        glm::value_ptr(view)
+    );
 
-        GLint viewLocation =
-            glGetUniformLocation(shaderID, "view");
+    glUniformMatrix4fv(
+        projectionLocation,
+        1,
+        GL_FALSE,
+        glm::value_ptr(projection)
+    );
 
-        GLint projectionLocation =
-            glGetUniformLocation(shaderID, "projection");
+    glUniform3fv(
+        colorLocation,
+        1,
+        glm::value_ptr(color)
+    );
 
-        GLint colorLocation =
-            glGetUniformLocation(shaderID, "color");
+    glBindVertexArray(VAO);
 
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-        glUniformMatrix4fv(
-            viewLocation,
-            1,
-            GL_FALSE,
-            glm::value_ptr(view)
-        );
+    glBufferSubData(
+        GL_ARRAY_BUFFER,
+        0,
+        sizeof(lines),
+        lines
+    );
 
-        glUniformMatrix4fv(
-            projectionLocation,
-            1,
-            GL_FALSE,
-            glm::value_ptr(projection)
-        );
+    glDrawArrays(GL_LINES, 0, 24);
 
-        glUniform3fv(
-            colorLocation,
-            1,
-            glm::value_ptr(color)
-        );
-
-
-        // ---------------------------------------------------------
-        // Upload line vertices
-        // ---------------------------------------------------------
-
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-        glBufferSubData(
-            GL_ARRAY_BUFFER,
-            0,
-            sizeof(lines),
-            lines
-        );
-
-
-        // ---------------------------------------------------------
-        // Draw 12 lines
-        // ---------------------------------------------------------
-
-        // So all gizmos are drawn on top layer
-        // GLboolean depthWasOn = glIsEnabled(GL_DEPTH_TEST);
-        // glDisable(GL_DEPTH_TEST);
-
-        // Draw gizmos
-        glDrawArrays(GL_LINES, 0, 24);
-        // if (depthWasOn) glEnable(GL_DEPTH_TEST);
-
-        // ---------------------------------------------------------
-        // Cleanup
-        // ---------------------------------------------------------
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
 
 }

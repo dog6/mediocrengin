@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "AVGNG/Graphics/MeshRenderer.hpp"
 #include "AVGNG/Assets/AssimpObjLoader.hpp"
 #include "AVGNG/Graphics/Shader.hpp"
@@ -5,6 +6,11 @@
 #include "AVGNG/Core/GameObject.hpp"
 #include "AVGNG/Assets/JsonUtils.hpp"
 #include "AVGNG/Graphics/Mesh.hpp"
+#include "AVGNG/Assets/TextureLoader.hpp"
+#include "AVGNG/Editor/FileDialog.hpp"
+#include <string>
+
+#include "AVGNG/Assets/ScopedTimer.hpp"
 
 #include <imgui/imgui.h>
 
@@ -12,24 +18,183 @@ using namespace ng::Core;
 
 namespace ng::Graphics {
 
-    void MeshRenderer::Draw(Camera& camera, Transform& transform)
+    bool MeshRenderer::ValidateMesh()
     {
+        bool result = true;
+        int errNum = 0;
         // Early validation checks
         if (!this->mesh) {
             Debug::Log(LogLevel::ERROR, "Mesh is null in MeshRenderer::Draw");
-            return;
+            result = false;
+            errNum -= 1;
         }
 
         if (this->mesh->indices.empty()) {
             Debug::Log(LogLevel::WARN, "Mesh has no indices");
-            return;
+            result = false;
+            errNum -= 1;
         }
 
         if (!this->mesh->material) {
             Debug::Log(LogLevel::WARN, "Mesh has no material assigned");
-            return;
+            result = false;
+            errNum -= 1;
         }
 
+        if (!result) Debug::Log(ERROR, "MeshRenderer failed to validate mesh, error: %d", errNum);
+
+        return result;
+
+    }
+
+    namespace {
+
+        bool ParseTextureType(const std::string& name, ng::Graphics::TextureType& out)
+        {
+            if (name == "diffuse")  { out = TextureType::DIFFUSE;  return true; }
+            if (name == "specular") { out = TextureType::SPECULAR; return true; }
+            if (name == "normal")   { out = TextureType::NORMAL;   return true; }
+            if (name == "emissive") { out = TextureType::EMISSIVE; return true; }
+            if (name == "alpha")    { out = TextureType::ALPHA;    return true; }
+            if (name == "metallic") { out = TextureType::METALLIC; return true; }
+            return false;
+        }
+
+        // Sends tiling and offset for all texture slots.
+        // Always call this. An unset GLSL uniform is 0, and a tiling of 0 breaks the texture.
+        void UploadTextureTransforms(Shader& shader, MaterialData& matData)
+        {
+            struct Slot {
+                TextureType type;
+                const char* tilingName;
+                const char* offsetName;
+            };
+            
+            static const Slot slots[] = {
+                { TextureType::DIFFUSE,  "diffuseMapTiling",  "diffuseMapOffset"  },
+                { TextureType::SPECULAR, "specularMapTiling", "specularMapOffset" },
+                { TextureType::NORMAL,   "normalMapTiling",   "normalMapOffset"   },
+                { TextureType::EMISSIVE, "emissiveMapTiling", "emissiveMapOffset" },
+                { TextureType::ALPHA,    "alphaMapTiling",    "alphaMapOffset"    },
+                { TextureType::METALLIC, "metallicMapTiling", "metallicMapOffset" },
+            };
+
+            for (const Slot& slot : slots) {
+                const TextureTransform& t = matData.GetTextureTransform(slot.type);
+                shader.SetVec2(slot.tilingName, t.tiling);
+                shader.SetVec2(slot.offsetName, t.offset);
+            }
+        }
+
+        void DrawTextureSlot(const char* label, TextureType type, MaterialData& matData)
+        {
+            Texture* tex = matData.FindTexture(type);
+
+            ImGui::TextUnformatted(label);
+
+            const ImVec2 previewSize(48.0f, 48.0f);
+            if (tex != nullptr)
+                ImGui::Image((ImTextureID)(intptr_t)tex->id, previewSize);
+            else
+                ImGui::Dummy(previewSize);
+
+            ImGui::SameLine();
+            ImGui::BeginGroup();
+
+            if (tex != nullptr)
+                ImGui::Text("ID %u | %d x %d", (unsigned int)tex->id, tex->width, tex->height);
+            else
+                ImGui::TextDisabled("none");
+
+            // "..." button: select a file
+            if (ImGui::Button("...")) {
+                std::string path;
+                if (ng::Editor::FileDialog::OpenImage(path)) {
+                    Texture* newTex = ng::Assets::TextureLoader::LoadFromFile(path);
+                    if (newTex != nullptr)
+                        matData.SetTexture(type, newTex); // MaterialData owns it now
+                    else
+                        Debug::Log(LogLevel::ERROR, "Could not load texture '%s'", path.c_str());
+                }
+            }
+            if (ImGui::IsItemHovered()) ImGui::SetTooltip("Select a texture file");
+
+            // "Clear" button
+            ImGui::SameLine();
+            ImGui::BeginDisabled(tex == nullptr);
+            if (ImGui::Button("Clear")) matData.RemoveTexture(type);
+            ImGui::EndDisabled();
+
+            // "Settings" button: tiling and offset
+            ImGui::SameLine();
+            if (ImGui::Button("Settings")) ImGui::OpenPopup("TextureSettings");
+
+            if (ImGui::BeginPopup("TextureSettings")) {
+                TextureTransform& t = matData.GetTextureTransform(type);
+
+                ImGui::Text("%s map settings", label);
+                ImGui::Separator();
+
+                ImGui::DragFloat2("Tiling", &t.tiling.x, 0.01f, 0.001f, 100.0f);
+                ImGui::DragFloat2("Offset", &t.offset.x, 0.01f);
+
+                if (ImGui::Button("Reset (1:1)"))
+                    t = TextureTransform{};
+
+                ImGui::EndPopup();
+            }
+
+            ImGui::EndGroup();
+        }
+
+    } // anonymous namespace
+
+    bool MeshRenderer::SetTextureTiling(const std::string& typeName, float x, float y)
+    {
+        TextureType type;
+        Mesh* mesh = GetMesh();
+        if (!ParseTextureType(typeName, type) || mesh == nullptr || mesh->material == nullptr)
+            return false;
+
+        mesh->material->GetMaterialData()->GetTextureTransform(type).tiling = glm::vec2(x, y);
+        return true;
+    }
+
+    bool MeshRenderer::SetTexture(const std::string& typeName, const std::string& path)
+    {
+        TextureType type;
+        if (!ParseTextureType(typeName, type)) {
+            Debug::Log(LogLevel::ERROR, "SetTexture: unknown texture type '%s'", typeName.c_str());
+            return false;
+        }
+
+        Mesh* mesh = GetMesh();
+        if (mesh == nullptr || mesh->material == nullptr) {
+            Debug::Log(LogLevel::ERROR, "SetTexture: load a mesh before you set a texture");
+            return false;
+        }
+
+        MaterialData* matData = mesh->material->GetMaterialData();
+        if (matData == nullptr) return false;
+
+        Texture* texture = ng::Assets::TextureLoader::LoadFromFile(path);
+        if (texture == nullptr) return false; // TextureLoader logs the error
+
+        matData->SetTexture(type, texture); // MaterialData owns the texture now
+        return true;
+    }
+
+    // Runs every frame
+    // An issue now is that we're drawing per object, and not clustering objects
+    // together based on which shader they're using. We should use render queues in the future to save
+    // performance
+    void MeshRenderer::Draw(Camera& camera, Transform& transform)
+    {
+       if (!ValidateMesh()) return; // only draw valid mesh
+        mesh->material->GetMaterialData()->ReleaseRetiredTextures();
+
+       Debug::Log(VERBOSE, "Validated mesh, drawing");
+       
         // 1. Get the shader assigned to the mesh material
         Shader* shader = this->mesh->material->GetShader();
         if (!shader) {
@@ -37,16 +202,18 @@ namespace ng::Graphics {
             return;
         }
 
-        // 2. ACTIVATE THE SHADER PROGRAM ON THE GPU
-        shader->Use(); // Ensures glUseProgram(shader->ID) is executed
-
-        // 3. Upload uniforms (Model, View, Projection, Light, Material data)
+        
+        // Use shader program
         this->mesh->UseShader(camera, transform);
+        UploadTextureTransforms(*shader, *mesh->material->GetMaterialData());
+        Debug::Log(VERBOSE, "Binding VAO and drawing elements..");
 
         // 4. Bind VAO and draw
         glBindVertexArray(mesh->VAO);
         glDrawElements(mesh->drawMode, (GLsizei)mesh->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
+        Debug::Log(VERBOSE, "Unbinding shader..");
 
         // 5. Unbind shader program (good practice)
         glUseProgram(0);
@@ -60,18 +227,20 @@ namespace ng::Graphics {
     
     Mesh* MeshRenderer::GetMesh() { return this->mesh; }
 
-    /// <summary>
-    /// Loads a mesh for this->mesh using a given .obj file path
-    /// </summary>
-    /// <param name="objPath">.obj file path</param>
-    void MeshRenderer::LoadMesh(const char* objPath)
+    void MeshRenderer::LoadMesh(const char* objPath) 
     {
-        Debug::Log(DEBUG, "LoadMesh called on MeshRenderer %p", (void*)this);
-        Debug::Log(DEBUG, "    .OBJ Path: '%s'", objPath);
+        // It's good practice to check for null if coming from Lua/C
+        if (!objPath) {
+            Debug::Log(ERROR, "MeshRenderer::LoadMesh -> objPath is null!");
+            return;
+        }
+
+        Debug::Log(LOG, "MeshRenderer::LoadMesh -> %p", (void*)this);
+        Debug::Log(LOG, " .OBJ Path: '%s'", objPath);
 
         // Load mesh using AssimpObjLoader
-		Mesh* loadedMesh = ng::Assets::AssimpObjLoader::LoadObjAsMesh(objPath);
-    
+        Mesh* loadedMesh = ng::Assets::AssimpObjLoader::LoadObjAsMesh(objPath);
+
         if (loadedMesh == nullptr) {
             Debug::Log(ERROR, "Failed to load mesh from MeshRenderer with path '%s'.", objPath);
             return;
@@ -80,73 +249,91 @@ namespace ng::Graphics {
         if (!loadedMesh->material) {
             Debug::Log(DEBUG, "Mesh had no material, creating default Material");
             loadedMesh->material = new ng::Graphics::Material();
-            // Shader should  be set automatically by material to ShaderLoader::s_defaultShader
         }
 
-        Debug::Log(LOG, "Loaded Mesh '%s' for MeshRenderer attached to GameObject: '%s'", objPath, owner->name.c_str());
+        Debug::Log(LOG, "Loaded Mesh '%s' for MeshRenderer attached to GameObject: '%s'", 
+                objPath, owner->name.c_str());
+
         this->SetMesh(loadedMesh);
-
     }
 
-    void MeshRenderer::OnInspectorGUI() {
+   namespace {
+    // Calls PushID in the constructor and PopID in the destructor.
+    // PopID then runs on each return path.
+    struct IdScope {
+        explicit IdScope(const void* id) { ImGui::PushID(id); }
+        ~IdScope() { ImGui::PopID(); }
+    };
 
-        // Render imgui elements for MeshRenderer Component
-        ng::Graphics::MeshRenderer* mr = static_cast<ng::Graphics::MeshRenderer*>(this);
-        ng::Graphics::Mesh* mesh = mr->GetMesh();
-        ImGui::Text("MeshRenderer Component [%p]", mr);
+    const ImVec4 ERROR_COLOR(1.0f, 0.3f, 0.3f, 1.0f);
+}
 
-        if (mesh == nullptr) {
-            ImGui::TextColored(ImColor(255, 0, 0), "No mesh assigned.");
-            return;
-        }
+void MeshRenderer::OnInspectorGUI() {
 
-        ImGui::Text("Vertices: %d", (int)mesh->vertices.size());
-        ImGui::Text("Indices: %d", (int)mesh->indices.size());
+    IdScope idScope(this);
 
-        MaterialData* matData = mesh->material->GetMaterialData();
+    ImGui::Text("MeshRenderer Component [%p]", (void*)this);
 
-		Texture* diffTex = matData->FindTexture(TextureType::DIFFUSE);
-		Texture* specTex = matData->FindTexture(TextureType::SPECULAR);
-		Texture* normTex = matData->FindTexture(TextureType::NORMAL);
-		Texture* emissiveTex = matData->FindTexture(TextureType::EMISSIVE);
-        Texture* alphaTex = matData->FindTexture(TextureType::ALPHA);
-		Texture* metallicTex = matData->FindTexture(TextureType::METALLIC);
-
-        if (matData != nullptr) {
-
-            if (ImGui::CollapsingHeader("Material Properties", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick)) {
-
-                // For testing, should be replaced with way to change texture per mesh
-                // ImGui::Text("Diffuse Map: %s", diffTex ? to_string(diffTex->id).c_str() : "NULL");
-                // ImGui::Text("Specular Map: %s", specTex ? to_string(specTex->id).c_str() : "NULL");
-                // ImGui::Text("Emissive Map: %s", emissiveTex ? to_string(emissiveTex->id).c_str() : "NULL");
-                // ImGui::Text("Normal Map: %s", normTex ? to_string(normTex->id).c_str() : "NULL");
-                // ImGui::Text("Alpha Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
-                // ImGui::Text("Metallic Map: %s", alphaTex ? to_string(alphaTex->id).c_str() : "NULL");
-                
-
-                ImGui::SliderFloat("Index of Refraction", &matData->IOR, 1.0f, 128.0f);
-                ImGui::SliderFloat("Shininess", &matData->Shininess, 0.01f, 1.0f);
-                ImGui::SliderFloat("Opacity", &matData->Opacity, 0.0f, 1.0f); // new
-                ImGui::SliderFloat("Metallicness", &matData->Metallicness, 0.0f, 1.0f); // new
-
-                ImGui::PushItemWidth(100);
-				ImGui::ColorEdit3("Albedo Color", (float*)&matData->Albedo, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorEdit3("Diffuse Color", (float*)&matData->Diffuse, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorEdit3("Specular Color", (float*)&matData->Specular, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorEdit3("Emissive Color", (float*)&matData->Emissive, ImGuiColorEditFlags_NoAlpha);
-                ImGui::ColorEdit3("Ambient Color", (float*)&matData->Ambient, ImGuiColorEditFlags_NoAlpha);
-
-
-            }
-
-        }
-        else {
-            Debug::Log(WARN, "Inspected GameObject '%s': Mesh is missing material data", owner->name.c_str());
-        }
-
-       
+    ng::Graphics::Mesh* mesh = GetMesh();
+    if (mesh == nullptr) {
+        ImGui::TextColored(ERROR_COLOR, "No mesh assigned.");
+        return;
     }
+
+    ImGui::Text("Vertices: %zu", mesh->vertices.size());
+    ImGui::Text("Indices: %zu", mesh->indices.size());
+    ImGui::Text("Triangles: %zu", mesh->indices.size() / 3);
+
+    MaterialData* matData = mesh->material ? mesh->material->GetMaterialData() : nullptr;
+    if (matData == nullptr) {
+        ImGui::TextColored(ERROR_COLOR, "This mesh has no material data.");
+        return;
+    }
+
+    if (ImGui::CollapsingHeader("Material Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+        ImGui::TextDisabled("Surface");
+        ImGui::SliderFloat("Index of Refraction", &matData->IOR, 1.0f, 128.0f);
+        ImGui::SliderFloat("Shininess", &matData->Shininess, 0.01f, 1.0f);
+        ImGui::SliderFloat("Opacity", &matData->Opacity, 0.0f, 1.0f);
+        ImGui::SliderFloat("Metallicness", &matData->Metallicness, 0.0f, 1.0f);
+
+        ImGui::Separator();
+        ImGui::TextDisabled("Colors");
+
+        auto ColorControl = [](const char* label, auto& color) {
+            ImGui::ColorEdit3(label, reinterpret_cast<float*>(&color), ImGuiColorEditFlags_NoAlpha);
+        };
+
+        ImGui::PushItemWidth(100.0f);
+        ColorControl("Albedo Color",   matData->Albedo);
+        ColorControl("Diffuse Color",  matData->Diffuse);
+        ColorControl("Specular Color", matData->Specular);
+        ColorControl("Emissive Color", matData->Emissive);
+        ColorControl("Ambient Color",  matData->Ambient);
+        ImGui::PopItemWidth();
+    }
+
+    if (ImGui::CollapsingHeader("Textures")) {
+
+        struct TextureSlot { const char* name; TextureType type; };
+        static const TextureSlot slots[] = {
+            { "Diffuse",  TextureType::DIFFUSE  },
+            { "Specular", TextureType::SPECULAR },
+            { "Normal",   TextureType::NORMAL   },
+            { "Emissive", TextureType::EMISSIVE },
+            { "Alpha",    TextureType::ALPHA    },
+            { "Metallic", TextureType::METALLIC },
+        };
+
+        for (const TextureSlot& slot : slots) {
+            ImGui::PushID(slot.name);
+            DrawTextureSlot(slot.name, slot.type, *matData);
+            ImGui::Separator();
+            ImGui::PopID();
+        }
+    }
+}
 
     void MeshRenderer::Save(nlohmann::json& j)
     {

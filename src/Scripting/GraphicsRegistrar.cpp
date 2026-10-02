@@ -25,7 +25,21 @@ namespace ng::Scripting {
         lua.new_usertype<Material>("Material",
             "SetShader", &Material::SetShader,
             "GetShader", &Material::GetShader,
-            "SetMaterialData", &Material::SetMaterialData,
+            "SetMaterialData", [](Material& material, const MaterialData& src) {
+                MaterialData* dst = material.GetMaterialData();
+                if (dst == nullptr) return;
+
+                dst->name         = src.name;
+                dst->Albedo       = src.Albedo;
+                dst->Ambient      = src.Ambient;
+                dst->Diffuse      = src.Diffuse;
+                dst->Specular     = src.Specular;
+                dst->Emissive     = src.Emissive;
+                dst->IOR          = src.IOR;
+                dst->Shininess    = src.Shininess;
+                dst->Opacity      = src.Opacity;
+                dst->Metallicness = src.Metallicness;
+            },
             "GetMaterialData", &Material::GetMaterialData
         );
     }
@@ -34,6 +48,8 @@ namespace ng::Scripting {
         lua.new_usertype<MeshRenderer>("MeshRenderer",
             sol::base_classes, sol::bases<IComponent>(),
             "LoadMesh", &MeshRenderer::LoadMesh,
+            "SetTexture", &MeshRenderer::SetTexture,
+            "SetTextureTiling", &MeshRenderer::SetTextureTiling,
             "GetMesh", &MeshRenderer::GetMesh
         );
     }
@@ -80,10 +96,15 @@ namespace ng::Scripting {
     }
 
     void GraphicsRegistrar::Register(sol::state& lua) {
+        Debug::Log(LOG, "Registering Mesh bindings with lua..");
         RegisterMesh(lua);
+        Debug::Log(LOG, "Registering Mesh bindings with lua..");
         RegisterMaterial(lua);
+        Debug::Log(LOG, "Registering MeshRenderer bindings with lua..");
         RegisterMeshRenderer(lua);
+        Debug::Log(LOG, "Registering Camera bindings with lua..");
         RegisterCamera(lua);
+        Debug::Log(LOG, "Registering ShaderLoader bindings with lua..");
         RegisterShaderLoader(lua);
     }
 

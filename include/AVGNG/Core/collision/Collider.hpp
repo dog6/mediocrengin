@@ -19,10 +19,10 @@ namespace ng::Core {
         bool gizmoVisible = false;
         glm::vec3 gizmoColor{0.0f, 1.0f, 0.0f}; // RGB, each value 0 to 1
         bool isActive = true; // can this collider be collided with?
-        // Collider* overlappingCollider; // should probably be a list or something at some point
         ShapeType shapeType = ShapeType::Box;
         bool overlapping = false; // is this collider colliding with something?
-
+        float penetration;
+        glm::vec3 contactNormal{0,0,0};
 
     public:
         void SetPositionOffset(const glm::vec3& posOffset) { positionOffset = posOffset; }
@@ -55,7 +55,25 @@ namespace ng::Core {
 
         ShapeType GetShapeType() { return shapeType; }
         // The collision system calls this one time each frame, before the broad phase.
-        void UpdateBounds(const glm::vec3& position, const glm::vec3& scale);
+        // void UpdateBounds(const glm::vec3& position, const glm::vec3& scale);
+        void UpdateBounds(const glm::mat4& worldMatrix);
+
+        void SetContact(const glm::vec3& normal, float depth) {
+            contactNormal = normal;
+            penetration = depth;
+        }
+
+        const glm::vec3& GetContactNormal() const { return contactNormal; }
+        float GetPenetration() const { return penetration; }
+
+        // Call this one time each frame for each collider, before the collision checks.
+        void ClearContact() {
+            overlapping = false;
+            other = nullptr;
+            penetration = 0.0f;
+            contactNormal = glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+
 
         void OnInspectorGUI() override;
         void Save(nlohmann::json& j) override;
