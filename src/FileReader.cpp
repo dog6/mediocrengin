@@ -52,12 +52,36 @@ namespace ng::Assets {
         return tokens;
     }
 
-    std::ifstream FileReader::ReadFile(const std::string& filePath) {
+    std::string FileReader::ReadFile(const std::string& filePath) {
         std::ifstream file(filePath);
         if (!file.is_open()) {
-            Debug::Log(LogLevel::ERROR, "Failed to open file %s\n", filePath.c_str());
+            Debug::Log(LogLevel::ERROR, "Failed to open file: %s", filePath.c_str());
+            return "";
         }
-        return file;
+
+        std::string content((std::istreambuf_iterator<char>(file)),
+            std::istreambuf_iterator<char>());
+        return content;
+    }
+
+    bool FileReader::WriteFile(const std::string& filepath, const std::string& content)
+    {
+       
+        std::ofstream file(filepath);
+
+        // Open file
+        if (!file.is_open()) {
+            Debug::Log(ERROR, "Failed to save scene with path: '%s'", filepath.c_str());
+            return false;
+        }
+
+        // Write to opened file
+        file << content;
+
+        file.close();
+
+        return true;
+
     }
 
 }

@@ -28,6 +28,8 @@ namespace ng::Graphics {
                 glDeleteBuffers(1, &EBO);
             }
 
+            std::string filepath;
+
             // Vertex shape
             std::vector<Vertex> vertices;
             std::vector<glm::vec3> positions;
@@ -35,7 +37,7 @@ namespace ng::Graphics {
             std::vector<glm::vec2> texCoords;
             std::vector<unsigned int> indices;
 
-            Material* material;
+            Material* material = new Material();
 
             unsigned int VAO;  // Vertex Array Object
             unsigned int VBO;  // Vertex Buffer Object
@@ -43,6 +45,11 @@ namespace ng::Graphics {
 
 
             void SetupMesh();
+
+			void UseShader(ng::Graphics::Camera& camera, ng::Core::Transform& transform);
+
+            Material* GetMaterial() { return material; }
+
         };
 
 

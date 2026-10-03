@@ -105,16 +105,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NG_DEVELOPER_MODE;NG_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalModuleDependencies>
+      </AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glfw3_mt.lib;glfw3dll.lib;opengl32.lib;gdi32.lib;shell32.lib;lua54.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glfw3_mt.lib;glfw3dll.lib;opengl32.lib;gdi32.lib;shell32.lib;lua54.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -128,53 +130,93 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalModuleDependencies>
+      </AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;glfw3_mt.lib;glfw3dll.lib;opengl32.lib;gdi32.lib;shell32.lib;lua54.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\AVGNG\CubemapTexture.cpp" />
+    <ClCompile Include="src\AssimpObjLoader.cpp" />
+    <ClCompile Include="src\ConsoleView.cpp" />
+    <ClCompile Include="src\Cursor.cpp" />
     <ClCompile Include="src\Debug.cpp" />
+    <ClCompile Include="src\EditorUI.cpp" />
     <ClCompile Include="src\FileReader.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\HierarchyView.cpp" />
+    <ClCompile Include="src\imgui.cpp" />
+    <ClCompile Include="src\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\imgui_stdlib.cpp" />
+    <ClCompile Include="src\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui_widgets.cpp" />
+    <ClCompile Include="src\InspectorView.cpp" />
+    <ClCompile Include="src\KeyboardInput.cpp" />
     <ClCompile Include="src\LuaManager.cpp" />
+    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\MaterialData.cpp" />
+    <ClCompile Include="src\MenuStripView.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshRenderer.cpp" />
-    <ClCompile Include="src\ObjFileParser.cpp" />
-    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\MouseInput.cpp" />
     <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\SceneJsonSerializer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ShaderLoader.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\Source.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AVGNG\AssimpObjLoader.hpp" />
     <ClInclude Include="include\AVGNG\Camera.hpp" />
-    <ClInclude Include="include\AVGNG\Component.hpp" />
-    <ClInclude Include="include\AVGNG\Core.hpp" />
+    <ClInclude Include="include\AVGNG\CubemapTexture.hpp" />
+    <ClInclude Include="include\AVGNG\IComponent.hpp" />
+    <ClInclude Include="include\AVGNG\ConsoleColors.hpp" />
+    <ClInclude Include="include\AVGNG\ConsoleView.hpp" />
+    <ClInclude Include="include\AVGNG\Cursor.hpp" />
     <ClInclude Include="include\AVGNG\Debug.hpp" />
+    <ClInclude Include="include\AVGNG\EditorUI.hpp" />
+    <ClInclude Include="include\AVGNG\EditorUIElement.hpp" />
     <ClInclude Include="include\AVGNG\FileReader.hpp" />
     <ClInclude Include="include\AVGNG\Game.hpp" />
     <ClInclude Include="include\AVGNG\GameObject.hpp" />
-    <ClInclude Include="include\AVGNG\Graphics.hpp" />
+    <ClInclude Include="include\AVGNG\HierarchyView.hpp" />
+    <ClInclude Include="include\AVGNG\IJsonSerializable.hpp" />
+    <ClInclude Include="include\AVGNG\InspectorView.hpp" />
+    <ClInclude Include="include\AVGNG\KeyboardInput.hpp" />
     <ClInclude Include="include\AVGNG\LuaManager.hpp" />
     <ClInclude Include="include\AVGNG\Material.hpp" />
+    <ClInclude Include="include\AVGNG\MaterialData.hpp" />
+    <ClInclude Include="include\AVGNG\MenuStripView.hpp" />
     <ClInclude Include="include\AVGNG\Mesh.hpp" />
     <ClInclude Include="include\AVGNG\MeshRenderer.hpp" />
-    <ClInclude Include="include\AVGNG\ObjFileParser.hpp" />
-    <ClInclude Include="include\AVGNG\Renderer.hpp" />
+    <ClInclude Include="include\AVGNG\MouseInput.hpp" />
     <ClInclude Include="include\AVGNG\Scene.hpp" />
+    <ClInclude Include="include\AVGNG\SceneJsonSerializer.hpp" />
     <ClInclude Include="include\AVGNG\Shader.hpp" />
     <ClInclude Include="include\AVGNG\ShaderLoader.hpp" />
+    <ClInclude Include="include\AVGNG\Skybox.hpp" />
     <ClInclude Include="include\AVGNG\TexCoord.hpp" />
+    <ClInclude Include="include\AVGNG\Texture.hpp" />
     <ClInclude Include="include\AVGNG\Time.hpp" />
     <ClInclude Include="include\AVGNG\Transform.hpp" />
+    <ClInclude Include="include\AVGNG\Utility.hpp" />
     <ClInclude Include="include\AVGNG\Vertex.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

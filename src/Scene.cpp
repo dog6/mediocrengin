@@ -1,5 +1,4 @@
 #include <AVGNG/Scene.hpp>
-
 #include <AVGNG/Time.hpp>
 
 using namespace ng::Graphics;
@@ -8,11 +7,14 @@ namespace ng::Core {
 
 	float deltaTime;
 
-	Scene::Scene(Camera* _mainCamera, const char* _sceneName)
-	{
-		this->sceneName = _sceneName;
-		this->mainCamera = _mainCamera;
-		Debug::Log(LOG, "Scene created: %s", sceneName);
+
+
+	Scene::Scene(Camera* _mainCamera, glm::uvec2& viewportSize, const char* _sceneName) : 
+		sceneName(_sceneName), 
+		mainCamera(_mainCamera), 
+		isActive(true),
+		viewportSize(viewportSize) { 
+		this->skybox = new Skybox(viewportSize);
 	}
 
 	Scene::~Scene() {
@@ -68,6 +70,8 @@ namespace ng::Core {
 	void Scene::Start() {
 		Debug::Log(LOG, "Starting scene: %s", sceneName);
 		isActive = true;
+		if (skybox != nullptr)
+			this->skybox->Init();
 	}
 
 	void Scene::Update() {
@@ -98,15 +102,13 @@ namespace ng::Core {
 			auto* meshRenderer = obj->GetComponent<MeshRenderer>();
 			auto* transform = obj->GetComponent<Transform>();
 
-			//Debug::Log(DEBUG, "Drawing MeshRenderer %p with shader %p ID: %d",
-				//meshRenderer, meshRenderer->shader,
-				//meshRenderer->shader ? meshRenderer->shader->ID : 0);
-
 			if (meshRenderer != nullptr && transform != nullptr) {
 				meshRenderer->Draw(*mainCamera, *transform);
 			}
 		}
 
+		if (skybox != nullptr)
+			this->skybox->Render(*mainCamera);
 	}
 
 	void Scene::Unload() {

@@ -1,16 +1,19 @@
 #pragma once
 
 #include <AVGNG/Mesh.hpp>
-#include <AVGNG/Component.hpp>
-#include <AVGNG/ObjFileParser.hpp>
+#include <AVGNG/IComponent.hpp>
+#include <filesystem>
 
 namespace ng::Graphics {
 
-	class MeshRenderer : public ng::Core::Component {
+	class MeshRenderer : public ng::Core::IComponent {
 		Mesh* mesh = nullptr;
+		Texture* diffuseTexture = nullptr;
+		Texture* specularTexture = nullptr;
+		Texture* normalTexture = nullptr;
+		Texture* emissiveTexture = nullptr;
+		Texture* alphaTexture = nullptr;
 	public:
-		Shader* shader;
-
 		void Draw(ng::Graphics::Camera& camera, ng::Core::Transform& transform);
 		
 		// Getters & Setters
@@ -18,7 +21,11 @@ namespace ng::Graphics {
 		Mesh* GetMesh();
 
 		void LoadMesh(const char* objPath);
-		void LoadShader(const char* shaderName, const char* vertShaderPath, const char* fragShaderPath);
+
+		void OnInspectorGUI() override;
+
+		void Save(nlohmann::json& j, int componentIndex);
+
 	};
 
 }

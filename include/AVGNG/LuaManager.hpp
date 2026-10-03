@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sol/sol.hpp>
+#include <string>
 
 namespace ng::Core {
 	class Scene;
@@ -8,19 +9,26 @@ namespace ng::Core {
 
 namespace ng::Scripting {
 
+	struct LuaScript {
+		sol::state lua;
+		std::string filepath;
+	};
+
 	class LuaManager {
 
 	private:
-		static void BindToLua(sol::state& lua);
-		static sol::state m_lua;
+
+		static std::vector<LuaScript> s_scripts;
 
 	public:
-		static void Init(ng::Core::Scene* scene);
-		static sol::state& GetState();
 
+		static void Load(const char* scriptPath);
 		static void Update(float deltaTime);
-		static void Load(ng::Core::Scene* scene, const char* scriptPath);
+		static void BindToLua(sol::state& lua);
+		static void Cleanup();
+		static void Execute(std::string luaCode);
 
+		static void LoadNoclip(); // should be moved eventually
 	};
 
 }

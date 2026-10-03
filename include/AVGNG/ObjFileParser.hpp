@@ -1,4 +1,3 @@
-// objFileParser.hpp
 #pragma once
 
 #define NG_QUIET_PARSING
@@ -18,15 +17,19 @@
 
 #include <AVGNG/ShaderLoader.hpp>
 #include <AVGNG/GameObject.hpp>
+#include <AVGNG/Utility.hpp>
 
 namespace ng::Assets {
 
-        class ObjFileParser {
+
+    class ObjFileParser {
+
+      
         public:
             static ng::Core::GameObject* LoadObjAsGameObject(const char* name, const char* objFilePath, ng::Graphics::Shader* shader);
             static ng::Graphics::Mesh* LoadObjFromFileAsMesh(const std::string& objFilePath);
-            static std::unordered_map<std::string, ng::Graphics::Material> LoadMaterialFromFile(const std::string& mtlPath);
+            static std::unordered_map<std::string, ng::Graphics::MaterialData> LoadMaterialsFromFile(const std::string& mtlPath);
         };
 
-    } 
+} 
 

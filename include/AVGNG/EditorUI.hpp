@@ -1,0 +1,32 @@
+#pragma once
+
+namespace ng::Editor {
+
+	class EditorUI {
+
+		static bool s_isInspectorVisible;
+		static bool s_isConsoleVisible;
+		static bool s_isHierarchyVisible;
+		static bool s_isMenuStripVisible;
+		static bool s_allVisible;
+
+	public:
+		static void ShowInspector();
+		static void ShowHierarchy();
+		static void ShowConsole();
+		static void ShowMenuStrip();
+
+		static void HideInspector();
+		static void HideHierarchy();
+		static void HideConsole();
+		static void HideMenuStrip();
+
+
+		static void ShowAllElements();
+		static void HideAllElements();
+
+		static void Update();
+
+	};
+
+}

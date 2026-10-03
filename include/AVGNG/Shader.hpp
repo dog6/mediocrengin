@@ -1,9 +1,7 @@
 #pragma once
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
-
 #include <AVGNG/FileReader.hpp>
 
 namespace ng::Graphics {
@@ -15,6 +13,8 @@ namespace ng::Graphics {
             ~Shader();
             unsigned int ID = 0; // default ID to 0
 
+            std::string vertex_shader_path;
+            std::string fragment_shader_path;
    
             void Build(const char* vertexCode, const char* fragmentCode);
 
@@ -27,6 +27,10 @@ namespace ng::Graphics {
             void SetVec3(const char* name, glm::vec3 vec);
 
             void SetInt(const char* name, int v);
+
+            void SetFloat(const char* name, float v);
+
+            void SetBool(const char* name, bool v);
 
         };
 

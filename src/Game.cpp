@@ -4,90 +4,128 @@ using namespace ng::Core;
 using namespace ng::Graphics;
 using namespace ng::Assets;
 
+#ifdef NG_DEVELOPER_MODE
+using namespace ng::Editor;
+#endif
 namespace ng {
 
-GLFWwindow* gameWindow;
+    GLFWwindow* Game::gameWindow = nullptr;
+    Camera* Game::camera = new ng::Graphics::Camera();
+    Scene* Game::activeScene;
+    Game* Game::Instance;
 
+    // Helper methods
+    void SetupImGUI(GLFWwindow* window) {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        ImGui::StyleColorsDark(); // theme
 
-Camera* camera = new ng::Graphics::Camera();
-Scene* activeScene = new Scene(camera, "Development Scene");
-
-// Helper Methods
-static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
-
-    // Setup Debug Logging
-    Debug::Init("game.log");
-
-    Debug::Log(LOG, "Initializing game window..");
-
-    if (!glfwInit()) {
-        Debug::Log(FATAL, "Failed to initialize GLFW instance");
-        return;
+        float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
+        style.FontScaleDpi = main_scale;
     }
 
-    // Set OpenGL version
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // Helper Methods
+    static void InitializeGameWindow(int window_width, int window_height, const char* windowName) {
 
-    /* Create a windowed mode window and its OpenGL context */
-    gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
+        Debug::Log(LOG, "Initializing game window..");
 
-    if (!gameWindow) {
-        Debug::Log(FATAL, "Failed to create GLFW window");
-        glfwTerminate();
-        return;
+        if (!glfwInit()) {
+            Debug::Log(FATAL, "Failed to initialize GLFW instance");
+            return;
+        }
+
+        // Set OpenGL version
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        // Create a windowed mode window and its OpenGL context
+        Game::gameWindow = glfwCreateWindow(window_width, window_height, windowName, NULL, NULL);
+
+        if (!Game::gameWindow) {
+            Debug::Log(FATAL, "Failed to create GLFW window");
+            glfwTerminate();
+            return;
+        }
+
+        glfwMakeContextCurrent(Game::gameWindow);
+
+
+        // Initialize GLAD
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+            Debug::Log(FATAL, "Failed to initialize GLAD");
+            return;
+        }
+
+        glEnable(GL_DEPTH_TEST);
+        glViewport(0, 0, window_width, window_height);
+
+        Debug::Log(LOG, "Successfully created game window.");
+
     }
-
-    glfwMakeContextCurrent(gameWindow);
-
-
-    // Initialize GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        Debug::Log(FATAL, "Failed to initialize GLAD");
-        return;
-    }
-
-    glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, window_width, window_height);
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
-
-    Debug::Log(LOG, "Successfully created game window.");
-
-
-}
 
     // Constructor
     Game::Game() {
         this->windowTitle = "AvgNGin | v0.0.0";
-        this->windowSize = glm::uvec2(1280, 720);
+        this->defaultWindowSize = glm::uvec2(1280, 720);
+		this->currentWindowSize = this->defaultWindowSize;
+        Game::Instance = this;
     }
     Game::Game(const char* title, glm::uvec2 size) {
         this->windowTitle = title;
-        this->windowSize = size;
+        this->defaultWindowSize = size;
+        this->currentWindowSize = this->defaultWindowSize;
+        Game::Instance = this;
     }
     
     // Destructor
-    Game::~Game() {}
+    Game::~Game() {
+        this->activeScene->Unload();
+    }
 
     // Before Load
-    void Core::Game::Init()
+    void Game::Init()
     {
         Debug::Log(LogLevel::LOG, "Loading game..");
-        InitializeGameWindow(this->windowSize.x, this->windowSize.y, this->windowTitle);
-        
+        InitializeGameWindow(this->defaultWindowSize.x, this->defaultWindowSize.y, this->windowTitle);
+        this->viewportSize = this->defaultWindowSize;
+
+        activeScene = new Scene(camera, this->viewportSize, "Development Scene");
         Time::Init();
 
-        ng::Scripting::LuaManager::Init(activeScene);
+
+        // Setup IMGUI
+        SetupImGUI(gameWindow);
+
+        // Initialize input handlers
+        MouseInput::Init(*gameWindow);
+        KeyboardInput::Init(gameWindow);
+        Cursor::Init(gameWindow);
+
+        // GL ES 3.0 + GLSL 300 es (WebGL 2.0)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+        ImGui_ImplOpenGL3_Init("#version 330");
+        ImGui_ImplGlfw_InitForOpenGL(gameWindow, true);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     }
 
     // Game Methods
     void Game::Load()
     {
+
         // Load lua scene script
-         ng::Scripting::LuaManager::Load(activeScene, "./res/scripts/dev.lua");
+        ng::Scripting::LuaManager::Load("./res/scripts/scene.lua");
+
 
         // Load active scene
         if (activeScene != nullptr) {
@@ -95,13 +133,6 @@ static void InitializeGameWindow(int window_width, int window_height, const char
         }
 
         activeScene->Load();
-
-        // Load Cube Mesh
-        //cubeObj = LoadObjAsGameObject("Cube", "./res/models/mdl_grass_cube.obj", defaultShader);
-        //cubeObj = LoadObjAsGameObject("Cube", "./res/models/textured_cube.obj", defaultShader);
-        // Load Terrain Mesh
-        //terrainObj = LoadObjAsGameObject("Terrain", "res/models/mdl_terrain.obj", defaultShader);
-
 
         Debug::Log(LogLevel::LOG, "Loading completed.");
 
@@ -112,8 +143,13 @@ static void InitializeGameWindow(int window_width, int window_height, const char
         Debug::Log(LogLevel::LOG, "Game started.");
         activeScene->Start();
 
-    }
+#ifdef NG_DEVELOPER_MODE
+        EditorUI::ShowAllElements();
+#endif
 
+    }
+   
+    ImVec4 clearcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     void Game::Run()
     {
         Debug::Log(LogLevel::LOG, "Starting game loop.");
@@ -124,27 +160,41 @@ static void InitializeGameWindow(int window_width, int window_height, const char
         while (!glfwWindowShouldClose(gameWindow))
         {
             Time::Update();
+            glfwPollEvents();
 
+            // Update everything in scene
             activeScene->Update();
-
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            viewportSize = glm::uvec2(currentWindowSize.x, currentWindowSize.y);
+            glfwGetFramebufferSize(gameWindow, &currentWindowSize.x, &currentWindowSize.y);
+            glViewport(0, 0, currentWindowSize.x, currentWindowSize.y);
+            glClearColor(0.3f, 0.5f, 0.5f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //glDisable(GL_CULL_FACE);  // Before drawing
-
+            
+            // Render to game window
             activeScene->Render();
 
-            // Check for GL errors 
-            if (frameCount++ == 60) {
+            // Start ImGui frame
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
-                // Check for openGL errors
+#ifdef NG_DEVELOPER_MODE            
+            ng::Editor::EditorUI::Update();
+#endif
+
+            // End ImGui frame and render
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            if (frameCount++ == 60) {
                 GLenum err = glGetError();
                 if (err != GL_NO_ERROR) {
                     Debug::Log(LogLevel::ERROR, "OpenGL Error: %d", err);
                 }
+                frameCount = 0;
             }
 
             glfwSwapBuffers(gameWindow);
-            glfwPollEvents();
         }
 
         this->Exit();
@@ -154,9 +204,14 @@ static void InitializeGameWindow(int window_width, int window_height, const char
     {
 
         Debug::Log(LogLevel::LOG, "Exiting application.");
-
+        Debug::Shutdown();
         glfwTerminate();
 
+    }
+
+    glm::uvec2 Core::Game::GetWindowSize()
+    {
+        return glm::uvec2();
     }
 
 }

@@ -1,4 +1,4 @@
-print("--- Lua Example Start ---")
+print("=== example.lua started ===")
 print("Scene exists: ", scene ~= nil)
 print("Scene Type: ", type(scene))
 
@@ -8,7 +8,7 @@ local meshRenderer = go:AddComponent("MeshRenderer")
 local renderer = go:GetComponent("MeshRenderer")
 
 renderer:LoadMesh("res/models/mdl_grass_cube.obj")
-renderer:LoadShader("res/shaders/vertexShaders/defaultShader.vert", "res/shaders/fragShaders/defaultShader.frag")
+renderer:LoadShader("DefaultShader", "res/shaders/vertexShaders/devShader.vert", "res/shaders/fragShaders/devShader.frag")
 
 local transform = go:GetComponent("Transform")
 transform:SetPosition(0, 0, -10)

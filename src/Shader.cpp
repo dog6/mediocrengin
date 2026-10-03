@@ -1,4 +1,5 @@
 #include <AVGNG/Shader.hpp>
+#include <glad/glad.h>
 
 using namespace ng::Core;
 using namespace ng::Assets;
@@ -18,7 +19,6 @@ namespace ng::Graphics {
         
         Debug::Log(DEBUG, "Building shader program...");
 
-        //
         // VERTEX SHADER
         //
         // Compile vertex shader
@@ -31,13 +31,14 @@ namespace ng::Graphics {
         if (!success) {
             glGetShaderInfoLog(vertex, 512, NULL, infoLog);
             Debug::Log(LogLevel::ERROR, "ERROR: Vertex shader compilation failed\n%s\n", infoLog);
+            return;
         }
         
-        //
         // FRAGMENT SHADER
         //
         // Compile fragment shader
         unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
+
         glShaderSource(fragment, 1, &fragmentCode, NULL);
         glCompileShader(fragment);
 
@@ -46,6 +47,7 @@ namespace ng::Graphics {
         if (!success) {
             glGetShaderInfoLog(fragment, 512, NULL, infoLog);
             Debug::Log(LogLevel::ERROR, "ERROR: Fragment shader compilation failed\n%s", infoLog);
+            return;
         }
 
         // Link program
@@ -61,6 +63,7 @@ namespace ng::Graphics {
         if (!success) {
             glGetProgramInfoLog(ID, 512, NULL, infoLog);
             Debug::Log(LogLevel::ERROR, "ERROR: Shader program linking failed\n%s\n", infoLog);
+            return;
         }
 
         glDeleteShader(vertex);
@@ -98,7 +101,7 @@ namespace ng::Graphics {
             Debug::Log(ERROR, "Shader Validation Failed: %s", infoLog);
         }
 
-        // Debug::Log(DEBUG, "! ---- Using shader program ID: %d", ID);
+         //Debug::Log(DEBUG, "Using shader program ID : % d", ID);
         glUseProgram(ID);
 
         GLenum err = glGetError();
@@ -142,6 +145,26 @@ namespace ng::Graphics {
         }
         glUniform1i(location, v);
     }
+
+    void Shader::SetFloat(const char* name, float v)
+    {
+		GLint location = glGetUniformLocation(ID, name);
+		if (location == -1) {
+			Debug::Log(WARN, "Uniform '%s' not found in shader %d", name, ID);
+			return;
+		}
+		glUniform1f(location, v);
+    }
+
+    void Shader::SetBool(const char* name, bool v) {
+        GLint location = glGetUniformLocation(ID, name);
+        if (location == -1) {
+            Debug::Log(WARN, "Uniform '%s' not found in shader %d", name, ID);
+            return;
+        }
+        glUniform1i(location, (int)v);
+    }
+    
    
 
 }
